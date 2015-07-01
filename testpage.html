@@ -1,0 +1,104 @@
+<html><head>
+    <!-- Original test page written by Dominic Mazzoni -->
+    <title>Mobile HTML Test</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      div,input,textarea,h1,h2 {
+      font-family: arial, sans-serif;
+      }
+      div { margin: 1em 0; }
+      div[role="textbox"] {
+      width: 10em;
+      min-height: 2em;
+      padding: 0.2em;
+      border: 1px solid #000;
+      }
+      label {
+      display: block;
+      margin: 1em 0;
+      }
+      select {
+      width: 10em;
+      }
+    </style>
+    <script src="point-focus.js"></script>
+    <style>
+      .point-focused:focus {
+      outline: none;
+      }
+      </style>
+  </head>
+  <body>
+    <h1>Mobile HTML Test</h1>
+    <h2>Editable text</h2>
+    <div>
+      <input placeholder="Single line">
+    </div>
+    <div>
+      <textarea placeholder="Multi line"></textarea>
+    </div>
+    <div>
+      <div role="textbox" tabindex="0" contenteditable="true">Contenteditable</div>
+    </div>
+    <h2>Buttons</h2>
+    <div>
+      <button>Button</button>
+    </div>
+    <div>
+      <input type="submit" value="Submit button">
+    </div>
+    <div>
+      <label><input type="checkbox">Checkbox</label>
+    </div>
+    <div>
+      <label><input name="a" type="radio">Radio 1</label>
+      <label><input name="a" type="radio">Radio 2</label>
+    </div>
+    <h2>Selects</h2>
+    <label>Select one from drop-down:<br>
+      <select>
+        <option>Apple</option>
+        <option>Orange</option>
+        <option>Banana</option>
+      </select>
+    </label>
+    <label>Select one from list:<br>
+      <select size="5">
+        <option>Apple</option>
+        <option>Orange</option>
+        <option>Banana</option>
+      </select>
+    </label>
+    <label>Select multiple:<br>
+      <select multiple="">
+        <option>Apple</option>
+        <option>Orange</option>
+        <option>Banana</option>
+      </select>
+    </label>
+    <h2>Other</h2>
+    <label>Process nice score from -20 to +20:<br>
+      <input type="range" min="-20" max="20" value="0">
+    </label>
+    <label>Bowling score from 0 to 300:<br>
+      <input type="range" min="0" max="300" value="0">
+    </label>
+    <div>
+      <input type="date" value="2008-09-01">
+    </div>
+    <div>
+      <input type="time" value="00:00:00">
+    </div>
+    <div>
+      <input type="number" placeholder="Number">
+    </div>
+    <div>
+      <input type="color" title="Color" value="#00ff00">
+    </div>
+    <div>
+      <input type="file" title="File">
+    </div>
+
+
+  </body>
+</html>
