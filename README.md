@@ -18,4 +18,4 @@ Should enable simple focus rules that meet the spirit of a11y guidelines for key
    </style>
  ```
 
-[Demo](alice.github.io/point-focus/testpage.html)
+[Demo](https://alice.github.io/point-focus/testpage.html)
