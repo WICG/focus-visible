@@ -23,17 +23,29 @@
     </style>
     <script src="point-focus.js"></script>
     <style>
-        :not([point-focused]) :focus {
+        /* disable the default one for point-focused things*/
+        .point-focused:focus {
+            outline: none;
+        }
+        
+        /* style non-point-focused outline */
+        :not([point-focused]):focus {
           outline: 2px solid green;
         }
       </style>
   </head>
   <body>
     <h1>Mobile HTML Test</h1>
-    <p>Demonstrates use of proposed `point-focus` attribute which allows styling based on point indication vs keyboard, see the readme for explanation. This page has one rule:
-    <pre>:not([point-focused]) :focus {
-    outline: 2px solid green;
-}</pre>
+    <p>Demonstrates use of proposed `point-focus` attribute which allows styling based on point indication vs keyboard, see the [readme](https://github.com/alice/point-focus) for explanation. This page has two rules:
+    <pre>/* disable the default one for point-focused things*/
+    .point-focused:focus {
+        outline: none;
+    }
+        
+    /* style non-point-focused outline */
+    :not([point-focused]):focus {
+      outline: 2px solid green;
+    }</pre>
     </p>
     <h2>Editable text</h2>
     <div>
