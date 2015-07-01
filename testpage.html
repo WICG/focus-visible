@@ -1,6 +1,6 @@
 <html><head>
     <!-- Original test page written by Dominic Mazzoni -->
-    <title>Mobile HTML Test</title>
+    <title>Point focus test</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
       div,input,textarea,h1,h2 {
@@ -35,7 +35,7 @@
       </style>
   </head>
   <body>
-    <h1>Mobile HTML Test</h1>
+    <h1>Point focus test</h1>
     <p>Demonstrates use of proposed `point-focus` attribute which allows styling based on point indication vs keyboard, see the <a href="https://github.com/alice/point-focus">readme(</a> for explanation. This page has two rules:
     <pre>/* disable the default one for point-focused things*/
     .point-focused :focus {
@@ -43,7 +43,7 @@
     }
 
     /* style non-point-focused outline */
-    :not([point-focused]) :focus {
+    body:not([point-focused]) :focus {
       outline: 2px solid green;
     }</pre>
     </p>
