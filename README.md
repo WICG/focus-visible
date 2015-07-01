@@ -6,7 +6,7 @@ Based on a conversation between Alice Boxhall, Brian Kardell and Marcy Sutton, t
 Should enable simple focus rules that meet the spirit of a11y guidelines for keyboard users but don't get in the way for pointer users.
 
 ```html
-<script src="https://rawgit.com/bkardell/d444e006bd6cfbc99986/raw/296b29a4099d37031613d9d7c72b588df5ddd065/click-focus.js"></script>
+<script src="https://rawgit.com/alice/point-focus/master/point-focus.js"></script>
 <style>
 :not([point-focused]):focus {
    .... focus ring styles....
