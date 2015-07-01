@@ -24,7 +24,7 @@
     <script src="point-focus.js"></script>
     <style>
         /* disable the default one for point-focused things*/
-        .point-focused :focus {
+        body[point-focused] :focus {
             outline: none;
         }
 
@@ -38,7 +38,7 @@
     <h1>Point focus test</h1>
     <p>Demonstrates use of proposed <code>point-focus</code> attribute which allows styling based on point indication vs keyboard, see the <a href="https://github.com/alice/point-focus">readme</a> for explanation. This page has two rules:
     <pre>/* disable the default one for point-focused things*/
-    .point-focused :focus {
+    [point-focused] :focus {
         outline: none;
     }
 
