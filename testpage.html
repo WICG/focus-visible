@@ -23,13 +23,28 @@
     </style>
     <script src="point-focus.js"></script>
     <style>
-      .point-focused:focus {
-      outline: none;
-      }
+        :focus {
+          outline: 2px solid green;
+        }
+
+        body[point-indicated] :focus {
+          outline: none;
+        }
       </style>
   </head>
   <body>
-    <h1>Mobile HTML Test</h1>
+    <h1>Point-indicated HTML Test</h1>
+    <p>
+      This page contains various html controls and demonstrates a proposal for a 'point-indicated' flag which allows more precise styling of a focus indicator based on the modality of the user.  When using a pointing device, most elements (with a few exceptions like those that receive text input) do not typically gain from a focus ring, however for keyboard users (and mixed users this is a necessity).  The <code>point-indicated</code> attribute on the body is set whenever a pointing device touches the screen on anything which is not explicitly non-indicatable.  You should see a green focus indicator on elements below differently based on whether you interact with them via keyboard or mouse.  If you are using the mouse and get lost, at any time you can tab/shift-tab to find your focus indicator.
+    </p>
+    <p>
+       Something is point-indicatable unless:
+       <ul>
+         <li>It is explicitly forbidden by the element having a boolean <code>disable-point-indication</code> attribute.</li>
+         <li>It accepts text input by having either a <code>.selectionStart</code> accessor which is callable without error or an aria <code>role="textbox"</code> </li>
+       </ul>
+    </p>
+
     <h2>Editable text</h2>
     <div>
       <input placeholder="Single line">
@@ -38,7 +53,7 @@
       <textarea placeholder="Multi line"></textarea>
     </div>
     <div>
-      <div role="textbox" tabindex="0" contenteditable="true">Contenteditable</div>
+      <div id="s" role="textbox" tabindex="0" contenteditable="true">Contenteditable</div>
     </div>
     <h2>Buttons</h2>
     <div>
