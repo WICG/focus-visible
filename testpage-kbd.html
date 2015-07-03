@@ -23,21 +23,60 @@
     </style>
     <script src="keyboard-focus.js"></script>
     <style>
-      body[show-focus-ring] :focus,
-      body [show-focus-ring]:focus{
+        body[show-focus] :focus {
           outline: 2px solid green;
         }
 
-        body:not([show-focus-ring]) :not([show-focus-ring]):focus {
-          outline: 0px none !important;
-          -moz-focus-ring: none !important;
+        body:not([show-focus]) :focus {
+          outline: none;
         }
       </style>
   </head>
   <body>
     <h1>Keyboard-only focus test</h1>
     <p>
-      This page contains various html controls and demonstrates a proposal for only drawing a focus ring when the keyboard is being used. You should see a green focus indicator on elements below differently based on whether you interact with them via keyboard or mouse.  If you are using the mouse and get lost, at any time you can tab/shift-tab to find your focus indicator.
+      This page contains various html controls and demonstrates a proposal for only drawing a focus ring when the keyboard is being used. You should see a green focus indicator (or comment out green focus ring style to see default focus ring) on elements below differently based on whether you interact with them via keyboard or mouse.  If you are using the mouse and get lost, at any time you can tab/shift-tab to find your focus indicator.
+    </p>
+
+    <h2>Rationale</h2>
+    <p>
+      <ul>
+        <li>Many developers disable the focus ring in their CSS styles. This often seems to be a result of finding the focus ring both aesthetically unpleasant and confusing to users when applied after a mouse or touch event.
+        <li>It seems evident that what has focus is only interesting to a user who is using the keyboard to interact with the page. A user using any kind of pointing device would only be interested in what is in focus if they were <em>just about</em> to use the keyboard - otherwise, it is irrelevant.
+        <li>Thus, if we only show the focus ring when relevant, we can avoid user confusion and avoid creating incentives for developers to disable it.
+      </ul>
+      Since we can't tell when a user is <em>about</em> to use the keyboard, we use the following heuristic to decide whether to show the focus ring:
+        <ul>
+          <li>the user has focused something using the keyboard (i.e. pressed <i>Tab</i> or <i>Shift-Tab</i>); or
+          <li>the user has focused something which accepts input from a keyboard or IME.
+        </ul>
+      This means that we don't have full coverage of the case where the user is <em>just about</em> to interact with something using the keyboard and may be wondering where focus is; we suggest that in that case, users who frequently switch modes from the mouse to the keyboard will become accustomed to moving focus forwards and backwards with the keyboard in order to determine its location.
+    </p>
+
+    <h2>Implementation</h2>
+    <p>
+      The logic in <a href="http://alice.github.io/point-focus/keyboard-focus.js">keyboard-focus.js</a> sets a <code>show-focus</code> attribute on <code>body</code> if either of the above heuristics are met. The style for this page includes the following block, which disables the focus ring <em>unless</em> <code>show-focus</code> is present:
+      <pre>
+        body:not([show-focus]) :focus {
+          outline: none;
+        }
+      </pre>
+    </p>
+
+    <h2>Proposals</h2>
+    <p>
+      <ul>
+        <li>Strong version: <code>:focus</code> selector should only be matched when the user is using the keyboard, as determined by something like the above heuristic.
+        <li>Weak version: the <em>focus ring</em> should only be shown when the user is using the keyboard; <code>:focus</code> should match whenever an element is focused.
+      </ul>
+      A version of the latter is implied by the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3A-moz-focusring"><code>:-moz-focusring</code></a> implementation. This allows a developer to specify one style when the user agent determines that the focus ring should be drawn (although this selector doesn't imply a focus ring per se), and another style which applies any time the element is focused.
+    </p>
+    <p>
+      Note that these proposals don't require the use of a <code>show-focus</code> attribute - this is just an implementation detail for this demo. However, a complete proposal <em>should</em> include a mechanism for custom elements to declare to the user agent that it should always get a focus ring. This could be
+      <ul>
+        <li><strong>explicit</strong>: an attribute, property or method allowing the element to state that it should always have a focus ring (or match a <code>:focus</code> style) when focused, or
+        <li><strong>implicit</strong>: a mechanism for a custom element to state that it will take some kind of input from a keyboard or IME.
+      </ul>
     </p>
 
     <h2>Editable text</h2>
@@ -48,14 +87,14 @@
       <textarea placeholder="Multi line"></textarea>
     </div>
     <div>
-      <div id="s" role="textbox" tabindex="0" contenteditable="true">Contenteditable</div>
+      <div id="s" role="textbox" tabindex="0" contenteditable="true">Contenteditable with textbox role</div>
     </div>
     <h2>Buttons</h2>
     <div>
       <button>Button</button>
     </div>
     <div>
-      <button show-focus-ring>Button with <code>show-focus-ring</code> attribute</button>
+      <button show-focus>Button with <code>show-focus</code> attribute</button>
     </div>
     <div>
       <input type="submit" value="Submit button">
