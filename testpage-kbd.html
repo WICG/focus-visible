@@ -27,8 +27,9 @@
           outline: 2px solid green;
         }
 
-        :focus {
-          outline: none;
+        body:not([using-keyboard]) :not([focus-ring]):focus {
+          outline: 0px none !important;
+          -moz-focus-ring: none !important;
         }
       </style>
   </head>
