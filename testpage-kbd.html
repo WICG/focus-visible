@@ -23,11 +23,12 @@
     </style>
     <script src="keyboard-focus.js"></script>
     <style>
-        body[using-keyboard] :focus {
+      body[show-focus-ring] :focus,
+      body [show-focus-ring]:focus{
           outline: 2px solid green;
         }
 
-        body:not([using-keyboard]) :not([focus-ring]):focus {
+        body:not([show-focus-ring]) :not([show-focus-ring]):focus {
           outline: 0px none !important;
           -moz-focus-ring: none !important;
         }
@@ -52,6 +53,9 @@
     <h2>Buttons</h2>
     <div>
       <button>Button</button>
+    </div>
+    <div>
+      <button show-focus-ring>Button with <code>show-focus-ring</code> attribute</button>
     </div>
     <div>
       <input type="submit" value="Submit button">

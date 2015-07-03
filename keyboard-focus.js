@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.body.addEventListener("focus", function(e) {
         if (hadKeyboardEvent || isTextInput(e.target))
-            document.body.setAttribute("using-keyboard", "");
+            document.body.setAttribute("show-focus-ring", "");
     }, true);
 
     document.body.addEventListener("blur", function(e) {
-        document.body.removeAttribute("using-keyboard");
+        document.body.removeAttribute("show-focus-ring");
     }, true);
 });
