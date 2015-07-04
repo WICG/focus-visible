@@ -8,22 +8,25 @@ document.addEventListener("DOMContentLoaded", function() {
                                    "input[type=datetime]",
                                    "textarea",
                                    "[role=textbox]",
-                                   "[show-focus]"].join(",");
+                                   "[show-focus]"].join(","),
+        matcher = getMatcher();
 
-    function matchesSelector(el, selector) {
+
+    function getMatcher() {
+        var el = document.body;
         if (el.matchesSelector)
-            return el.matchesSelector(selector);
+            return el.matchesSelector;
         if (el.webkitMatchesSelector)
-            return el.webkitMatchesSelector(selector);
+            return el.webkitMatchesSelector;
         if (el.mozMatchesSelector)
-            return el.mozMatchesSelector(selector);
+            return el.mozMatchesSelector;
         if (el.msMatchesSelector)
-            return el.msMatchesSelector(selector);
-        return false;
+            return el.msMatchesSelector;
+        throw "Couldn't find any matchesSelector method on document.body."
     }
 
     function shouldShowFocusRing(el) {
-        return matchesSelector(el, showFocusRingWhitelist);
+        return matcher.call(el, showFocusRingWhitelist);
     }
 
     document.body.addEventListener("keydown", function(e) {
@@ -33,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.body.addEventListener("focus", function(e) {
         if (hadKeyboardEvent || shouldShowFocusRing(e.target))
-            document.body.setAttribute("show-focus", "");
+            document.body.setAttribute("input-modality", "keyboard");
     }, true);
 
     document.body.addEventListener("blur", function(e) {
-        document.body.removeAttribute("show-focus");
+        document.body.removeAttribute("input-modality");
     }, true);
 });

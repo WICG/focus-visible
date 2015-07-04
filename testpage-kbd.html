@@ -23,11 +23,11 @@
     </style>
     <script src="keyboard-focus.js"></script>
     <style>
-        body[show-focus] :focus {
+        body[input-modality=keyboard] :focus {
           outline: 2px solid green;
         }
 
-        body:not([show-focus]) :focus {
+        body:not([input-modality=keyboard]) :focus {
           outline: none;
         }
       </style>
@@ -55,9 +55,9 @@
 
     <h2>Implementation</h2>
     <p>
-      The logic in <a href="http://alice.github.io/point-focus/keyboard-focus.js">keyboard-focus.js</a> sets a <code>show-focus</code> attribute on <code>body</code> if either of the above heuristics are met. The style for this page includes the following block, which disables the focus ring <em>unless</em> <code>show-focus</code> is present:
+      The logic in <a href="http://alice.github.io/point-focus/keyboard-focus.js">keyboard-focus.js</a> sets an <code>input-modality</code> attribute on <code>body</code> if either of the above heuristics are met. The style for this page includes the following block, which disables the focus ring <em>unless</em> <code>input-modality</code> is set to <code>keyboard</code>:
       <pre>
-        body:not([show-focus]) :focus {
+        body:not([input-modality=keyboard]) :focus {
           outline: none;
         }
       </pre>
@@ -72,10 +72,10 @@
       A version of the latter is implied by the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3A-moz-focusring"><code>:-moz-focusring</code></a> implementation. This allows a developer to specify one style when the user agent determines that the focus ring should be drawn (although this selector doesn't imply a focus ring per se), and another style which applies any time the element is focused.
     </p>
     <p>
-      Note that these proposals don't require the use of a <code>show-focus</code> attribute - this is just an implementation detail for this demo. However, a complete proposal <em>should</em> include a mechanism for custom elements to declare to the user agent that it should always get a focus ring. This could be
+      Note that these proposals don't require the use of an <code>input-modality</code> attribute - this is just an implementation detail for this demo. However, a complete proposal <em>should</em> include a mechanism for custom elements to declare to the user agent that it should always get a focus ring. This could be
       <ul>
         <li><strong>explicit</strong>: an attribute, property or method allowing the element to state that it should always have a focus ring (or match a <code>:focus</code> style) when focused, or
-        <li><strong>implicit</strong>: a mechanism for a custom element to state that it will take some kind of input from a keyboard or IME.
+        <li><strong>implicit</strong>: a mechanism for a custom element to state that it will take some kind of input from a keyboard or IME. (This demo's <code>input-modality</code> attribute suggests this option.)
       </ul>
     </p>
 
@@ -94,7 +94,7 @@
       <button>Button</button>
     </div>
     <div>
-      <button show-focus>Button with <code>show-focus</code> attribute</button>
+      <button input-modality=keyboard>Button with <code>input-modality=keyboard</code></button>
     </div>
     <div>
       <input type="submit" value="Submit button">
