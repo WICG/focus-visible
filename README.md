@@ -1,4 +1,4 @@
-Based on a conversation between Alice Boxhall, Brian Kardell and Marcy Sutton, this code attaches/manages metadata in the form of a `modality` attribute to the body, as a way to allow authors to experiment with adapting style based on the user's _active_ input modality (i.e., how they are interacting with the UI _right now_).
+Based on a conversation between Alice Boxhall, Brian Kardell and Marcy Sutton, this prototype attaches/manages metadata in the form of a `modality` attribute to the body, as a way to allow authors to experiment with adapting style based on the user's _active_ input modality (i.e., how they are interacting with the UI _right now_).
 
 [Demo](https://alice.github.io/modality/demo)
 
