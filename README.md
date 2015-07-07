@@ -1,6 +1,6 @@
 Based on a conversation between Alice Boxhall, Brian Kardell and Marcy Sutton, this code attaches/manages metadata in the form of a `modality` attribute to the body, as a way to experiment with styling based on user modality.
 
-[Demo](https://alice.github.io/modality/testpage.html)
+[Demo](https://alice.github.io/modality/demo)
 
 ## Rationale
 
