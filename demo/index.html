@@ -1,6 +1,6 @@
 <html><head>
     <!-- Original test page written by Dominic Mazzoni -->
-    <title>Mobile HTML Test</title>
+    <title>modality attribute demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
       div,input,textarea,h1,h2 {
@@ -21,30 +21,18 @@
       width: 10em;
       }
     </style>
-    <script src="point-focus.js"></script>
+    <script src="../src/keyboard-modality.js"></script>
     <style>
-        :focus {
+        body[modality=keyboard] :focus {
           outline: 2px solid green;
         }
-
-        body[point-indicated] :focus {
-          outline: none;
-        }
-      </style>
+    </style>
   </head>
   <body>
-    <h1>Point-indicated HTML Test</h1>
+    <h1>Keyboard-only focus test</h1>
     <p>
-      This page contains various html controls and demonstrates a proposal for a 'point-indicated' flag which allows more precise styling of a focus indicator based on the modality of the user.  When using a pointing device, most elements (with a few exceptions like those that receive text input) do not typically gain from a focus ring, however for keyboard users (and mixed users this is a necessity).  The <code>point-indicated</code> attribute on the body is set whenever a pointing device touches the screen on anything which is not explicitly non-indicatable.  You should see a green focus indicator on elements below differently based on whether you interact with them via keyboard or mouse.  If you are using the mouse and get lost, at any time you can tab/shift-tab to find your focus indicator.
+      This page contains various html controls and demonstrates a proposal for only drawing a focus ring when the keyboard is being used. You should see a green focus indicator (or comment out green focus ring style to see default focus ring) on elements below differently based on whether you interact with them via keyboard or mouse.  If you are using the mouse and get lost, at any time you can tab/shift-tab to find your focus indicator.
     </p>
-    <p>
-       Something is point-indicatable unless:
-       <ul>
-         <li>It is explicitly forbidden by the element having a boolean <code>disable-point-indication</code> attribute.</li>
-         <li>It accepts text input by having either a <code>.selectionStart</code> accessor which is callable without error or an aria <code>role="textbox"</code> </li>
-       </ul>
-    </p>
-
     <h2>Editable text</h2>
     <div>
       <input placeholder="Single line">
@@ -53,11 +41,14 @@
       <textarea placeholder="Multi line"></textarea>
     </div>
     <div>
-      <div id="s" role="textbox" tabindex="0" contenteditable="true">Contenteditable</div>
+      <div id="s" role="textbox" tabindex="0" contenteditable="true">Contenteditable with textbox role</div>
     </div>
     <h2>Buttons</h2>
     <div>
       <button>Button</button>
+    </div>
+    <div>
+      <button supports-modality=keyboard>Button with <code>supports-modality=keyboard</code></button>
     </div>
     <div>
       <input type="submit" value="Submit button">
