@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
             style.appendChild(document.createTextNode(css));
         }
 
-        head.appendChild(style);
+        head.insertBefore(style, head.firstChild);
     }
 
     function getMatcher() {
