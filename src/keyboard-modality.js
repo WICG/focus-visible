@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }, true);
 
     function disableFocusRingByDefault() {
-        var css = "body:not[modality=keyboard] :focus { outline: none; }",
+        var css = "body:not([modality=keyboard]) :focus { outline: none; }",
             head = document.head || document.getElementsByTagName("head")[0],
             style = document.createElement("style");
 
