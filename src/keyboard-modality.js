@@ -1,3 +1,4 @@
+/* https://github.com/alice/modality */
 document.addEventListener("DOMContentLoaded", function() {
     var hadKeyboardEvent = false,
         keyboardModalityWhitelist = [ "input:not([type])",
@@ -9,11 +10,40 @@ document.addEventListener("DOMContentLoaded", function() {
                                       "textarea",
                                       "[role=textbox]",
                                       "[supports-modality=keyboard]"].join(","),
-        matcher = getMatcher();
+        matcher = (function () {
+			var el = document.body;
+			if (el.matchesSelector)
+				return el.matchesSelector;
+			if (el.webkitMatchesSelector)
+				return el.webkitMatchesSelector;
+			if (el.mozMatchesSelector)
+				return el.mozMatchesSelector;
+			if (el.msMatchesSelector)
+				return el.msMatchesSelector;
+			console.error("Couldn't find any matchesSelector method on document.body.");
+		}()),
+        disableFocusRingByDefault = function () {
+			var css = "body:not([modality=keyboard]) :focus { outline: none; }",
+				head = document.head || document.getElementsByTagName("head")[0],
+				style = document.createElement("style");
+
+			style.type = "text/css";
+			style.id = "disable-focus-ring";
+			if (style.styleSheet) {
+				style.styleSheet.cssText = css;
+			} else {
+				style.appendChild(document.createTextNode(css));
+			}
+
+			head.insertBefore(style, head.firstChild);
+		},
+		focusTriggersKeyboardModality = function (el) {
+			return matcher.call(el, keyboardModalityWhitelist);
+		};
 
     disableFocusRingByDefault();
 
-    document.body.addEventListener("keydown", function(e) {
+    document.body.addEventListener("keydown", function() {
         hadKeyboardEvent = true;
         setTimeout(function() { hadKeyboardEvent = false; }, 0);
     }, true);
@@ -23,41 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.body.setAttribute("modality", "keyboard");
     }, true);
 
-    document.body.addEventListener("blur", function(e) {
+    document.body.addEventListener("blur", function() {
         document.body.removeAttribute("modality");
     }, true);
-
-    function disableFocusRingByDefault() {
-        var css = "body:not[modality=keyboard] :focus { outline: none; }",
-            head = document.head || document.getElementsByTagName("head")[0],
-            style = document.createElement("style");
-
-        style.type = "text/css";
-        style.id = "disable-focus-ring";
-        if (style.styleSheet) {
-            style.styleSheet.cssText = css;
-        } else {
-            style.appendChild(document.createTextNode(css));
-        }
-
-        head.insertBefore(style, head.firstChild);
-    }
-
-    function getMatcher() {
-        var el = document.body;
-        if (el.matchesSelector)
-            return el.matchesSelector;
-        if (el.webkitMatchesSelector)
-            return el.webkitMatchesSelector;
-        if (el.mozMatchesSelector)
-            return el.mozMatchesSelector;
-        if (el.msMatchesSelector)
-            return el.msMatchesSelector;
-        throw "Couldn't find any matchesSelector method on document.body."
-    }
-
-    function focusTriggersKeyboardModality(el) {
-        return matcher.call(el, keyboardModalityWhitelist);
-    }
-
 });
