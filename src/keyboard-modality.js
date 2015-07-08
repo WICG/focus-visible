@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			head.insertBefore(style, head.firstChild);
 		},
 		focusTriggersKeyboardModality = function (el) {
-			return matcher.call(el, keyboardModalityWhitelist);
+			return (matcher) ? matcher.call(el, keyboardModalityWhitelist) : false;
 		};
 
     disableFocusRingByDefault();
