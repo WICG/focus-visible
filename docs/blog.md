@@ -27,13 +27,13 @@ Then, of course, there is the keyboard case: a user, for any of a multitude of r
  
 In any case, sending the `tab` key allows these users to navigate sequentially through interactive elements on the page (such as form fields). The _only way_ for keyboard users to know which element is active (and thus how you might potentially interact with it via the keyboard) is via the focus style - i.e., by default, the __focus ring__).
 
-Since keyboard users pretty much can't do anything without knowing where focus is, it's tempting to over-simplify, wag our fingers at the nay-sayers and call it a day: we could simply say, "when a thing has focus it *must* get the focus ring indicator". Ok, since designs vary, what the particular focus ring should look like could vary too: on a white page background, a light blue outline might be really appropriate - but if your interface _is_ light blue, you might need to consider this in your branding and perhaps provide something as simple as:
+Since keyboard users pretty much can't do anything without knowing where focus is, it's tempting to over-simplify, wag our fingers at the nay-sayers and call it a day: we could simply say, "when a thing has focus it *must* get the focus ring indicator". Ok, since designs vary, what the particular focus ring should look like could vary too: on a white page background, a light blue outline might be really appropriate - but if your interface _is_ light blue, you might need to consider this in your branding and perhaps provide something like:
 
 ```css
 :focus { outline: 3px solid green; }
 ```
 
-Simple, right?  Unfortunately, not really. Why not?
+That should make everyone happy, right?  Unfortunately, not really.
 
 ## The Fly in the Ointment
 If you've never done so, try adding a global focus rule like the one above and use the UI for a bit.  If you're using a mouse, it can be pretty disconcerting and unpleasant. In fact, it can be downright confusing as suddenly you begin to notice that focus ring in ways/places you probably didn't before you added it. Understanding why this happens is where things get _really_ interesting. There's a fly in the ointment here, but where?
@@ -48,10 +48,10 @@ So, browsers tend to treat some elements differently (natively) based on whether
 
 Interesting, right?  And it turns out that this isn't a new thing, it's got a long history: Browsers [have been experimenting](https://bugzilla.mozilla.org/show_bug.cgi?id=377320) with variations of this since at least IE7. 
 
-Implementations vary a bit, and  still trying to strike the right balances, but overall the idea is consistent and you might say a big success.  
+Implementations vary a bit, and browsers are still trying to strike the right balances, but overall the idea is consistent and works well: A couple of billion unaware folks using Web browsers for the last 8+ years have proven it out.
 
 ## An unfortunate disconnect
-A couple of billion unaware folks using Web browsers for the last 8+ years have proven it out: In some cases you can significantly improve the experience for everyone by knowing a little bit about how they are using it.  The problem is, this information isn't exposed or standardized in any way so there are two unfortunate disconnects.
+So, we can see that in some cases you can significantly improve the experience for everyone by knowing a little bit about how they are using it. The problem is, this information isn't exposed or standardized in any way so there are two unfortunate disconnects.
 
 First, styling the focus ring is problematic.  The "out of the box" ring doesn't fit with a lot of design, so you'd like to customize it.  However - a simple, global rule is basically a non-option because it cannot consider the same sources of truth about how the user is using the UI as the browser itself and thus makes the experience of the norm measurably worse.  Another option is targeted rules, however, this leads to an explosion of rules and inevitably, lots of things that don't show the focus when they should leaving keyboard users with a partially unintuitive interface altogether.  The net result is a lot of feedback which frequently causes really bad choices - like disabling the ring altogether.  Second, not identifying the importance of such a distinction means that lots of other potential improvements along similar lines can't be experimented with or uncovered.  Merely identifying the capabilities of the system a user is using doesn't help - after all, the Mac laptop on which I am typing this right now, for example, supports both mouse and keyboard - but it doesn't tell an author anything about me, so they cannot adapt. Do you show me the ring or not?  As shown above, the answer is "it depends".  A phone with a slider keyboard or a Blackberry might technically have a means of pushing the tab key to navigate, but if the user isn't using it that way, it doesn't matter.
 
