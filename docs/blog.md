@@ -2,7 +2,7 @@
 
 Web developers and web standards authors alike strive to live up to the promise of "universality" - the idea that the web _should_ be available to all. This concept drives many innovations in web technology, as well as being fundamentally built in to the philosophy of the open standards on which the web is based.
 
-In order to achieve this, we frequently find that having some carefully chosen information about how the user intends to view the content (a concept called "user context") allows web developers to create more flexible and useful user experiences. In this post, we'll lay out a case that it's time to expand our view of user context to include the concept of __modality__ (how the user is physically interacting), but before we flesh that out, let's take a look at "user context".
+In order to achieve this, we frequently find that having some carefully chosen information about how the user intends to view the content (a concept we'll refer to in this article as "user context") allows web developers to create more flexible and useful user experiences. In this post, we'll lay out a case that it's time to expand our view of user context to include the concept of __modality__ (_how_ the user is interacting with the page), but before we flesh that out, let's take a look at "user context".
 
 ## `media`: responding to user context
 [Media Sheets](http://www.w3.org/TR/CSS21/media.html#media-sheets), introduced in CSS 2.0, allow us to specify distinct styles for, say, print media, while not changing the experience for users viewing on a screen. This means we can present the same content in multiple ways to best suit the media being used by the user at the time to view it, thereby improving the individual  experiences by taking the _context_ - media - into account.
@@ -14,7 +14,7 @@ Now, we find ourselves in a similar place, but from a different direction:  We'r
 ## The Focus Ring
 Authors might realise that the focus ring is important to keyboard users, but overall it gets a lot less love than it probably should: The web famously has no shortage of `outline: none;` styles. However, if we ask the question of why the focus ring causes so much frustration, it sheds light on some interesting and subtle things that we might apply more broadly too.
 
-The "average" web user is heavily reliant on "random access" style interaction using a mouse or touch screen. However, _all_ users can benefit from seeing where focus is when they're about to type into an input field. To lllustrate, picture using a login form in your mobile web browser. Here, the focus ring provides an indication of where your keystrokes are going to end up - critical information if you're about to type your password!
+The "average" web user is heavily reliant on "random access" style interaction using a mouse or touch screen. However, _all_ users can benefit from seeing where focus is when they're about to type into an input field. To illustrate, picture using a login form in your mobile web browser. Here, the focus ring provides an indication of where your keystrokes are going to end up - critical information if you're about to type your password!
 
 Then, of course, there are users who use the keyboard heavily or exclusively. This may be:
 * A user with a disability precluding the fine motor control necessary to control a mouse;
@@ -23,7 +23,7 @@ Then, of course, there are users who use the keyboard heavily or exclusively. Th
 
 ...or many other cases. 
  
-In any case, the `tab` key allows users to navigate sequentially through interactive elements on the page (such as form fields) with just a keyboard. In fact, the _only way_ for keyboard users to know which element is active (and thus how they might potentially interact with it via the keyboard) is via a visual indictor of what thing is focused - i.e., by default, the __focus ring__).
+In any case, the `tab` key allows users to navigate sequentially through interactive elements on the page (such as form fields) with just a keyboard. The _only way_ for keyboard users to know which element is active (and thus how they might potentially interact with it via the keyboard) is via a visual indictor of what thing is focused - i.e., by default, the __focus ring__).
 
 Given this, it's tempting to put our foot down and ignore the subtleties of the issue.  We could simply say, "when a thing has focus it *must* get the focus ring indicator". However, since designs vary, what the particular focus ring should look like could vary too. On a white page background, a light blue outline might be really appropriate - but if your interface _is_ light blue, it might be necessary to consider this part of branding and perhaps provide something like:
 
