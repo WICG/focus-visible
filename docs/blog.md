@@ -70,7 +70,7 @@ Doing so would allow an author to express the following: "If someone is interact
 
 Rules like this would allow users of touch devices or mouse oriented users to avoid the focus ring except in cases where the only available or very likely input modality was a keyboard (like `<input type=text>`), while allowing keyboard users to see the focus ring on anything with focus based on the fact that they are using the keyboard. If a user begins using the mouse, simply pressing tab/shift tab will let them know where they are by shifting the modality back to keyboard.
 
-We've created a rough prollyfill for this concept. Because we can't (yet) prolyfill media queries, it uses the more basic mechanism on setting an attribute on `<body>`, so the above rule would look more like
+We've created a rough prollyfill for this concept. Because we can't (yet) polyfill media queries, it uses the more basic mechanism on setting an attribute on `<body>`, so the above rule would look more like
 ```css
 body([modality=keyboard]) :focus {
     outline: -webkit-focus-ring-color auto 5px; /* or default UA style of your choosing */
