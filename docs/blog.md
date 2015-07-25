@@ -25,7 +25,7 @@ Then, of course, there are users who use the keyboard heavily or exclusively. Th
  
 In any case, the `tab` key allows users to navigate sequentially through interactive elements on the page (such as form fields) with just a keyboard. The _only way_ for keyboard users to know which element is active (and thus how they might potentially interact with it via the keyboard) is via a visual indictor of what thing is focused - i.e., by default, the __focus ring__).
 
-Given this, it's tempting to put our foot down and ignore the subtleties of the issue.  We could simply say, "when a thing has focus it *must* get the focus ring indicator". However, this runs into issues before we even consider user context.
+Given this, it's tempting to put our foot down and ignore the subtleties of the issue.  We could simply say, "when a thing has focus it *must* get the focus ring indicator". However, this quickly runs into issues; and today, we have only a partial solution.
 
 Since designs vary, what the particular focus ring should look like could vary too. An accessibility-conscious site may nevertheless want to have a consistent style for focus across browsers, which fits in with its branding. The `:focus` selector and `outline` property allow creating a simple rule for this:
 
