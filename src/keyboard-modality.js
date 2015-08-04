@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.body.addEventListener("keydown", function() {
         hadKeyboardEvent = true;
-        setTimeout(function() { hadKeyboardEvent = false; }, 0);
+        setTimeout(function() { hadKeyboardEvent = false; }, 100);
     }, true);
 
     document.body.addEventListener("focus", function(e) {
