@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                       "textarea",
                                       "[role=textbox]",
                                       "[supports-modality=keyboard]"].join(","),
+        isHandlingKeyboardThrottle,
         matcher = (function () {
 			var el = document.body;
 			if (el.matchesSelector)
@@ -49,7 +50,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.body.addEventListener("keydown", function() {
         hadKeyboardEvent = true;
-        setTimeout(function() { hadKeyboardEvent = false; }, 100);
+        if (isHandlingKeyboardThrottle) {
+            clearTimeout(isHandlingKeyboardThrottle);
+        }
+        isHandlingKeyboardThrottle = setTimeout(function() {
+            hadKeyboardEvent = false;
+        }, 100);
     }, true);
 
     document.body.addEventListener("focus", function(e) {
