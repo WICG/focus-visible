@@ -20,11 +20,11 @@ The modality is a document-wide property about which state the user-context is i
 }
 ```
 
-This is exposed through a `modality` state property on the document itself and changes to the document's known modalitity state will raise a `modalitychange` event (fired on animation frame) and script can easily respond to account accordingly.
+This is exposed through a `modality` observably in that changes to the document's known modalitity state will raise a `modalitychange` event (fired on animation frame) and script can easily respond to account accordingly.
 
 ```js
 document.addEventListener("modalitychange", function () {
-   console.log("The user's current modality state is %s", document.modality);
+   /* authors can use document.matchesSelector(":modality(...)"") to determine state */
 }, true);
 ```
 
