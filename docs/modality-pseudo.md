@@ -14,10 +14,10 @@ We propose that lying beneath implementations is already an observable concept o
 The modality is a document-wide property about which state the user-context is in which can be consulted via the `:modality()` pseudo-class filter.
 
 ```html
-:focus { outline: none; }
-:modality(keyboard):focus {
+:focus {
    outline: 2px solid blue;
 }
+:not(:modality(keyboard)):focus { outline: none; }
 ```
 
 This is exposed through a `modality` observably in that changes to the document's known modalitity state will raise a `modalitychange` event (fired on animation frame) and script can easily respond to account accordingly.
@@ -46,5 +46,3 @@ The named 'keyboard' modality triggers modality reevaluation immediately after:
 - any blur event not immediately followed by one of the above
 
 Evaluation of the modality (boolean) is determined by evaluating the event that happened above combined with what the element it occurred on supports for input modality.  For example, focusing on an `<input type="text">` will always evaluate to a keyboard modality because this is the only modality it supports, whereas focusing on a `<input type="button">` will evaluate based purely on which event triggered it (keyboard or pointer, for example).
-
-
