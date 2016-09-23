@@ -14,11 +14,38 @@ To deal with this:
 - Thus, if we only show the focus ring when relevant, we can avoid user confusion and avoid creating incentives for developers to disable it.  
 - A mechanism for exposing focus ring styles only when the keyboard is the user's current input modality gives us this opportunity.
 
+## API Proposal
+
+```css
+/* override UA stylesheet if necessary */
+:focus {
+  outline: none;
+}
+
+/* establish desired focus ring appearance for appropriate input modalities */
+:focusring {
+  outline: 2px solid blue;
+}
+```
+
+:focusring matches native elements that are
+1. focussed; and 
+2. would display a focus ring if only UA styles applied
+
+Additionally, :focusring matches non-native elements as if they were
+native button elements.
+
+## Example heuristic
+
+The heuristic used to decide the current modality should not be defined
+normatively. An example heuristic is to update modality on each style recalc:
+if the most recent user interaction was via the keyboard; and less than 100ms
+has elapsed since the last input event; then the modality is keyboard. Otherwise,
+the modality is not keyboard.
+
 ## Implementation Prototype
 
-At this stage, we're only looking at keyboard modality.  
-
-The tiny [keyboard-modality.js](http://alice.github.io/modality/src/keyboard-modality.js) provides a prototype intended to achieve the goals we are proposing with technology that exists today in order for developers to be able to try it out, understand it and provide feedback.  Simply speaking, it sets a `modality=keyboard` attribute on `body` if the script determines that the keyboard is being used. Similarly, the attribute is removed if the script determines that the user is no longer using the keyboard. This allows authors to write rules which consider the input modality and style appropriately.   
+The tiny [keyboard-modality.js](http://alice.github.io/modality/src/keyboard-modality.js) provides a prototype intended to achieve the goals we are proposing with technology that exists today in order for developers to be able to try it out, understand it and provide feedback.  Simply speaking, it sets a `modality=keyboard` attribute on `body` if the script determines that the keyboard is being used. Similarly, the attribute is removed if the script determines that the user is no longer using the keyboard. This allows authors to write rules which consider the input modality and style appropriately. Note that the prototype does not match the proposed API - it is intended to give developers a feel for the model rather than to provide a high-fidelity polyfill.
 
 It also simulates how the default UA styles would be adjusted by appending the following style as the first rule in the page, which disables the focus ring _unless_ `modality` is set to `keyboard`:
 
