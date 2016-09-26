@@ -66,7 +66,7 @@ the keyboard.
 <div class='note'>
 Authors who build non-native interactive elements that are text-field like
 in nature should consider adding a '':focus'' rule to that element to
-ensure a focusring is displayed whenever focussed, rather than only wen
+ensure a focusring is displayed whenever focussed, rather than only when
 the heuristic matches.
 </div>
 
