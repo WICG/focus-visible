@@ -68,7 +68,7 @@ the modality is not keyboard.
 ## Implementation Prototype
 
 The tiny
-[focus-ring.js](http://alice.github.io/focus-ring/src/focus-ring.js)
+[focus-ring.js](http://wicg.github.io/focus-ring/src/focus-ring.js)
 provides a prototype intended to achieve the goals we are proposing
 with technology that exists today
 in order for developers to be able to try it out, understand it and provide feedback.
