@@ -1,6 +1,6 @@
 <html><head>
     <!-- Original test page written by Dominic Mazzoni -->
-    <title>modality attribute demo</title>
+    <title>focus-ring class demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
       div,input,textarea,h1,h2 {
@@ -21,10 +21,10 @@
       width: 10em;
       }
     </style>
-    <script src="../src/focusring.js"></script>
+    <script src="../src/focus-ring.js"></script>
     <style>
-        .focus-ring {
-          outline: 2px solid green;
+        :focus:not(.focus-ring) {
+          outline: none;
         }
     </style>
   </head>
@@ -49,9 +49,6 @@
       <button>Button</button>
     </div>
     <div>
-      <button supports-modality=keyboard>Button with <code>supports-modality=keyboard</code></button>
-    </div>
-    <div>
       <input type="submit" value="Submit button">
     </div>
     <div>
@@ -61,6 +58,10 @@
       <label><input name="a" type="radio">Radio 1</label>
       <label><input name="a" type="radio">Radio 2</label>
     </div>
+    <h2>Focusable <code>&lt;div&gt;</code>s</h2>
+      <div tabindex="0"><code>tabindex="0"</code></div>
+      <div tabindex="-1"><code>tabindex="-1"</code></div>
+      <div tabindex="0" class="focus-ring"><code>tabindex="0"</code> with explicit <code>class="focus-ring"</code></div>
     <h2>Selects</h2>
     <label>Select one from drop-down:<br>
       <select>
