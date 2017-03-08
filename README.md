@@ -57,6 +57,29 @@ To deal with this:
 Additionally, :focusring matches non-native elements as if they were
 native button elements.
 
+### Note: Styling non-native elements which should always match `focus-ring`
+
+This is not currently part of the spec,
+but a mechanism is needed to explain the ability of native text fields
+to match `:focus-ring` regardless of how focus arrived on the element.
+
+Two different strategies may enable this
+("`-bikeshed`" placeholder indicates that these names are by no means final!):
+
+1. Add a new keyword value to the outline shorthand that represents whatever the default UA `::focus-ring` is. Then authors can do:
+
+        :focus {
+            outline: platform-default-focus-outline-style-bikeshed;
+        }
+
+2. Add a new CSS property that controls "keyboard modality" vs non-"keyboard modality" behavior, e.g.
+
+        my-custom-texty-element {
+            should-show-focus-on-mouse-click-bikeshed: on-bikeshed;
+        }
+
+It may make sense to implement both of these strategies.
+
 ## Example heuristic
 
 The heuristic used to decide the current modality should not be defined
