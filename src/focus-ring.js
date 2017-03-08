@@ -1,4 +1,4 @@
-/* https://github.com/WICG/focusring */
+/* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
     var hadKeyboardEvent = false,
         keyboardModalityWhitelist = [ 'input:not([type])',
