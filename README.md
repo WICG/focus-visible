@@ -4,7 +4,7 @@ pseudo-selector,
 this prototype adds a `focus-ring` class to the focused element,
 in situations in which the `:focus-ring` pseudo-selector should match.
 
-[Demo](https://alice.github.io/focus-ring/demo)
+[Demo](https://wicg.github.io/focus-ring/demo)
 
 ## Rationale
 
