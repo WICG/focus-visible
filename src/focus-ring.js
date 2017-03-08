@@ -1,67 +1,112 @@
-/* https://github.com/WICG/focusring */
+/* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
-    var hadKeyboardEvent = false,
-        keyboardModalityWhitelist = [ 'input:not([type])',
+    var hadKeyboardEvent = false;
+    var keyboardThrottleTimeoutID = 0;
+
+    var keyboardModalityWhitelist = [ 'input:not([type])',
                                       'input[type=text]',
                                       'input[type=number]',
                                       'input[type=date]',
                                       'input[type=time]',
                                       'input[type=datetime]',
                                       'textarea',
-                                      '[role=textbox]' ].join(','),
-        isHandlingKeyboardThrottle,
-        matcher = (function () {
-	    var el = document.body;
-	    if (el.matchesSelector)
-		return el.matchesSelector;
-	    if (el.webkitMatchesSelector)
-		return el.webkitMatchesSelector;
-	    if (el.mozMatchesSelector)
-		return el.mozMatchesSelector;
-	    if (el.msMatchesSelector)
-		return el.msMatchesSelector;
-	    console.error('Couldn\'t find any matchesSelector method on document.body.');
-	}()),
-	focusTriggersKeyboardModality = function (el) {
-	    var triggers = false;
-	    if (matcher) {
-		triggers = matcher.call(el, keyboardModalityWhitelist) && matcher.call(el, ':not([readonly]');
-	    }
-	    return triggers;
-	},
-        addFocusRingClass = function(el) {
-            if (el.classList.contains('focus-ring'))
-                return;
-            el.classList.add('focus-ring');
-            el.setAttribute('data-focus-ring-added', '');
-        },
-        removeFocusRingClass = function(el) {
-            if (!el.hasAttribute('data-focus-ring-added'))
-                return;
-            el.classList.remove('focus-ring');
-            el.removeAttribute('data-focus-ring-added')
-        };
+                                      '[role=textbox]' ].join(',');
+    var matcher = (function() {
+        var proto = Element.prototype;
+        if (proto.matches)
+            return proto.matches;
+        if (proto.matchesSelector)
+            return proto.matchesSelector;
+        if (proto.webkitMatchesSelector)
+            return proto.webkitMatchesSelector;
+        if (proto.mozMatchesSelector)
+            return proto.mozMatchesSelector;
+        if (proto.msMatchesSelector)
+            return proto.msMatchesSelector;
+        console.error('Couldn\'t find a matches method on Element.prototype.');
+    }());
 
-    document.body.addEventListener('keydown', function() {
+    /**
+     * Computes whether the given element should automatically trigger the
+     * `focus-ring` class being added, i.e. whether it should always match
+     * `:focus-ring` when focused.
+     * @param {Element} el
+     * @return {boolean}
+     */
+    function focusTriggersKeyboardModality(el) {
+        var triggers = false;
+        if (matcher) {
+            triggers = matcher.call(el, keyboardModalityWhitelist) &&
+                       matcher.call(el, ':not([readonly]');
+        }
+        return triggers;
+    }
+
+    /**
+     * Add the `focus-ring` class to the given element if it was not added by
+     * the author.
+     * @param {Element} el
+     */
+    function addFocusRingClass(el) {
+        if (el.classList.contains('focus-ring'))
+            return;
+        el.classList.add('focus-ring');
+        el.setAttribute('data-focus-ring-added', '');
+    }
+
+    /**
+     * Remove the `focus-ring` class from the given element if it was not
+     * originally added by the author.
+     * @param {Element} el
+     */
+    function removeFocusRingClass(el) {
+        if (!el.hasAttribute('data-focus-ring-added'))
+            return;
+        el.classList.remove('focus-ring');
+        el.removeAttribute('data-focus-ring-added')
+    }
+
+    /**
+     * On `keydown`, set `hadKeyboardEvent`, to be removed 100ms later if there
+     * are no further keyboard events.  The 100ms throttle handles cases where
+     * focus is redirected programmatically after a keyboard event, such as
+     * opening a menu or dialog.
+     */
+    function onKeyDown() {
         hadKeyboardEvent = true;
+        // `activeElement` defaults to document.body if nothing focused,
+        // so check the active element is actually focused.
         if (document.activeElement.matches(':focus')) {
             addFocusRingClass(document.activeElement);
         }
-        if (isHandlingKeyboardThrottle) {
+        if (keyboardThrottleTimeoutID !== 0) {
             clearTimeout(isHandlingKeyboardThrottle);
         }
-        isHandlingKeyboardThrottle = setTimeout(function() {
+        keyboardThrottleTimeoutID = setTimeout(function() {
             hadKeyboardEvent = false;
+            keyboardThrottleTimeoutID = 0;
         }, 100);
-    }, true);
+    }
 
-    document.body.addEventListener('focus', function(e) {
+    /**
+     * On `focus`, add the `focus-ring` class to the target if necessary.
+     * @param {Event} e
+     */
+    function onFocus(e) {
         if (!hadKeyboardEvent && !focusTriggersKeyboardModality(e.target))
             return;
         addFocusRingClass(e.target);
-    }, true);
+    }
 
-    document.body.addEventListener('blur', function(e) {
+    /**
+     * On `blur`, remove the `focus-ring` class from the target.
+     * @param {Event} e
+     */
+    function onBlur(e) {
         removeFocusRingClass(e.target)
-    }, true);
+    }
+
+    document.body.addEventListener('keydown', onKeyDown, true);
+    document.body.addEventListener('focus', onFocus, true);
+    document.body.addEventListener('blur', onBlur, true);
 });
