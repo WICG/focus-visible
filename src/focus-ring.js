@@ -11,29 +11,42 @@ document.addEventListener('DOMContentLoaded', function() {
                                       '[role=textbox]' ].join(','),
         isHandlingKeyboardThrottle,
         matcher = (function () {
-			var el = document.body;
-			if (el.matchesSelector)
-				return el.matchesSelector;
-			if (el.webkitMatchesSelector)
-				return el.webkitMatchesSelector;
-			if (el.mozMatchesSelector)
-				return el.mozMatchesSelector;
-			if (el.msMatchesSelector)
-				return el.msMatchesSelector;
-			console.error('Couldn\'t find any matchesSelector method on document.body.');
-		}()),
-		focusTriggersKeyboardModality = function (el) {
-			var triggers = false;
-			if (matcher) {
-				triggers = matcher.call(el, keyboardModalityWhitelist) && matcher.call(el, ':not([readonly]');
-			}
-		        return triggers;
-		};
+	    var el = document.body;
+	    if (el.matchesSelector)
+		return el.matchesSelector;
+	    if (el.webkitMatchesSelector)
+		return el.webkitMatchesSelector;
+	    if (el.mozMatchesSelector)
+		return el.mozMatchesSelector;
+	    if (el.msMatchesSelector)
+		return el.msMatchesSelector;
+	    console.error('Couldn\'t find any matchesSelector method on document.body.');
+	}()),
+	focusTriggersKeyboardModality = function (el) {
+	    var triggers = false;
+	    if (matcher) {
+		triggers = matcher.call(el, keyboardModalityWhitelist) && matcher.call(el, ':not([readonly]');
+	    }
+	    return triggers;
+	},
+        addFocusRingClass = function(el) {
+            if (el.classList.contains('focus-ring'))
+                return;
+            el.classList.add('focus-ring');
+            el.setAttribute('data-focus-ring-added', '');
+        },
+        removeFocusRingClass = function(el) {
+            if (!el.hasAttribute('data-focus-ring-added'))
+                return;
+            el.classList.remove('focus-ring');
+            el.removeAttribute('data-focus-ring-added')
+        };
 
     document.body.addEventListener('keydown', function() {
         hadKeyboardEvent = true;
-        if (document.activeElement.matches(':focus'))
-            document.activeElement.classList.add('focus-ring');
+        if (document.activeElement.matches(':focus')) {
+            addFocusRingClass(document.activeElement);
+        }
         if (isHandlingKeyboardThrottle) {
             clearTimeout(isHandlingKeyboardThrottle);
         }
@@ -45,16 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('focus', function(e) {
         if (!hadKeyboardEvent && !focusTriggersKeyboardModality(e.target))
             return;
-        if (e.target.classList.contains('focus-ring'))
-            return;
-        e.target.classList.add('focus-ring');
-      e.target.setAttribute('data-focus-ring-added', '');
+        addFocusRingClass(e.target);
     }, true);
 
     document.body.addEventListener('blur', function(e) {
-        if (!e.target.hasAttribute('data-focus-ring-added'))
-            return;
-        e.target.classList.remove('focus-ring');
-        e.target.removeAttribute('data-focus-ring-added')
+        removeFocusRingClass(e.target)
     }, true);
 });
