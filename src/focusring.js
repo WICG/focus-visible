@@ -1,4 +1,4 @@
-/* https://github.com/alice/modality */
+/* https://github.com/WICG/focusring */
 document.addEventListener("DOMContentLoaded", function() {
     var hadKeyboardEvent = false,
         keyboardModalityWhitelist = [ "input:not([type])",
@@ -8,8 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                       "input[type=time]",
                                       "input[type=datetime]",
                                       "textarea",
-                                      "[role=textbox]",
-                                      "[supports-modality=keyboard]"].join(","),
+                                      "[role=textbox]" ].join(","),
         isHandlingKeyboardThrottle,
         matcher = (function () {
 			var el = document.body;
@@ -24,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			console.error("Couldn't find any matchesSelector method on document.body.");
 		}()),
         disableFocusRingByDefault = function () {
-			var css = "body:not([modality=keyboard]) :focus { outline: none; }",
+			var css = ":focus { outline: none; }",
 				head = document.head || document.getElementsByTagName("head")[0],
 				style = document.createElement("style");
 
@@ -50,6 +49,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.body.addEventListener("keydown", function() {
         hadKeyboardEvent = true;
+        if (document.activeElement.matches(':focus'))
+            document.activeElement.classList.add('focus-ring');
         if (isHandlingKeyboardThrottle) {
             clearTimeout(isHandlingKeyboardThrottle);
         }
@@ -60,10 +61,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.body.addEventListener("focus", function(e) {
         if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target))
-            document.body.setAttribute("modality", "keyboard");
+            e.target.classList.add('focus-ring');
     }, true);
 
-    document.body.addEventListener("blur", function() {
-        document.body.removeAttribute("modality");
+    document.body.addEventListener("blur", function(e) {
+        e.target.classList.remove('focus-ring');
     }, true);
 });
