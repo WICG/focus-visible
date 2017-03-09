@@ -93,13 +93,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * On `focus`, add the `focus-ring` class to the target if necessary.
+     * On `focus`, add the `focus-ring` class to the target if:
+     * - a keyboard event happened in the past 100ms, or
+     * - the focus event target triggers "keyboard modality" and should always
+     *   have a focus ring drawn.
      * @param {Event} e
      */
     function onFocus(e) {
-        if (!hadKeyboardEvent && !focusTriggersKeyboardModality(e.target))
-            return;
-        addFocusRingClass(e.target);
+        if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+            addFocusRingClass(e.target);
+        }
     }
 
     /**
