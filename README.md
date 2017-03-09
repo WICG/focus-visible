@@ -59,26 +59,43 @@ native button elements.
 
 ### Note: Styling non-native elements which should always match `focus-ring`
 
+
 This is not currently part of the spec,
 but a mechanism is needed to explain the ability of native text fields
 to match `:focus-ring` regardless of how focus arrived on the element.
 
-Two different strategies may enable this
-("`-bikeshed`" placeholder indicates that these names are by no means final!):
+Consider an author creating a custom element, `custom-texty-element`,
+which they believe should show a focus ring on mouse click.
+By default, the default `:focus-ring` user agent style
+will not show a focus ring when this element receives focus via mouse click.
+However, if the author were to style the element via `:focus`,
+they could not recreate the browser's default `outline` style reliably:
+
+```css
+custom-texty-element:focus {
+   outline: ???;
+}
+```
+
+Either of the following two new primitives would allow the author to
+show the default focus ring on click for this element:
 
 1. Add a new keyword value to the outline shorthand that represents whatever the default UA `::focus-ring` is. Then authors can do:
 
-        :focus {
+        custom-texty-element:focus {
             outline: platform-default-focus-outline-style-bikeshed;
         }
 
 2. Add a new CSS property that controls "keyboard modality" vs non-"keyboard modality" behavior, e.g.
 
-        my-custom-texty-element {
-            should-show-focus-on-mouse-click-bikeshed: on-bikeshed;
+        custom-texty-element {
+            show-focus-ring-bikeshed: always | keyboard-only;
         }
 
-It may make sense to implement both of these strategies.
+_("`-bikeshed`" placeholder indicates that these names are by no means final!)_
+
+While either of these primitives would suffice,
+having both would provide more flexibility for authors.
 
 ## Example heuristic
 
