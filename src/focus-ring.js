@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var hadKeyboardEvent = false;
     var keyboardThrottleTimeoutID = 0;
 
+    // These elements should always have a focus ring drawn, because they are
+    // associated with switching to a keyboard modality.
     var keyboardModalityWhitelist = [ 'input:not([type])',
                                       'input[type=text]',
                                       'input[type=number]',
@@ -11,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                       'input[type=datetime]',
                                       'textarea',
                                       '[role=textbox]' ].join(',');
-    var matcher = (function() {
+
+    var matchesFunction = (function() {
         var proto = Element.prototype;
         if (proto.matches)
             return proto.matches;
@@ -35,9 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function focusTriggersKeyboardModality(el) {
         var triggers = false;
-        if (matcher) {
-            triggers = matcher.call(el, keyboardModalityWhitelist) &&
-                       matcher.call(el, ':not([readonly]');
+        if (matchesFunction) {
+            triggers = matchesFunction.call(el, keyboardModalityWhitelist) &&
+                       matchesFunction.call(el, ':not([readonly]');
         }
         return triggers;
     }
@@ -76,7 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
         hadKeyboardEvent = true;
         // `activeElement` defaults to document.body if nothing focused,
         // so check the active element is actually focused.
-        if (document.activeElement.matches(':focus')) {
+        if (matchesFunction &&
+            matchesFunction.call(document.activeElement, ':focus')) {
             addFocusRingClass(document.activeElement);
         }
         if (keyboardThrottleTimeoutID !== 0) {
