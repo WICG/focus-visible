@@ -83,16 +83,16 @@ show the default focus ring on click for this element:
 1. Add a new keyword value to the outline shorthand that represents whatever the default UA `::focus-ring` is. Then authors can do:
 
         custom-texty-element:focus {
-            outline: platform-default-focus-outline-style-bikeshed;
+            outline: platform-default-focus-outline-style-foo;
         }
 
 2. Add a new CSS property that controls "keyboard modality" vs non-"keyboard modality" behavior, e.g.
 
         custom-texty-element {
-            show-focus-ring-bikeshed: always | keyboard-only;
+            show-focus-ring-foo: always | keyboard-only;
         }
 
-_("`-bikeshed`" placeholder indicates that these names are by no means final!)_
+_("`-foo`" placeholder indicates that these names are by no means final!)_
 
 While either of these primitives would suffice,
 having both would provide more flexibility for authors.
