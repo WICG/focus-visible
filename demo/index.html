@@ -1,8 +1,11 @@
-<html><head>
-    <!-- Original test page written by Dominic Mazzoni -->
-    <title>focus-ring class demo</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <style>
+    <title>Focus Ring</title>
+	<style>
       div,input,textarea,h1,h2 {
       font-family: arial, sans-serif;
       }
@@ -21,14 +24,14 @@
       width: 10em;
       }
     </style>
+	<style>
+		:focus:not(.focus-ring) {
+			outline: none;
+		}
+	</style>
     <script src="../src/focus-ring.js"></script>
-    <style>
-        :focus:not(.focus-ring) {
-          outline: none;
-        }
-    </style>
-  </head>
-  <body>
+</head>
+<body>
     <h1>Keyboard-only focus test</h1>
     <p>
       This page contains various html controls and demonstrates a proposal for only drawing a focus ring when the keyboard is being used.
@@ -36,7 +39,7 @@
     </p>
     <h2>Editable text</h2>
     <div>
-      <input placeholder="Single line">
+      <input type="text" placeholder="Single line">
     </div>
     <div>
       <textarea placeholder="Multi line"></textarea>
@@ -106,7 +109,5 @@
     <div>
       <input type="file" title="File">
     </div>
-
-
-  </body>
+</body>
 </html>
