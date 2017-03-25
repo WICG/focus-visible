@@ -1,5 +1,4 @@
 /* https://github.com/WICG/focus-ring */
-
 document.documentElement.className += " focus-ring-polyfill";
 
 document.addEventListener('DOMContentLoaded', function() {
