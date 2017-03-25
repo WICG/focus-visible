@@ -1,6 +1,8 @@
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
     var hadKeyboardEvent = false,
+        focusRingClass = 'focus-ring',
+        focusRingAttr = 'data-focus-ring-added',
         keyboardModalityWhitelist = [ 'input:not([type])',
                                       'input[type=text]',
                                       'input[type=number]',
@@ -29,22 +31,31 @@ document.addEventListener('DOMContentLoaded', function() {
 	    }
 	    return triggers;
 	},
+        _addClass = function(el, htmlClass) {
+            el.className += ' '+htmlClass;   
+        },
+        _removeClass = function(el, htmlClass) {
+            var elClass = ' '+el.className+' ';
+            while(elClass.indexOf(' '+htmlClass+' ') != -1)
+                elClass = elClass.replace(' '+htmlClass+' ', '');
+            el.className = elClass;
+        },
         addFocusRingClass = function(el) {
-            if (el.classList.contains('focus-ring'))
+            if (el.className.indexOf(focusRingClass) != -1)
                 return;
-            el.classList.add('focus-ring');
-            el.setAttribute('data-focus-ring-added', '');
+            _addClass(el,focusRingClass);
+            el.setAttribute(focusRingAttr, '');
         },
         removeFocusRingClass = function(el) {
-            if (!el.hasAttribute('data-focus-ring-added'))
+            if (!el.hasAttribute(focusRingAttr))
                 return;
-            el.classList.remove('focus-ring');
-            el.removeAttribute('data-focus-ring-added')
+            _removeClass(el,focusRingClass);
+            el.removeAttribute(focusRingAttr)
         };
 
     document.body.addEventListener('keydown', function() {
         hadKeyboardEvent = true;
-        if (document.activeElement.matches(':focus')) {
+        if (document.activeElement) {
             addFocusRingClass(document.activeElement);
         }
         if (isHandlingKeyboardThrottle) {
