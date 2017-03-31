@@ -31,31 +31,39 @@ document.addEventListener('DOMContentLoaded', function() {
 	    }
 	    return triggers;
 	},
-        _addClass = function(el, htmlClass) {
-            el.className += ' '+htmlClass;   
-        },
-        _removeClass = function(el, htmlClass) {
-            var elClass = ' '+el.className+' ';
-            while(elClass.indexOf(' '+htmlClass+' ') != -1)
-                elClass = elClass.replace(' '+htmlClass+' ', '');
-            el.className = elClass;
-        },
-        addFocusRingClass = function(el) {
-            if (el.className.indexOf(focusRingClass) != -1)
-                return;
-            _addClass(el,focusRingClass);
-            el.setAttribute(focusRingAttr, '');
-        },
-        removeFocusRingClass = function(el) {
-            if (!el.hasAttribute(focusRingAttr))
-                return;
-            _removeClass(el,focusRingClass);
-            el.removeAttribute(focusRingAttr)
-        };
-
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/classList#Polyfill
+    regExp = function(name) {
+	    return new RegExp('(^| )'+ name +'( |$)');
+    },
+    forEach = function(list, fn, scope) {
+        for (var i = 0; i < list.length; i++) {
+            fn.call(scope, list[i]);
+        }
+    },
+    addClass = function(el, htmlClass) {
+        el.className += ' '+htmlClass;
+    },
+    removeClass = function(el, htmlClass) {
+        forEach(el, function(htmlClass) {
+            this.element.className =
+                this.element.className.replace(regExp(name), '');
+        }, this);
+    },
+    addFocusRingClass = function(el) {
+        if (el.className.indexOf(focusRingClass) != -1)
+            return;
+        addClass(el,focusRingClass);
+        el.setAttribute(focusRingAttr, '');
+    },
+    removeFocusRingClass = function(el) {
+        if (!el.hasAttribute(focusRingAttr))
+            return;
+        removeClass(el,focusRingClass);
+        el.removeAttribute(focusRingAttr)
+    };
     document.body.addEventListener('keydown', function() {
         hadKeyboardEvent = true;
-        if (document.activeElement) {
+        if (document.activeElement && document.activeElement !== document.body) {
             addFocusRingClass(document.activeElement);
         }
         if (isHandlingKeyboardThrottle) {
@@ -65,13 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
             hadKeyboardEvent = false;
         }, 100);
     }, true);
-
     document.body.addEventListener('focus', function(e) {
         if (!hadKeyboardEvent && !focusTriggersKeyboardModality(e.target))
             return;
         addFocusRingClass(e.target);
     }, true);
-
     document.body.addEventListener('blur', function(e) {
         removeFocusRingClass(e.target)
     }, true);
