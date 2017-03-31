@@ -35,19 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
     regExp = function(name) {
 	    return new RegExp('(^| )'+ name +'( |$)');
     },
-    forEach = function(list, fn, scope) {
-        for (var i = 0; i < list.length; i++) {
-            fn.call(scope, list[i]);
-        }
-    },
     addClass = function(el, htmlClass) {
         el.className += ' '+htmlClass;
     },
     removeClass = function(el, htmlClass) {
-        forEach(el, function(htmlClass) {
-            this.element.className =
-                this.element.className.replace(regExp(name), '');
-        }, this);
+        var elClass = ' '+el.className+' ';
+        while(elClass.indexOf(' '+htmlClass+' ') != -1)
+            elClass = elClass.replace(regExp(htmlClass), '');
+        el.className = elClass;
     },
     addFocusRingClass = function(el) {
         if (el.className.indexOf(focusRingClass) != -1)
