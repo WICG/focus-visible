@@ -7,10 +7,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // associated with switching to a keyboard modality.
     var keyboardModalityWhitelist = [ 'input:not([type])',
                                       'input[type=text]',
+                                      'input[type=search]',
+                                      'input[type=url]',
+                                      'input[type=tel]',
+                                      'input[type=email]',
+                                      'input[type=password]',
                                       'input[type=number]',
                                       'input[type=date]',
+                                      'input[type=month]',
+                                      'input[type=week]',
                                       'input[type=time]',
                                       'input[type=datetime]',
+                                      'input[type=datetime-local]',
                                       'textarea',
                                       '[role=textbox]' ].join(',');
 
