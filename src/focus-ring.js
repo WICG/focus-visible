@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addFocusRingClass(document.activeElement);
         }
         if (keyboardThrottleTimeoutID !== 0) {
-            clearTimeout(isHandlingKeyboardThrottle);
+            clearTimeout(keyboardThrottleTimeoutID);
         }
         keyboardThrottleTimeoutID = setTimeout(function() {
             hadKeyboardEvent = false;
