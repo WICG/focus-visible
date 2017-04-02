@@ -41,6 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }());
 
     /**
+     * Regex helper function.
+     * https://developer.mozilla.org/en-US/docs/Web/API/Element/classList#Polyfill
+     * @param {Element} name
+     * @return {string}
+     * https://developer.mozilla.org/en-US/docs/Web/API/Element/classList#Polyfill
+     */
+    function regExp(name) {
+	    return new RegExp('(^| )'+ name +'( |$)');
+    }
+
+    /**
      * Computes whether the given element should automatically trigger the
      * `focus-ring` class being added, i.e. whether it should always match
      * `:focus-ring` when focused.
@@ -62,9 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function addFocusRingClass(el) {
-        if (el.classList.contains(focusRingClass))
+        if (el.className.indexOf(focusRingClass) != -1)
             return;
-        el.classList.add(focusRingClass);
+        if (el.className !== '') {
+            el.className += ' '+focusRingClass;
+        } else {
+            el.className = focusRingClass;
+        }
         el.setAttribute(focusRingAttr, '');
     }
 
@@ -76,7 +91,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function removeFocusRingClass(el) {
         if (!el.hasAttribute(focusRingAttr))
             return;
-        el.classList.remove(focusRingClass);
+        var elClass = el.className;
+        while(elClass.indexOf(focusRingClass) != -1)
+            elClass = elClass.replace(regExp(focusRingClass), '');
+        el.className = elClass;
         el.removeAttribute(focusRingAttr)
     }
 
