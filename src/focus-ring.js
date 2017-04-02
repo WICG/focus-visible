@@ -1,11 +1,14 @@
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
-    var hadKeyboardEvent = false;
-    var keyboardThrottleTimeoutID = 0;
 
-    // These elements should always have a focus ring drawn, because they are
-    // associated with switching to a keyboard modality.
-    var keyboardModalityWhitelist = [ 'input:not([type])',
+    var hadKeyboardEvent = false,
+        keyboardThrottleTimeoutID = 0,
+        focusRingClass = 'focus-ring',
+        focusRingAttr = 'data-focus-ring-added',
+
+        // These elements should always have a focus ring drawn, because they are
+        // associated with switching to a keyboard modality.
+        keyboardModalityWhitelist = [ 'input:not([type])',
                                       'input[type=text]',
                                       'input[type=search]',
                                       'input[type=url]',
@@ -59,10 +62,10 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function addFocusRingClass(el) {
-        if (el.classList.contains('focus-ring'))
+        if (el.classList.contains(focusRingClass))
             return;
-        el.classList.add('focus-ring');
-        el.setAttribute('data-focus-ring-added', '');
+        el.classList.add(focusRingClass);
+        el.setAttribute(focusRingAttr, '');
     }
 
     /**
@@ -71,10 +74,10 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function removeFocusRingClass(el) {
-        if (!el.hasAttribute('data-focus-ring-added'))
+        if (!el.hasAttribute(focusRingAttr))
             return;
-        el.classList.remove('focus-ring');
-        el.removeAttribute('data-focus-ring-added')
+        el.classList.remove(focusRingClass);
+        el.removeAttribute(focusRingAttr)
     }
 
     /**
