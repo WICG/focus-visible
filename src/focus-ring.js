@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
      * https://developer.mozilla.org/en-US/docs/Web/API/Element/classList#Polyfill
      * @param {Element} name
      * @return {string}
-     * https://developer.mozilla.org/en-US/docs/Web/API/Element/classList#Polyfill
      */
     function regExp(name) {
 	    return new RegExp('(^| )'+ name +'( |$)');
