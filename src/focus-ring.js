@@ -1,11 +1,15 @@
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
-    var hadKeyboardEvent = false;
-    var keyboardThrottleTimeoutID = 0;
 
-    // These elements should always have a focus ring drawn, because they are
-    // associated with switching to a keyboard modality.
-    var keyboardModalityWhitelist = [ 'input:not([type])',
+    var hadKeyboardEvent = false,
+        keyboardThrottleTimeoutID = 0,
+        focusRingClass = 'focus-ring',
+        focusRingAttr = 'data-focus-ring-added',
+        matchClassRegEx = regExp(focusRingClass),
+
+        // These elements should always have a focus ring drawn, because they are
+        // associated with switching to a keyboard modality.
+        keyboardModalityWhitelist = [ 'input:not([type])',
                                       'input[type=text]',
                                       'input[type=search]',
                                       'input[type=url]',
@@ -38,6 +42,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }());
 
     /**
+     * Regex helper function.
+     * https://developer.mozilla.org/en-US/docs/Web/API/Element/classList#Polyfill
+     * @param {Element} name
+     * @return {string}
+     */
+    function regExp(name) {
+	    return new RegExp('(^|\\W)'+name+'($|\\W)', 'gi');
+    }
+
+    /**
      * Computes whether the given element should automatically trigger the
      * `focus-ring` class being added, i.e. whether it should always match
      * `:focus-ring` when focused.
@@ -59,10 +73,15 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function addFocusRingClass(el) {
-        if (el.classList.contains('focus-ring'))
+		if(matchClassRegEx.test(el.className)) {
             return;
-        el.classList.add('focus-ring');
-        el.setAttribute('data-focus-ring-added', '');
+        }
+        if (el.className !== '') {
+            el.className += ' '+focusRingClass;
+        } else {
+            el.className = focusRingClass;
+        }
+        el.setAttribute(focusRingAttr, '');
     }
 
     /**
@@ -71,10 +90,15 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function removeFocusRingClass(el) {
-        if (!el.hasAttribute('data-focus-ring-added'))
+        if (!el.hasAttribute(focusRingAttr)){
             return;
-        el.classList.remove('focus-ring');
-        el.removeAttribute('data-focus-ring-added')
+        }
+        var elClass = el.className;
+        while(elClass.indexOf(focusRingClass) != -1){
+            elClass = elClass.replace(matchClassRegEx, '');
+        }
+        el.className = elClass;
+        el.removeAttribute(focusRingAttr)
     }
 
     /**
