@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         keyboardThrottleTimeoutID = 0,
         focusRingClass = 'focus-ring',
         focusRingAttr = 'data-focus-ring-added',
+        matchClassRegEx = regExp(focusRingClass),
 
         // These elements should always have a focus ring drawn, because they are
         // associated with switching to a keyboard modality.
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * @return {string}
      */
     function regExp(name) {
-	    return new RegExp('(^| )'+ name +'( |$)');
+	    return new RegExp('(^|\\W)'+name+'($|\\W)', 'gi');
     }
 
     /**
@@ -72,8 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function addFocusRingClass(el) {
-        if (el.className.indexOf(focusRingClass) != -1)
+		if(matchClassRegEx.test(el.className)) {
             return;
+        }
         if (el.className !== '') {
             el.className += ' '+focusRingClass;
         } else {
@@ -88,11 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function removeFocusRingClass(el) {
-        if (!el.hasAttribute(focusRingAttr))
+        if (!el.hasAttribute(focusRingAttr)){
             return;
+        }
         var elClass = el.className;
-        while(elClass.indexOf(focusRingClass) != -1)
-            elClass = elClass.replace(regExp(focusRingClass), '');
+        while(elClass.indexOf(focusRingClass) != -1){
+            elClass = elClass.replace(matchClassRegEx, '');
+        }
         el.className = elClass;
         el.removeAttribute(focusRingAttr)
     }
