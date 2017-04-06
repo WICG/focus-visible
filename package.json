@@ -1,0 +1,16 @@
+{
+  "name": "focus-ring",
+  "version": "1.0.0",
+  "description": "Polyfill for :focus-ring pseudo-selector",
+  "main": "src/focus-ring.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WICG/focus-ring.git"
+  },
+  "author": "WICG",
+  "license": "W3C",
+  "bugs": {
+    "url": "https://github.com/WICG/focus-ring/issues"
+  },
+  "homepage": "https://github.com/WICG/focus-ring"
+}
