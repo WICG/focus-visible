@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function focusTriggersKeyboardModality(el) {
         return matchesFunction.call(el, keyboardModalityWhitelist) &&
-            matchesFunction.call(el, ':not([readonly]');
+            matchesFunction.call(el, ':not([readonly])');
     }
 
     /**
