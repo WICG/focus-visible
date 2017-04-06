@@ -1,5 +1,23 @@
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
+    var matchesFunction = (function() {
+        var proto = Element.prototype;
+        if (proto.matches)
+            return proto.matches;
+        if (proto.matchesSelector)
+            return proto.matchesSelector;
+        if (proto.webkitMatchesSelector)
+            return proto.webkitMatchesSelector;
+        if (proto.mozMatchesSelector)
+            return proto.mozMatchesSelector;
+        if (proto.msMatchesSelector)
+            return proto.msMatchesSelector;
+    }());
+
+    if (!matchesFunction) {
+        return;
+    }
+
     var hadKeyboardEvent = false;
     var keyboardThrottleTimeoutID = 0;
 
@@ -22,21 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                       'textarea',
                                       '[role=textbox]' ].join(',');
 
-    var matchesFunction = (function() {
-        var proto = Element.prototype;
-        if (proto.matches)
-            return proto.matches;
-        if (proto.matchesSelector)
-            return proto.matchesSelector;
-        if (proto.webkitMatchesSelector)
-            return proto.webkitMatchesSelector;
-        if (proto.mozMatchesSelector)
-            return proto.mozMatchesSelector;
-        if (proto.msMatchesSelector)
-            return proto.msMatchesSelector;
-        console.error('Couldn\'t find a matches method on Element.prototype.');
-    }());
-
     /**
      * Computes whether the given element should automatically trigger the
      * `focus-ring` class being added, i.e. whether it should always match
@@ -45,12 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * @return {boolean}
      */
     function focusTriggersKeyboardModality(el) {
-        var triggers = false;
-        if (matchesFunction) {
-            triggers = matchesFunction.call(el, keyboardModalityWhitelist) &&
-                       matchesFunction.call(el, ':not([readonly]');
-        }
-        return triggers;
+        return matchesFunction.call(el, keyboardModalityWhitelist) &&
+            matchesFunction.call(el, ':not([readonly]');
     }
 
     /**
@@ -87,8 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         hadKeyboardEvent = true;
         // `activeElement` defaults to document.body if nothing focused,
         // so check the active element is actually focused.
-        if (matchesFunction &&
-            matchesFunction.call(document.activeElement, ':focus')) {
+        if (matchesFunction.call(document.activeElement, ':focus')) {
             addFocusRingClass(document.activeElement);
         }
         if (keyboardThrottleTimeoutID !== 0) {
