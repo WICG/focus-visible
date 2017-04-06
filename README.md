@@ -50,11 +50,11 @@ To deal with this:
 }
 ```
 
-:focusring matches native elements that are
+`:focus-ring` matches native elements that are
 1. focussed; and
 2. would display a focus ring if only UA styles applied
 
-Additionally, :focusring matches non-native elements as if they were
+Additionally, `:focus-ring` matches non-native elements as if they were
 native button elements.
 
 ### Note: Styling non-native elements which should always match `focus-ring`
