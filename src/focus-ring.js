@@ -23,22 +23,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // These elements should always have a focus ring drawn, because they are
     // associated with switching to a keyboard modality.
-    var keyboardModalityWhitelist = [ 'input:not([type])',
-                                      'input[type=text]',
-                                      'input[type=search]',
-                                      'input[type=url]',
-                                      'input[type=tel]',
-                                      'input[type=email]',
-                                      'input[type=password]',
-                                      'input[type=number]',
-                                      'input[type=date]',
-                                      'input[type=month]',
-                                      'input[type=week]',
-                                      'input[type=time]',
-                                      'input[type=datetime]',
-                                      'input[type=datetime-local]',
-                                      'textarea',
-                                      '[role=textbox]' ].join(',');
+    var keyboardModalityWhitelist = ['input:not([type])',
+                                     'input[type=text]',
+                                     'input[type=search]',
+                                     'input[type=url]',
+                                     'input[type=tel]',
+                                     'input[type=email]',
+                                     'input[type=password]',
+                                     'input[type=number]',
+                                     'input[type=date]',
+                                     'input[type=month]',
+                                     'input[type=week]',
+                                     'input[type=time]',
+                                     'input[type=datetime]',
+                                     'input[type=datetime-local]',
+                                     'textarea',
+                                     '[role=textbox]'].join(',');
 
     /**
      * Computes whether the given element should automatically trigger the
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!el.hasAttribute('data-focus-ring-added'))
             return;
         el.classList.remove('focus-ring');
-        el.removeAttribute('data-focus-ring-added')
+        el.removeAttribute('data-focus-ring-added');
     }
 
     /**
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Event} e
      */
     function onBlur(e) {
-        removeFocusRingClass(e.target)
+        removeFocusRingClass(e.target);
     }
 
     document.body.addEventListener('keydown', onKeyDown, true);

@@ -2,6 +2,9 @@
   "name": "focus-ring",
   "version": "1.0.0",
   "description": "Polyfill for :focus-ring pseudo-selector",
+  "scripts": {
+    "lint": "eslint ./**/*.js"
+  },
   "main": "src/focus-ring.js",
   "repository": {
     "type": "git",
@@ -12,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/WICG/focus-ring/issues"
   },
-  "homepage": "https://github.com/WICG/focus-ring"
+  "homepage": "https://github.com/WICG/focus-ring",
+  "devDependencies": {
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1"
+  }
 }
