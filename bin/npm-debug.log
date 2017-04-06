@@ -1,0 +1,50 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'lint-focus-ring' ]
+2 info using npm@4.0.5
+3 info using node@v6.9.3
+4 verbose run-script [ 'prelint-focus-ring',
+4 verbose run-script   'lint-focus-ring',
+4 verbose run-script   'postlint-focus-ring' ]
+5 info lifecycle focus-ring@1.0.0~prelint-focus-ring: focus-ring@1.0.0
+6 silly lifecycle focus-ring@1.0.0~prelint-focus-ring: no script for prelint-focus-ring, continuing
+7 info lifecycle focus-ring@1.0.0~lint-focus-ring: focus-ring@1.0.0
+8 verbose lifecycle focus-ring@1.0.0~lint-focus-ring: unsafe-perm in lifecycle true
+9 verbose lifecycle focus-ring@1.0.0~lint-focus-ring: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/kloots/workspace/focus-ring/node_modules/.bin:/usr/local/sbin:/Library/Frameworks/Python.framework/Versions/3.5/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/bin:~/pear/bin
+10 verbose lifecycle focus-ring@1.0.0~lint-focus-ring: CWD: /Users/kloots/workspace/focus-ring
+11 silly lifecycle focus-ring@1.0.0~lint-focus-ring: Args: [ '-c', './bin/npm-lint-focus-ring' ]
+12 silly lifecycle focus-ring@1.0.0~lint-focus-ring: Returned: code: 1  signal: null
+13 info lifecycle focus-ring@1.0.0~lint-focus-ring: Failed to exec lint-focus-ring script
+14 verbose stack Error: focus-ring@1.0.0 lint-focus-ring: `./bin/npm-lint-focus-ring`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:279:16)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at EventEmitter.emit (events.js:191:7)
+14 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:40:14)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at ChildProcess.emit (events.js:191:7)
+14 verbose stack     at maybeClose (internal/child_process.js:877:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+15 verbose pkgid focus-ring@1.0.0
+16 verbose cwd /Users/kloots/workspace/focus-ring/bin
+17 error Darwin 16.4.0
+18 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "lint-focus-ring"
+19 error node v6.9.3
+20 error npm  v4.0.5
+21 error code ELIFECYCLE
+22 error focus-ring@1.0.0 lint-focus-ring: `./bin/npm-lint-focus-ring`
+22 error Exit status 1
+23 error Failed at the focus-ring@1.0.0 lint-focus-ring script './bin/npm-lint-focus-ring'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the focus-ring package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     ./bin/npm-lint-focus-ring
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs focus-ring
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls focus-ring
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

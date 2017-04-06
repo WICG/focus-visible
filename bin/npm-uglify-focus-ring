@@ -1,0 +1,2 @@
+#!/bin/sh
+./node_modules/uglify-js/bin/uglifyjs index.js -o index-min.js

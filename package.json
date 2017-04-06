@@ -2,7 +2,7 @@
   "name": "focus-ring",
   "version": "1.0.0",
   "description": "Polyfill for :focus-ring pseudo-selector",
-  "main": "src/focus-ring.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/WICG/focus-ring.git"
@@ -12,5 +12,19 @@
   "bugs": {
     "url": "https://github.com/WICG/focus-ring/issues"
   },
-  "homepage": "https://github.com/WICG/focus-ring"
+  "homepage": "https://github.com/WICG/focus-ring",
+  "devDependencies": {
+    "browserify": "^14.3.0",
+    "dom-classlist": "^1.0.1",
+    "eslint": "^3.19.0",
+    "eslint-config-google": "^0.7.1",
+    "uglify-js": "^2.8.21"
+  },
+  "scripts": {
+    "lint-focus-ring": "./bin/npm-lint-focus-ring",
+    "browserify-focus-ring": "./bin/npm-browserify-focus-ring",
+    "uglify-focus-ring": "./bin/npm-uglify-focus-ring",
+    "build-focus-ring": "./bin/npm-build-focus-ring",
+    "build": "npm run build-focus-ring"
+  }
 }

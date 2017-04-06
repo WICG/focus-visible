@@ -1,0 +1,4 @@
+#!/bin/sh
+npm run lint-focus-ring
+npm run browserify-focus-ring
+npm run uglify-focus-ring
