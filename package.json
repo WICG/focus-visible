@@ -1,12 +1,15 @@
 {
-  "name": "focus-ring",
+  "name": "wicg-focus-ring",
   "version": "1.0.0",
   "description": "Polyfill for :focus-ring pseudo-selector",
   "scripts": {
-    "lint": "eslint ./**/*.js",
-    "test": "npm run lint"
+    "lint": "eslint src/*.js",
+    "test": "npm run lint",
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "prepublish": "npm run test && npm run build"
   },
-  "main": "src/focus-ring.js",
+  "main": "dist/focus-ring.umd.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/WICG/focus-ring.git"
@@ -19,6 +22,14 @@
   "homepage": "https://github.com/WICG/focus-ring",
   "devDependencies": {
     "eslint": "^3.13.1",
-    "eslint-config-google": "^0.7.1"
+    "eslint-config-google": "^0.7.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^3.2.2"
+  },
+  "dependencies": {
+    "dom-classlist": "^1.0.1",
+    "dom-matches": "^2.0.0"
   }
 }

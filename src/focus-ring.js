@@ -1,44 +1,31 @@
+import classList from 'dom-classlist';
+import matches from 'dom-matches';
+
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
-    var matchesFunction = (function() {
-        var proto = Element.prototype;
-        if (proto.matches)
-            return proto.matches;
-        if (proto.matchesSelector)
-            return proto.matchesSelector;
-        if (proto.webkitMatchesSelector)
-            return proto.webkitMatchesSelector;
-        if (proto.mozMatchesSelector)
-            return proto.mozMatchesSelector;
-        if (proto.msMatchesSelector)
-            return proto.msMatchesSelector;
-    }());
-
-    if (!matchesFunction) {
-        return;
-    }
-
     var hadKeyboardEvent = false;
     var keyboardThrottleTimeoutID = 0;
 
     // These elements should always have a focus ring drawn, because they are
     // associated with switching to a keyboard modality.
-    var keyboardModalityWhitelist = ['input:not([type])',
-                                     'input[type=text]',
-                                     'input[type=search]',
-                                     'input[type=url]',
-                                     'input[type=tel]',
-                                     'input[type=email]',
-                                     'input[type=password]',
-                                     'input[type=number]',
-                                     'input[type=date]',
-                                     'input[type=month]',
-                                     'input[type=week]',
-                                     'input[type=time]',
-                                     'input[type=datetime]',
-                                     'input[type=datetime-local]',
-                                     'textarea',
-                                     '[role=textbox]'].join(',');
+    var keyboardModalityWhitelist = [
+        'input:not([type])',
+        'input[type=text]',
+        'input[type=search]',
+        'input[type=url]',
+        'input[type=tel]',
+        'input[type=email]',
+        'input[type=password]',
+        'input[type=number]',
+        'input[type=date]',
+        'input[type=month]',
+        'input[type=week]',
+        'input[type=time]',
+        'input[type=datetime]',
+        'input[type=datetime-local]',
+        'textarea',
+        '[role=textbox]',
+    ].join(',');
 
     /**
      * Computes whether the given element should automatically trigger the
@@ -48,8 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * @return {boolean}
      */
     function focusTriggersKeyboardModality(el) {
-        return matchesFunction.call(el, keyboardModalityWhitelist) &&
-            matchesFunction.call(el, ':not([readonly])');
+        return matches(el, keyboardModalityWhitelist) && matches(el, ':not([readonly])');
     }
 
     /**
@@ -58,9 +44,9 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Element} el
      */
     function addFocusRingClass(el) {
-        if (el.classList.contains('focus-ring'))
+        if (classList(el).contains('focus-ring'))
             return;
-        el.classList.add('focus-ring');
+        classList(el).add('focus-ring');
         el.setAttribute('data-focus-ring-added', '');
     }
 
@@ -72,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function removeFocusRingClass(el) {
         if (!el.hasAttribute('data-focus-ring-added'))
             return;
-        el.classList.remove('focus-ring');
+        classList(el).remove('focus-ring');
         el.removeAttribute('data-focus-ring-added');
     }
 
@@ -86,12 +72,10 @@ document.addEventListener('DOMContentLoaded', function() {
         hadKeyboardEvent = true;
         // `activeElement` defaults to document.body if nothing focused,
         // so check the active element is actually focused.
-        if (matchesFunction.call(document.activeElement, ':focus')) {
+        if (matches(document.activeElement, ':focus'))
             addFocusRingClass(document.activeElement);
-        }
-        if (keyboardThrottleTimeoutID !== 0) {
+        if (keyboardThrottleTimeoutID !== 0)
             clearTimeout(keyboardThrottleTimeoutID);
-        }
         keyboardThrottleTimeoutID = setTimeout(function() {
             hadKeyboardEvent = false;
             keyboardThrottleTimeoutID = 0;
@@ -106,9 +90,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Event} e
      */
     function onFocus(e) {
-        if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+        if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target))
             addFocusRingClass(e.target);
-        }
     }
 
     /**
