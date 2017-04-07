@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Polyfill for :focus-ring pseudo-selector",
   "scripts": {
-    "lint": "eslint ./**/*.js"
+    "lint": "eslint ./**/*.js",
+    "test": "npm run lint"
   },
   "main": "src/focus-ring.js",
   "repository": {
