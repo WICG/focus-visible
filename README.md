@@ -1,9 +1,10 @@
 [![Build Status](https://travis-ci.org/WICG/focus-ring.svg?branch=gh-pages)](https://travis-ci.org/WICG/focus-ring)
 
 Based on the proposed CSS
-[`:focus-ring`](https://drafts.csswg.org/selectors-4/#the-focusring-pseudo) pseudo-selector, this
-prototype adds a `focus-ring` class to the focused element, in situations in which the `:focus-ring`
-pseudo-selector should match.
+[`:focus-ring`](https://drafts.csswg.org/selectors-4/#the-focusring-pseudo)
+pseudo-selector,
+this prototype adds a `focus-ring` class to the focused element,
+in situations in which the `:focus-ring` pseudo-selector should match.
 
 [Demo](https://wicg.github.io/focus-ring/demo)
 
@@ -13,8 +14,9 @@ pseudo-selector should match.
 
 ## Usage
 
-We suggest that users selectively disable the default focus style by selecting for the case when
-`.focus-ring` is _not_ applied:
+We suggest that users
+selectively disable the default focus style
+by selecting for the case when `.focus-ring` is _not_ applied:
 
 ```html
 :focus:not(.focus-ring) {
@@ -22,8 +24,9 @@ We suggest that users selectively disable the default focus style by selecting f
 }
 ```
 
-If there are elements which should always have a focus ring shown, authors may explicitly add the
-`focus-ring` class. If explicitly added, it will not be removed on `blur`.
+If there are elements which should always have a focus ring shown,
+authors may explicitly add the `focus-ring` class.
+If explicitly added, it will not be removed on `blur`.
 
 ## Rationale
 
