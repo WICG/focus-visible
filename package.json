@@ -9,7 +9,7 @@
     "dev": "rollup -c -w",
     "prepublish": "npm run test && npm run build"
   },
-  "main": "dist/focus-ring.umd.js",
+  "main": "dist/focus-ring.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/WICG/focus-ring.git"
