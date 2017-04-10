@@ -8,6 +8,26 @@ in situations in which the `:focus-ring` pseudo-selector should match.
 
 [Demo](https://wicg.github.io/focus-ring/demo)
 
+## Installation
+
+`npm install --save wicg-focus-ring`
+
+## Usage
+
+We suggest that users
+selectively disable the default focus style
+by selecting for the case when `.focus-ring` is _not_ applied:
+
+```html
+:focus:not(.focus-ring) {
+    outline: none;
+}
+```
+
+If there are elements which should always have a focus ring shown,
+authors may explicitly add the `focus-ring` class.
+If explicitly added, it will not be removed on `blur`.
+
 ## Rationale
 
 The status quo, `:focus`, is quite problematic:
@@ -122,21 +142,6 @@ which show a focus style only when it would be relevant to the user.
 Note that the prototype does not match the proposed API -
 it is intended to give developers a feel for the model
 rather than to provide a high-fidelity polyfill.
-
-We suggest that users
-selectively disable the default focus style
-by selecting for the case when `.focus-ring` is _not_ applied:
-
-
-```html
-:focus:not(.focus-ring) {
-    outline: none;
-}
-```
-
-If there are elements which should always have a focus ring shown,
-authors may explicitly add the `focus-ring` class.
-If explicitly added, it will not be removed on `blur`.
 
 ### How it works
 The script uses two heuristics to determine whether the keyboard is being used:
