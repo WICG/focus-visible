@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/WICG/focus-ring.svg?branch=gh-pages)](https://travis-ci.org/WICG/focus-ring)
+[![Build Status](https://travis-ci.org/WICG/focus-ring.svg?branch=master)](https://travis-ci.org/WICG/focus-ring)
 
 Based on the proposed CSS
 [`:focus-ring`](https://drafts.csswg.org/selectors-4/#the-focusring-pseudo)
