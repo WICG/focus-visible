@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
   /**
    * Add the `focus-ring` class to the given element if it was not added by
    * the author.
+   * @param {Event} e
    * @param {Element} el
    */
   function addFocusRingClass(e, el) {
@@ -53,14 +54,14 @@ document.addEventListener('DOMContentLoaded', function() {
       'bubbles': true,
       'cancelable': true,
       'detail': {
-        'srcEvent': e
-      }
+        'srcEvent': e,
+      },
     });
 
     var wasPrevented = !el.dispatchEvent(focusRingEvent);
     if (!wasPrevented) {
       classList(el).add('focus-ring');
-      el.setAttribute('data-focus-ring-added', '');      
+      el.setAttribute('data-focus-ring-added', '');
     }
   }
 
@@ -81,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
    * are no further keyboard events.  The 100ms throttle handles cases where
    * focus is redirected programmatically after a keyboard event, such as
    * opening a menu or dialog.
+   * @param {Event} e
    */
   function onKeyDown(e) {
     lastKeyboardEvent = e;
