@@ -29,6 +29,7 @@
     "rollup-watch": "^3.2.2"
   },
   "dependencies": {
+    "custom-event-polyfill": "^0.3.0",
     "dom-classlist": "^1.0.1",
     "dom-matches": "^2.0.0"
   }
