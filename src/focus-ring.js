@@ -5,6 +5,7 @@ import matches from 'dom-matches';
 document.addEventListener('DOMContentLoaded', function() {
   var hadKeyboardEvent = false;
   var keyboardThrottleTimeoutID = 0;
+  var elWithFocusRing;
 
   // These elements should always have a focus ring drawn, because they are
   // associated with switching to a keyboard modality.
@@ -48,6 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     classList(el).add('focus-ring');
     el.setAttribute('data-focus-ring-added', '');
+    // Keep a reference to the element to which the focus-ring class is applied
+    // so the focus-ring class can be restored to it if the window regains
+    // focus after being blurred.
+    elWithFocusRing = el;
   }
 
   /**
@@ -102,7 +107,18 @@ document.addEventListener('DOMContentLoaded', function() {
     removeFocusRingClass(e.target);
   }
 
+  /**
+   * When the window regains focus, restore the focus-ring class to the element
+   * to which it was previously applied.
+   */
+  function onWindowFocus() {
+    if (document.activeElement == elWithFocusRing) {
+      addFocusRingClass(elWithFocusRing);
+    }
+  }
+
   document.body.addEventListener('keydown', onKeyDown, true);
   document.body.addEventListener('focus', onFocus, true);
   document.body.addEventListener('blur', onBlur, true);
+  window.addEventListener('focus', onWindowFocus, true);
 });
