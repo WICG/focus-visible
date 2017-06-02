@@ -267,6 +267,7 @@ try {
 document.addEventListener('DOMContentLoaded', function() {
   var lastKeyboardEvent = null;
   var keyboardThrottleTimeoutID = 0;
+  var elWithFocusRing;
 
   // These elements should always have a focus ring drawn, because they are
   // associated with switching to a keyboard modality.
@@ -303,25 +304,30 @@ document.addEventListener('DOMContentLoaded', function() {
   /**
    * Add the `focus-ring` class to the given element if it was not added by
    * the author.
+   * @param {Event} e
    * @param {Element} el
    */
   function addFocusRingClass(e, el) {
     if (el.classList.contains('focus-ring'))
         return;
 
-    var focusRingEvent = new CustomEvent('focus-ring', {
+    var focusRingEvent = new CustomEvent('focusring', {
       'view': window,
       'bubbles': true,
       'cancelable': true,
       'detail': {
-        'srcEvent': e
-      }
+        'srcEvent': e,
+      },
     });
 
     var wasPrevented = !el.dispatchEvent(focusRingEvent);
     if (!wasPrevented) {
       index(el).add('focus-ring');
-      el.setAttribute('data-focus-ring-added', '');      
+      el.setAttribute('data-focus-ring-added', '');
+      // Keep a reference to the element to which the focus-ring class is applied
+      // so the focus-ring class can be restored to it if the window regains
+      // focus after being blurred.
+      elWithFocusRing = el;
     }
   }
 
@@ -342,6 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
    * are no further keyboard events.  The 100ms throttle handles cases where
    * focus is redirected programmatically after a keyboard event, such as
    * opening a menu or dialog.
+   * @param {Event} e
    */
   function onKeyDown(e) {
     lastKeyboardEvent = e;
@@ -377,9 +384,20 @@ document.addEventListener('DOMContentLoaded', function() {
     removeFocusRingClass(e.target);
   }
 
+  /**
+   * When the window regains focus, restore the focus-ring class to the element
+   * to which it was previously applied.
+   */
+  function onWindowFocus() {
+    if (document.activeElement == elWithFocusRing) {
+      addFocusRingClass(elWithFocusRing);
+    }
+  }
+
   document.body.addEventListener('keydown', onKeyDown, true);
   document.body.addEventListener('focus', onFocus, true);
   document.body.addEventListener('blur', onBlur, true);
+  window.addEventListener('focus', onWindowFocus, true);
 });
 
 })));
