@@ -218,9 +218,54 @@ function matches(elem, selector) {
 
 var index$1 = matches;
 
+// Polyfill for creating CustomEvents on IE9/10/11
+
+// code pulled from:
+// https://github.com/d4tocchini/customevent-polyfill
+// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent#Polyfill
+
+try {
+    var ce = new window.CustomEvent('test');
+    ce.preventDefault();
+    if (ce.defaultPrevented !== true) {
+        // IE has problems with .preventDefault() on custom events
+        // http://stackoverflow.com/questions/23349191
+        throw new Error('Could not prevent default');
+    }
+} catch(e) {
+  var CustomEvent$1 = function(event, params) {
+    var evt, origPrevent;
+    params = params || {
+      bubbles: false,
+      cancelable: false,
+      detail: undefined
+    };
+
+    evt = document.createEvent("CustomEvent");
+    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+    origPrevent = evt.preventDefault;
+    evt.preventDefault = function () {
+      origPrevent.call(this);
+      try {
+        Object.defineProperty(this, 'defaultPrevented', {
+          get: function () {
+            return true;
+          }
+        });
+      } catch(e) {
+        this.defaultPrevented = true;
+      }
+    };
+    return evt;
+  };
+
+  CustomEvent$1.prototype = window.Event.prototype;
+  window.CustomEvent = CustomEvent$1; // expose definition to window
+}
+
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
-  var hadKeyboardEvent = false;
+  var lastKeyboardEvent = null;
   var keyboardThrottleTimeoutID = 0;
   var elWithFocusRing;
 
@@ -259,17 +304,31 @@ document.addEventListener('DOMContentLoaded', function() {
   /**
    * Add the `focus-ring` class to the given element if it was not added by
    * the author.
+   * @param {Event} e
    * @param {Element} el
    */
-  function addFocusRingClass(el) {
-    if (index(el).contains('focus-ring'))
-      return;
-    index(el).add('focus-ring');
-    el.setAttribute('data-focus-ring-added', '');
-    // Keep a reference to the element to which the focus-ring class is applied
-    // so the focus-ring class can be restored to it if the window regains
-    // focus after being blurred.
-    elWithFocusRing = el;
+  function addFocusRingClass(e, el) {
+    if (el.classList.contains('focus-ring'))
+        return;
+
+    var focusRingEvent = new CustomEvent('focusring', {
+      'view': window,
+      'bubbles': true,
+      'cancelable': true,
+      'detail': {
+        'srcEvent': e,
+      },
+    });
+
+    var wasPrevented = !el.dispatchEvent(focusRingEvent);
+    if (!wasPrevented) {
+      index(el).add('focus-ring');
+      el.setAttribute('data-focus-ring-added', '');
+      // Keep a reference to the element to which the focus-ring class is applied
+      // so the focus-ring class can be restored to it if the window regains
+      // focus after being blurred.
+      elWithFocusRing = el;
+    }
   }
 
   /**
@@ -285,21 +344,22 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, to be removed 100ms later if there
+   * On `keydown`, set `lastKeyboardEvent`, to be removed 100ms later if there
    * are no further keyboard events.  The 100ms throttle handles cases where
    * focus is redirected programmatically after a keyboard event, such as
    * opening a menu or dialog.
+   * @param {Event} e
    */
-  function onKeyDown() {
-    hadKeyboardEvent = true;
+  function onKeyDown(e) {
+    lastKeyboardEvent = e;
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
     if (index$1(document.activeElement, ':focus'))
-      addFocusRingClass(document.activeElement);
+      addFocusRingClass(lastKeyboardEvent, document.activeElement);
     if (keyboardThrottleTimeoutID !== 0)
       clearTimeout(keyboardThrottleTimeoutID);
     keyboardThrottleTimeoutID = setTimeout(function() {
-      hadKeyboardEvent = false;
+      lastKeyboardEvent = null;
       keyboardThrottleTimeoutID = 0;
     }, 100);
   }
@@ -312,8 +372,8 @@ document.addEventListener('DOMContentLoaded', function() {
    * @param {Event} e
    */
   function onFocus(e) {
-    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target))
-      addFocusRingClass(e.target);
+    if (lastKeyboardEvent || focusTriggersKeyboardModality(e.target))
+      addFocusRingClass(lastKeyboardEvent, e.target);
   }
 
   /**
@@ -325,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * When the window regains focus, restore the focus-ring class to the element 
+   * When the window regains focus, restore the focus-ring class to the element
    * to which it was previously applied.
    */
   function onWindowFocus() {
