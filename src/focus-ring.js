@@ -31,17 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var type = el.type;
     var tagName = el.tagName.toLowerCase();
 
-    if (tagName == 'input' && inputTypesWhitelist[type] && !el.readonly) {
+    if (tagName == 'input' && inputTypesWhitelist[type] && !el.readonly)
       return true;
-    }
 
-    if (tagName == 'textarea' && !el.readonly) {
+    if (tagName == 'textarea' && !el.readonly)
       return true;
-    }
 
-    if (el.getAttribute('role').toLowerCase() == 'textbox') {
+    if (el.getAttribute('role').toLowerCase() == 'textbox')
       return true;
-    }
 
     return false;
   }
@@ -52,9 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
    * @param {Element} el
    */
   function addFocusRingClass(el) {
-    if (classList(el).contains('focus-ring')) {
+    if (classList(el).contains('focus-ring'))
       return;
-    }
 
     classList(el).add('focus-ring');
     // Keep a reference to the element to which the focus-ring class is applied
@@ -80,20 +76,17 @@ document.addEventListener('DOMContentLoaded', function() {
    * @param {Event} e
    */
   function onKeyDown(e) {
-    if (e.altKey || e.ctrlKey || e.metaKey) {
+    if (e.altKey || e.ctrlKey || e.metaKey)
       return;
-    }
 
-    if (e.keyCode != 9) {
+    if (e.keyCode != 9)
       return;
-    }
 
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
     var activeElement = document.activeElement;
-    if (activeElement.tagName == 'body') {
+    if (activeElement.tagName == 'body')
       return;
-    }
 
     addFocusRingClass(activeElement);
     hadKeyboardEvent = true;
@@ -126,9 +119,8 @@ document.addEventListener('DOMContentLoaded', function() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
-    if (document.activeElement == elWithFocusRing) {
+    if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
-    }
   }
 
   document.addEventListener('keydown', onKeyDown, true);
