@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
    */
   function focusTriggersKeyboardModality(el) {
     var type = el.type;
-    var tagName = el.tagName.toLowerCase();
+    var tagName = el.tagName;
 
-    if (tagName == 'input' && inputTypesWhitelist[type] && !el.readonly)
+    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readonly)
       return true;
 
-    if (tagName == 'textarea' && !el.readonly)
+    if (tagName == 'TEXTAREA' && !el.readonly)
       return true;
 
     if (el.getAttribute('role').toLowerCase() == 'textbox')
@@ -72,10 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, to be removed 100ms later if there
-   * are no further keyboard events.  The 100ms throttle handles cases where
-   * focus is redirected programmatically after a keyboard event, such as
-   * opening a menu or dialog.
+   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
+   * key was Tab.
    * @param {Event} e
    */
   function onKeyDown(e) {
@@ -88,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
     var activeElement = document.activeElement;
-    if (activeElement.tagName == 'body')
+    if (activeElement.tagName == 'BODY')
       return;
 
     addFocusRingClass(activeElement);
