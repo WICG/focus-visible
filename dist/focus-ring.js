@@ -170,80 +170,27 @@ ClassList.prototype.toggle = function (token, force) {
   return (typeof force == 'boolean' ? force : !hasToken);
 };
 
-/**
- * Determine if a DOM element matches a CSS selector
- *
- * @param {Element} elem
- * @param {String} selector
- * @return {Boolean}
- * @api public
- */
-
-function matches(elem, selector) {
-  // Vendor-specific implementations of `Element.prototype.matches()`.
-  var proto = window.Element.prototype;
-  var nativeMatches = proto.matches ||
-      proto.mozMatchesSelector ||
-      proto.msMatchesSelector ||
-      proto.oMatchesSelector ||
-      proto.webkitMatchesSelector;
-
-  if (!elem || elem.nodeType !== 1) {
-    return false;
-  }
-
-  var parentElem = elem.parentNode;
-
-  // use native 'matches'
-  if (nativeMatches) {
-    return nativeMatches.call(elem, selector);
-  }
-
-  // native support for `matches` is missing and a fallback is required
-  var nodes = parentElem.querySelectorAll(selector);
-  var len = nodes.length;
-
-  for (var i = 0; i < len; i++) {
-    if (nodes[i] === elem) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-/**
- * Expose `matches`
- */
-
-var index$1 = matches;
-
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
   var hadKeyboardEvent = false;
   var keyboardThrottleTimeoutID = 0;
   var elWithFocusRing;
 
-  // These elements should always have a focus ring drawn, because they are
-  // associated with switching to a keyboard modality.
-  var keyboardModalityWhitelist = [
-    'input:not([type])',
-    'input[type=text]',
-    'input[type=search]',
-    'input[type=url]',
-    'input[type=tel]',
-    'input[type=email]',
-    'input[type=password]',
-    'input[type=number]',
-    'input[type=date]',
-    'input[type=month]',
-    'input[type=week]',
-    'input[type=time]',
-    'input[type=datetime]',
-    'input[type=datetime-local]',
-    'textarea',
-    '[role=textbox]',
-  ].join(',');
+  var inputTypesWhitelist = {
+    'text': true,
+    'search': true,
+    'url': true,
+    'tel': true,
+    'email': true,
+    'password': true,
+    'number': true,
+    'date': true,
+    'month': true,
+    'week': true,
+    'time': true,
+    'datetime': true,
+    'datetime-local': true,
+  };
 
   /**
    * Computes whether the given element should automatically trigger the
@@ -253,7 +200,19 @@ document.addEventListener('DOMContentLoaded', function() {
    * @return {boolean}
    */
   function focusTriggersKeyboardModality(el) {
-    return index$1(el, keyboardModalityWhitelist) && index$1(el, ':not([readonly])');
+    var type = el.type;
+    var tagName = el.tagName.toLowerCase();
+
+    if (tagName == 'input' && inputTypesWhitelist[type] && !el.readonly)
+      return true;
+
+    if (tagName == 'textarea' && !el.readonly)
+      return true;
+
+    if (el.contentEditable)
+      return true;
+
+    return false;
   }
 
   /**
@@ -291,11 +250,13 @@ document.addEventListener('DOMContentLoaded', function() {
    * opening a menu or dialog.
    */
   function onKeyDown() {
-    hadKeyboardEvent = true;
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
-    if (index$1(document.activeElement, ':focus'))
-      addFocusRingClass(document.activeElement);
+    var activeElement = document.activeElement;
+    if (activeElement.tagName.toLowerCase() == 'body')
+      return;
+
+    hadKeyboardEvent = true;
     if (keyboardThrottleTimeoutID !== 0)
       clearTimeout(keyboardThrottleTimeoutID);
     keyboardThrottleTimeoutID = setTimeout(function() {
@@ -325,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * When the window regains focus, restore the focus-ring class to the element 
+   * When the window regains focus, restore the focus-ring class to the element
    * to which it was previously applied.
    */
   function onWindowFocus() {
