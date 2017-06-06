@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
    */
   function focusTriggersKeyboardModality(el) {
     var type = el.type;
-    var tagName = el.tagName.toLowerCase();
+    var tagName = el.tagName;
 
     if (tagName == 'input' && inputTypesWhitelist[type] && !el.readonly)
       return true;
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
     var activeElement = document.activeElement;
-    if (activeElement.tagName.toLowerCase() == 'body')
+    if (activeElement.tagName == 'body')
       return;
 
     hadKeyboardEvent = true;
