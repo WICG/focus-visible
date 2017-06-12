@@ -20,7 +20,7 @@ by selecting for the case when `.focus-ring` is _not_ applied:
 
 ```html
 :focus:not(.focus-ring) {
-    outline: none;
+    outline-width: 0;
 }
 ```
 
@@ -63,7 +63,7 @@ To deal with this:
 ```css
 /* override UA stylesheet if necessary */
 :focus {
-  outline: none;
+  outline-width: 0;
 }
 
 /* establish desired focus ring appearance for appropriate input modalities */
