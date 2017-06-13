@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (classList(el).contains('focus-ring'))
       return;
     classList(el).add('focus-ring');
-    el.setAttribute('data-focus-ring-added', '');
     // Keep a reference to the element to which the focus-ring class is applied
     // so the focus-ring class can be restored to it if the window regains
     // focus after being blurred.
@@ -61,10 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
    * @param {Element} el
    */
   function removeFocusRingClass(el) {
-    if (!el.hasAttribute('data-focus-ring-added'))
-      return;
     classList(el).remove('focus-ring');
-    el.removeAttribute('data-focus-ring-added');
   }
 
   /**
