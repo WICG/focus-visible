@@ -1,5 +1,4 @@
 import classList from 'dom-classlist';
-import matches from 'dom-matches';
 
 /* https://github.com/WICG/focus-ring */
 document.addEventListener('DOMContentLoaded', function() {
@@ -7,26 +6,21 @@ document.addEventListener('DOMContentLoaded', function() {
   var keyboardThrottleTimeoutID = 0;
   var elWithFocusRing;
 
-  // These elements should always have a focus ring drawn, because they are
-  // associated with switching to a keyboard modality.
-  var keyboardModalityWhitelist = [
-    'input:not([type])',
-    'input[type=text]',
-    'input[type=search]',
-    'input[type=url]',
-    'input[type=tel]',
-    'input[type=email]',
-    'input[type=password]',
-    'input[type=number]',
-    'input[type=date]',
-    'input[type=month]',
-    'input[type=week]',
-    'input[type=time]',
-    'input[type=datetime]',
-    'input[type=datetime-local]',
-    'textarea',
-    '[role=textbox]',
-  ].join(',');
+  var inputTypesWhitelist = {
+    'text': true,
+    'search': true,
+    'url': true,
+    'tel': true,
+    'email': true,
+    'password': true,
+    'number': true,
+    'date': true,
+    'month': true,
+    'week': true,
+    'time': true,
+    'datetime': true,
+    'datetime-local': true,
+  };
 
   /**
    * Computes whether the given element should automatically trigger the
@@ -36,7 +30,19 @@ document.addEventListener('DOMContentLoaded', function() {
    * @return {boolean}
    */
   function focusTriggersKeyboardModality(el) {
-    return matches(el, keyboardModalityWhitelist) && matches(el, ':not([readonly])');
+    var type = el.type;
+    var tagName = el.tagName;
+
+    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readonly)
+      return true;
+
+    if (tagName == 'TEXTAREA' && !el.readonly)
+      return true;
+
+    if (el.contentEditable == 'true')
+      return true;
+
+    return false;
   }
 
   /**
@@ -71,10 +77,13 @@ document.addEventListener('DOMContentLoaded', function() {
    */
   function onKeyDown() {
     hadKeyboardEvent = true;
+
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
-    if (matches(document.activeElement, ':focus'))
-      addFocusRingClass(document.activeElement);
+    var activeElement = document.activeElement;
+    if (activeElement.tagName == 'BODY')
+      return;
+
     if (keyboardThrottleTimeoutID !== 0)
       clearTimeout(keyboardThrottleTimeoutID);
     keyboardThrottleTimeoutID = setTimeout(function() {
