@@ -201,15 +201,15 @@ document.addEventListener('DOMContentLoaded', function() {
    */
   function focusTriggersKeyboardModality(el) {
     var type = el.type;
-    var tagName = el.tagName.toLowerCase();
+    var tagName = el.tagName;
 
-    if (tagName == 'input' && inputTypesWhitelist[type] && !el.readonly)
+    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readonly)
       return true;
 
-    if (tagName == 'textarea' && !el.readonly)
+    if (tagName == 'TEXTAREA' && !el.readonly)
       return true;
 
-    if (el.contentEditable)
+    if (el.contentEditable == 'true')
       return true;
 
     return false;
@@ -250,13 +250,14 @@ document.addEventListener('DOMContentLoaded', function() {
    * opening a menu or dialog.
    */
   function onKeyDown() {
+    hadKeyboardEvent = true;
+
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
     var activeElement = document.activeElement;
-    if (activeElement.tagName.toLowerCase() == 'body')
+    if (activeElement.tagName == 'BODY')
       return;
 
-    hadKeyboardEvent = true;
     if (keyboardThrottleTimeoutID !== 0)
       clearTimeout(keyboardThrottleTimeoutID);
     keyboardThrottleTimeoutID = setTimeout(function() {

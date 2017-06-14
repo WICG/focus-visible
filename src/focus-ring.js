@@ -80,13 +80,14 @@ document.addEventListener('DOMContentLoaded', function() {
    * opening a menu or dialog.
    */
   function onKeyDown() {
+    hadKeyboardEvent = true;
+
     // `activeElement` defaults to document.body if nothing focused,
     // so check the active element is actually focused.
     var activeElement = document.activeElement;
     if (activeElement.tagName == 'BODY')
       return;
 
-    hadKeyboardEvent = true;
     if (keyboardThrottleTimeoutID !== 0)
       clearTimeout(keyboardThrottleTimeoutID);
     keyboardThrottleTimeoutID = setTimeout(function() {
