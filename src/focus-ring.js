@@ -4,6 +4,7 @@ import classList from 'dom-classlist';
 document.addEventListener('DOMContentLoaded', function() {
   var hadKeyboardEvent = false;
   var elWithFocusRing;
+
   var inputTypesWhitelist = {
     'text': true,
     'search': true,
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (tagName == 'TEXTAREA' && !el.readonly)
       return true;
 
-    if (el.getAttribute('role').toLowerCase() == 'textbox')
+    if (el.contentEditable == 'true')
       return true;
 
     return false;
@@ -52,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (classList(el).contains('focus-ring'))
       return;
     classList(el).add('focus-ring');
-    el.setAttribute('data-focus-ring-added', '');
     // Keep a reference to the element to which the focus-ring class is applied
     // so the focus-ring class can be restored to it if the window regains
     // focus after being blurred.
@@ -65,10 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
    * @param {Element} el
    */
   function removeFocusRingClass(el) {
-    if (!el.hasAttribute('data-focus-ring-added'))
-      return;
     classList(el).remove('focus-ring');
-    el.removeAttribute('data-focus-ring-added');
   }
 
   /**
@@ -83,13 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.keyCode != 9)
       return;
 
-    // `activeElement` defaults to document.body if nothing focused,
-    // so check the active element is actually focused.
-    var activeElement = document.activeElement;
-    if (activeElement.tagName == 'BODY')
-      return;
-
-    addFocusRingClass(activeElement);
     hadKeyboardEvent = true;
   }
 

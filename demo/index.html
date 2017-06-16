@@ -8,7 +8,7 @@
       font-family: arial, sans-serif;
       }
       div { margin: 1em 0; }
-      div[role="textbox"] {
+      div[contenteditable] {
       width: 10em;
       min-height: 2em;
       padding: 0.2em;
@@ -25,7 +25,7 @@
     <script src="../dist/focus-ring.js"></script>
     <style>
         :focus:not(.focus-ring) {
-          outline: none;
+          outline-width: 0;
         }
     </style>
   </head>
@@ -45,7 +45,13 @@
       <textarea placeholder="Multi line"></textarea>
     </div>
     <div>
-      <div id="s" role="textbox" tabindex="0" contenteditable="true">Contenteditable with textbox role</div>
+      <div contenteditable="true">Contenteditable explicitly set to true</div>
+    </div>
+    <div>
+      <div contenteditable>Contenteditable</div>
+    </div>
+    <div>
+      <div role="textbox" contenteditable="true">Contenteditable with textbox role</div>
     </div>
     <h2>Buttons</h2>
     <div>

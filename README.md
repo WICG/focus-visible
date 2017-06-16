@@ -20,13 +20,12 @@ by selecting for the case when `.focus-ring` is _not_ applied:
 
 ```html
 :focus:not(.focus-ring) {
-    outline: none;
+    outline-width: 0;
 }
 ```
 
-If there are elements which should always have a focus ring shown,
-authors may explicitly add the `focus-ring` class.
-If explicitly added, it will not be removed on `blur`.
+Note that `.focus-ring` will *always* be removed on blur,
+so authors should not explicitly add this class.
 
 ## Rationale
 
@@ -63,7 +62,7 @@ To deal with this:
 ```css
 /* override UA stylesheet if necessary */
 :focus {
-  outline: none;
+  outline-width: 0;
 }
 
 /* establish desired focus ring appearance for appropriate input modalities */
