@@ -170,8 +170,10 @@ ClassList.prototype.toggle = function (token, force) {
   return (typeof force == 'boolean' ? force : !hasToken);
 };
 
-/* https://github.com/WICG/focus-ring */
-document.addEventListener('DOMContentLoaded', function() {
+/**
+ * https://github.com/WICG/focus-ring
+ */
+function init() {
   var hadKeyboardEvent = false;
   var keyboardThrottleTimeoutID = 0;
   var elWithFocusRing;
@@ -300,6 +302,34 @@ document.addEventListener('DOMContentLoaded', function() {
   document.body.addEventListener('focus', onFocus, true);
   document.body.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
-});
+}
+
+/**
+ * Subscription when the DOM is ready
+ * @param {Function} callback
+ */
+function onDOMReady(callback) {
+  if (document.readyState === 'complete') {
+    callback();
+  } else {
+    var loaded = false;
+
+    /**
+     * Callback wrapper for check loaded state
+     */
+    function load() {
+      if (!loaded) {
+        loaded = true;
+
+        callback();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', load, false);
+    window.addEventListener('load', load, false);
+  }
+}
+
+onDOMReady(init);
 
 })));
