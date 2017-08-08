@@ -5,7 +5,6 @@ import classList from 'dom-classlist';
  */
 function init() {
   var hadKeyboardEvent = false;
-  var keyboardThrottleTimeoutID = 0;
   var elWithFocusRing;
 
   var inputTypesWhitelist = {
@@ -76,38 +75,35 @@ function init() {
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, to be removed 100ms later if there
-   * are no further keyboard events.  The 100ms throttle handles cases where
-   * focus is redirected programmatically after a keyboard event, such as
-   * opening a menu or dialog.
+   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
+   * key was Tab.
+   * @param {Event} e
    */
-  function onKeyDown() {
-    hadKeyboardEvent = true;
-
-    // `activeElement` defaults to document.body if nothing focused,
-    // so check the active element is actually focused.
-    var activeElement = document.activeElement;
-    if (activeElement.tagName == 'BODY')
+  function onKeyDown(e) {
+    if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
-    if (keyboardThrottleTimeoutID !== 0)
-      clearTimeout(keyboardThrottleTimeoutID);
-    keyboardThrottleTimeoutID = setTimeout(function() {
-      hadKeyboardEvent = false;
-      keyboardThrottleTimeoutID = 0;
-    }, 100);
+    if (e.keyCode != 9)
+      return;
+
+    hadKeyboardEvent = true;
   }
 
   /**
    * On `focus`, add the `focus-ring` class to the target if:
-   * - a keyboard event happened in the past 100ms, or
-   * - the focus event target triggers "keyboard modality" and should always
-   *   have a focus ring drawn.
+   * - the target received focus as a result of keyboard navigation
+   * - the event target is an element that will likely require interaction
+   *   via the keyboard (e.g. a text box)
    * @param {Event} e
    */
   function onFocus(e) {
-    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target))
+    if (e.target == document)
+      return;
+
+    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
       addFocusRingClass(e.target);
+      hadKeyboardEvent = false;
+    }
   }
 
   /**
@@ -115,6 +111,9 @@ function init() {
    * @param {Event} e
    */
   function onBlur(e) {
+    if (e.target == document)
+      return;
+
     removeFocusRingClass(e.target);
   }
 
@@ -123,14 +122,13 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
-    if (document.activeElement == elWithFocusRing) {
+    if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
-    }
   }
 
-  document.body.addEventListener('keydown', onKeyDown, true);
-  document.body.addEventListener('focus', onFocus, true);
-  document.body.addEventListener('blur', onBlur, true);
+  document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('focus', onFocus, true);
+  document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
 }
 
