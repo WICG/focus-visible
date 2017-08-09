@@ -225,10 +225,7 @@ function init() {
     if (index(el).contains('focus-ring'))
       return;
     index(el).add('focus-ring');
-    // Keep a reference to the element to which the focus-ring class is applied
-    // so the focus-ring class can be restored to it if the window regains
-    // focus after being blurred.
-    elWithFocusRing = el;
+    el.setAttribute('data-focus-ring-added', '');
   }
 
   /**
@@ -237,7 +234,10 @@ function init() {
    * @param {Element} el
    */
   function removeFocusRingClass(el) {
+    if (!el.hasAttribute('data-focus-ring-added'))
+      return;
     index(el).remove('focus-ring');
+    el.removeAttribute('data-focus-ring-added');
   }
 
   /**
@@ -288,14 +288,30 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
-    if (document.activeElement == elWithFocusRing)
+    if (document.activeElement == elWithFocusRing) {
       addFocusRingClass(elWithFocusRing);
+      elWithFocusRing = null;
+    }
+  }
+
+  /**
+   * When the window regains focus, restore the focus-ring class to the element
+   * to which it was previously applied.
+   */
+  function onWindowBlur() {
+    if (document.activeElement.classList.contains('focus-ring')) {
+      // Keep a reference to the element to which the focus-ring class is applied
+      // so the focus-ring class can be restored to it if the window regains
+      // focus after being blurred.
+      elWithFocusRing = document.activeElement;
+    }
   }
 
   document.addEventListener('keydown', onKeyDown, true);
   document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
+  window.addEventListener('blur', onWindowBlur, true);
 }
 
 /**
