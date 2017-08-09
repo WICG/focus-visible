@@ -56,10 +56,6 @@ function init() {
       return;
     classList(el).add('focus-ring');
     el.setAttribute('data-focus-ring-added', '');
-    // Keep a reference to the element to which the focus-ring class is applied
-    // so the focus-ring class can be restored to it if the window regains
-    // focus after being blurred.
-    elWithFocusRing = el;
   }
 
   /**
@@ -124,12 +120,28 @@ function init() {
   function onWindowFocus() {
     if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
+
+    elWithFocusRing = null;
+  }
+
+  /**
+   * When switching windows, keep track of the focused element if it has a
+   * focus-ring class.
+   */
+  function onWindowBlur() {
+    if (document.activeElement.classList.contains('focus-ring')) {
+      // Keep a reference to the element to which the focus-ring class is applied
+      // so the focus-ring class can be restored to it if the window regains
+      // focus after being blurred.
+      elWithFocusRing = document.activeElement;
+    }
   }
 
   document.addEventListener('keydown', onKeyDown, true);
   document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
+  window.addEventListener('blur', onWindowBlur, true);
 }
 
 /**
