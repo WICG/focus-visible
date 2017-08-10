@@ -288,15 +288,15 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
-    if (document.activeElement == elWithFocusRing) {
+    if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
-      elWithFocusRing = null;
-    }
+
+    elWithFocusRing = null;
   }
 
   /**
-   * When the window regains focus, restore the focus-ring class to the element
-   * to which it was previously applied.
+   * When switching windows, keep track of the focused element if it has a
+   * focus-ring class.
    */
   function onWindowBlur() {
     if (document.activeElement.classList.contains('focus-ring')) {
@@ -312,6 +312,8 @@ function init() {
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
+
+  document.body.classList.add('focus-ring-enabled');
 }
 
 /**

@@ -142,6 +142,8 @@ function init() {
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
+
+  document.body.classList.add('focus-ring-enabled');
 }
 
 /**
