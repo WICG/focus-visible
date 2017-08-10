@@ -16,10 +16,11 @@ in situations in which the `:focus-ring` pseudo-selector should match.
 
 We suggest that users
 selectively disable the default focus style
-by selecting for the case when `.focus-ring` is _not_ applied:
+by selecting for the case when the polyfill is loaded
+and `.focus-ring` is _not_ applied to the element:
 
 ```html
-:focus:not(.focus-ring) {
+.focus-ring-enabled :focus:not(.focus-ring) {
     outline-width: 0;
 }
 ```
@@ -134,9 +135,12 @@ The tiny
 provides a prototype intended to achieve the goals we are proposing
 with technology that exists today
 in order for developers to be able to try it out, understand it and provide feedback.
-It simply sets a `.focus-ring` class on the active element
+It simply sets a `.focus-ring-enabled` class to the body element
+to provide a way to disable focus styles only when the polyfill is loaded.
+It also sets a `.focus-ring` class on the active element
 if the script determines that the keyboard is being used.
 This attribute is removed on any `blur` event.
+
 This allows authors to write rules
 which show a focus style only when it would be relevant to the user.
 Note that the prototype does not match the proposed API -
