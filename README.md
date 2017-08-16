@@ -20,7 +20,7 @@ by selecting for the case when the polyfill is loaded
 and `.focus-ring` is _not_ applied to the element:
 
 ```html
-.focus-ring-enabled :focus:not(.focus-ring) {
+.js-focus-ring :focus:not(.focus-ring) {
     outline-width: 0;
 }
 ```
@@ -124,8 +124,9 @@ having both would provide more flexibility for authors.
 
 The heuristic used to decide the current modality should not be defined
 normatively. An example heuristic is to update modality on each style recalc:
-if the most recent user interaction was via the keyboard; and less than 100ms
-has elapsed since the last input event; then the modality is keyboard. Otherwise,
+if the most recent user interaction was via the keyboard;
+and the key pressed was either `Tab` or `Shift + Tab`;
+then the modality is keyboard. Otherwise,
 the modality is not keyboard.
 
 ## Implementation Prototype
@@ -135,7 +136,7 @@ The tiny
 provides a prototype intended to achieve the goals we are proposing
 with technology that exists today
 in order for developers to be able to try it out, understand it and provide feedback.
-It simply sets a `.focus-ring-enabled` class to the body element
+It sets a `.js-focus-ring` class on the body element
 to provide a way to disable focus styles only when the polyfill is loaded.
 It also sets a `.focus-ring` class on the active element
 if the script determines that the keyboard is being used.
@@ -150,7 +151,8 @@ rather than to provide a high-fidelity polyfill.
 ### How it works
 The script uses two heuristics to determine whether the keyboard is being used:
 
-- a `focus` event immediately following a `keydown` event
+- a `focus` event immediately following a `keydown` event where the key pressed was either `Tab`
+or `Shift + Tab`.
 - focus moves into an element which requires keyboard interaction,
   such as a text field
 - _TODO: ideally, we also trigger keyboard modality
