@@ -313,7 +313,7 @@ function init() {
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
 
-  document.body.classList.add('focus-ring-enabled');
+  document.body.classList.add('js-focus-ring');
 }
 
 /**
