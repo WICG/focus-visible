@@ -1,6 +1,6 @@
 {
   "name": "wicg-focus-ring",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Polyfill for :focus-ring pseudo-selector",
   "scripts": {
     "lint": "eslint src/*.js",
