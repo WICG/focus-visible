@@ -11,7 +11,7 @@
  * @return {ClassList}
  */
 
-var index = function (el) {
+var domClasslist = function (el) {
   return new ClassList(el);
 };
 
@@ -222,9 +222,9 @@ function init() {
    * @param {Element} el
    */
   function addFocusRingClass(el) {
-    if (index(el).contains('focus-ring'))
+    if (domClasslist(el).contains('focus-ring'))
       return;
-    index(el).add('focus-ring');
+    domClasslist(el).add('focus-ring');
     el.setAttribute('data-focus-ring-added', '');
   }
 
@@ -236,7 +236,7 @@ function init() {
   function removeFocusRingClass(el) {
     if (!el.hasAttribute('data-focus-ring-added'))
       return;
-    index(el).remove('focus-ring');
+    domClasslist(el).remove('focus-ring');
     el.removeAttribute('data-focus-ring-added');
   }
 
@@ -299,7 +299,7 @@ function init() {
    * focus-ring class.
    */
   function onWindowBlur() {
-    if (index(document.activeElement).contains('focus-ring')) {
+    if (domClasslist(document.activeElement).contains('focus-ring')) {
       // Keep a reference to the element to which the focus-ring class is applied
       // so the focus-ring class can be restored to it if the window regains
       // focus after being blurred.
@@ -313,7 +313,7 @@ function init() {
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
 
-  index(document.body).add('js-focus-ring');
+  domClasslist(document.body).add('js-focus-ring');
 }
 
 /**
@@ -321,22 +321,23 @@ function init() {
  * @param {Function} callback
  */
 function onDOMReady(callback) {
+  var loaded;
+
+  /**
+   * Callback wrapper for check loaded state
+   */
+  function load() {
+    if (!loaded) {
+      loaded = true;
+
+      callback();
+    }
+  }
+
   if (document.readyState === 'complete') {
     callback();
   } else {
-    var loaded = false;
-
-    /**
-     * Callback wrapper for check loaded state
-     */
-    function load() {
-      if (!loaded) {
-        loaded = true;
-
-        callback();
-      }
-    }
-
+    loaded = false;
     document.addEventListener('DOMContentLoaded', load, false);
     window.addEventListener('load', load, false);
   }
