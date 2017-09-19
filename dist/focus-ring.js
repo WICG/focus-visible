@@ -321,22 +321,23 @@ function init() {
  * @param {Function} callback
  */
 function onDOMReady(callback) {
+  var loaded;
+
+  /**
+   * Callback wrapper for check loaded state
+   */
+  function load() {
+    if (!loaded) {
+      loaded = true;
+
+      callback();
+    }
+  }
+
   if (document.readyState === 'complete') {
     callback();
   } else {
-    var loaded = false;
-
-    /**
-     * Callback wrapper for check loaded state
-     */
-    function load() {
-      if (!loaded) {
-        loaded = true;
-
-        callback();
-      }
-    }
-
+    loaded = false;
     document.addEventListener('DOMContentLoaded', load, false);
     window.addEventListener('load', load, false);
   }
