@@ -1,7 +1,7 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(factory());
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (factory());
 }(this, (function () { 'use strict';
 
 /**
@@ -193,6 +193,24 @@ function init() {
     'datetime-local': true,
   };
 
+  // keys that often produce a change of context or focus
+  var navigationKeys = [
+    8 /* Backspace */,
+    9 /* Tab */,
+    13 /* Enter */,
+    27 /* Esc */,
+    32 /* Space */,
+    33 /* PageUp */,
+    34 /* PageDown */,
+    35 /* End */,
+    36 /* Home */,
+    37 /* ArrowLeft */,
+    38 /* ArrowUp */,
+    39 /* ArrowRight */,
+    40 /* ArrowDown */,
+    46/* Delete */,
+  ];
+
   /**
    * Computes whether the given element should automatically trigger the
    * `focus-ring` class being added, i.e. whether it should always match
@@ -246,10 +264,10 @@ function init() {
    * @param {Event} e
    */
   function onKeyDown(e) {
-    if (e.altKey || e.ctrlKey || e.metaKey)
+    if (e.altKey || e.ctrlKey || e.metaKey || navigationKeys.indexOf(e.keyCode) === -1)
       return;
 
-    if (e.keyCode != 9)
+    if (e.target === document.body)
       return;
 
     hadKeyboardEvent = true;

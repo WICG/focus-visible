@@ -155,6 +155,4 @@ The script uses two heuristics to determine whether the keyboard is being used:
 or `Shift + Tab`.
 - focus moves into an element which requires keyboard interaction,
   such as a text field
-- _TODO: ideally, we also trigger keyboard modality
-  following a keyboard event which activates an element or causes a mutation;
-  this still needs to be implemented._
+- We also trigger keyboard modality following a keyboard event which activates an element or causes a mutation. The following keys that typically result in a change of context or focus are handled: `Backspace`, `Enter`, `Esc`, `Space`, `PageUp`, `PageDown`, `End`, `Home`, `ArrowLeft`, `ArrowUp`, `ArrowRight`, `ArrowDown`, or `Delete`.
