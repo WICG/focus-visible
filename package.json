@@ -29,6 +29,7 @@
     "rollup-watch": "^3.2.2"
   },
   "dependencies": {
-    "dom-classlist": "^1.0.1"
+    "dom-classlist": "^1.0.1",
+    "element-closest": "^2.0.2"
   }
 }
