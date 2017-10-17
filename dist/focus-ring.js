@@ -288,6 +288,10 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
+    // When removing the activeElement from DOM it's possible IE11 is in state
+    // document.activeElement === null
+    if (!document.activeElement)
+      return;
     if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
 
@@ -299,6 +303,10 @@ function init() {
    * focus-ring class.
    */
   function onWindowBlur() {
+    // When removing the activeElement from DOM it's possible IE11 is in state
+    // document.activeElement === null
+    if (!document.activeElement)
+      return;
     if (index(document.activeElement).contains('focus-ring')) {
       // Keep a reference to the element to which the focus-ring class is applied
       // so the focus-ring class can be restored to it if the window regains
