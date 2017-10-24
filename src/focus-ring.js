@@ -4,10 +4,14 @@ import classList from 'dom-classlist';
  * https://github.com/WICG/focus-ring
  */
 function init() {
-  var hadKeyboardEvent = false;
   var elWithFocusRing;
 
   var inputTypesWhitelist = {
+    'radio': true,
+    'checkbox': true,
+    'button': true,
+    'reset': true,
+    'submit': true,
     'text': true,
     'search': true,
     'url': true,
@@ -71,34 +75,27 @@ function init() {
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
-   * key was Tab.
+   * On `keyup` add `focus-ring` class if the user pressed Tab and the event
+   * target is an element that will likely require interaction via the
+   * keyboard (e.g. a text box).
+   * The `keyup` event is used over the focus event because:
+   * 1. `focus` is a device-independent event, and `keyup` ensures the
+   *    `focus-ring` class is only added when focus originates from
+   *    keyboard navigation.
+   * 2. Unlike `focus`, keyup` will fire when the user navigates from the
+   *    browser chrome into the document. (For more, see issue #15)
    * @param {Event} e
    */
-  function onKeyDown(e) {
+  function onKeyUp(e) {
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
     if (e.keyCode != 9)
       return;
 
-    hadKeyboardEvent = true;
-  }
-
-  /**
-   * On `focus`, add the `focus-ring` class to the target if:
-   * - the target received focus as a result of keyboard navigation
-   * - the event target is an element that will likely require interaction
-   *   via the keyboard (e.g. a text box)
-   * @param {Event} e
-   */
-  function onFocus(e) {
-    if (e.target == document)
-      return;
-
-    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
-      addFocusRingClass(e.target);
-      hadKeyboardEvent = false;
+    var target = e.target;
+    if (focusTriggersKeyboardModality(target)) {
+      addFocusRingClass(target);
     }
   }
 
@@ -145,8 +142,7 @@ function init() {
     }
   }
 
-  document.addEventListener('keydown', onKeyDown, true);
-  document.addEventListener('focus', onFocus, true);
+  document.addEventListener('keyup', onKeyUp, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
