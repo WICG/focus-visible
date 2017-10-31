@@ -10,6 +10,11 @@ function init() {
   var elementsWithFocusRing = document.getElementsByClassName('focus-ring');
 
   var inputTypesWhitelist = {
+    'radio': true,
+    'checkbox': true,
+    'button': true,
+    'reset': true,
+    'submit': true,
     'text': true,
     'search': true,
     'url': true,
@@ -248,6 +253,10 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
+    // When removing the activeElement from DOM it's possible IE11 is in state
+    // document.activeElement === null
+    if (!document.activeElement)
+      return;
     if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
 
@@ -259,6 +268,10 @@ function init() {
    * focus-ring class.
    */
   function onWindowBlur() {
+    // When removing the activeElement from DOM it's possible IE11 is in state
+    // document.activeElement === null
+    if (!document.activeElement)
+      return;
     if (classList(document.activeElement).contains('focus-ring')) {
       // Keep a reference to the element to which the focus-ring class is applied
       // so the focus-ring class can be restored to it if the window regains
