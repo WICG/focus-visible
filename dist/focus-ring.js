@@ -275,6 +275,7 @@ function init() {
         'radio': true,
       },
       role: {
+        'button': true,
         'checkbox': true,
         'columnheading': true,
         'gridcell': true,

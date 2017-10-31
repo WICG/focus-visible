@@ -51,6 +51,7 @@ function init() {
         'range': true,
       },
       role: {
+        'button': true,
         'checkbox': true,
         'columnheading': true,
         'gridcell': true,
@@ -72,6 +73,7 @@ function init() {
         'radio': true,
       },
       role: {
+        'button': true,
         'checkbox': true,
         'columnheading': true,
         'gridcell': true,
