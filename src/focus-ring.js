@@ -1,10 +1,13 @@
 import classList from 'dom-classlist';
+import 'element-closest';
 
 /**
  * https://github.com/WICG/focus-ring
  */
 function init() {
+  var hadKeyboardEvent = false;
   var elWithFocusRing;
+  var elementsWithFocusRing = document.getElementsByClassName('focus-ring');
 
   var inputTypesWhitelist = {
     'radio': true,
@@ -26,6 +29,121 @@ function init() {
     'datetime': true,
     'datetime-local': true,
   };
+
+  // keys that often produce a change of context or focus
+  var navigationKeys = [
+    8 /* Backspace */,
+    9 /* Tab */,
+    13 /* Enter */,
+    27 /* Esc */,
+    32 /* Space */,
+    33 /* PageUp */,
+    34 /* PageDown */,
+    35 /* End */,
+    36 /* Home */,
+    37 /* ArrowLeft */,
+    38 /* ArrowUp */,
+    39 /* ArrowRight */,
+    40 /* ArrowDown */,
+    46/* Delete */,
+  ];
+
+  var behavior = {
+    incrementable: {
+      inputType: {
+        'checkbox': true,
+        'radio': true,
+        'range': true,
+      },
+      role: {
+        'button': true,
+        'checkbox': true,
+        'columnheading': true,
+        'gridcell': true,
+        'menuitem': true,
+        'menuitemcheckbox': true,
+        'menuitemradio': true,
+        'option': true,
+        'radio': true,
+        'row': true,
+        'rowheading': true,
+        'slider': true,
+        'tab': true,
+        'treeitem': true,
+      },
+    },
+    selectable: {
+      inputType: {
+        'checkbox': true,
+        'radio': true,
+      },
+      role: {
+        'button': true,
+        'checkbox': true,
+        'columnheading': true,
+        'gridcell': true,
+        'menuitemcheckbox': true,
+        'menuitemradio': true,
+        'option': true,
+        'radio': true,
+        'row': true,
+        'rowheading': true,
+        'treeitem': true,
+      },
+    },
+    deletable: {
+      inputType: {
+      },
+      role: {
+        'option': true,
+        'row': true,
+        'tab': true,
+        'treeitem': true,
+      },
+    },
+  };
+
+  /**
+   * Computes whether keyboard event should be treated as initiating focus navigation.
+   * @param {Event} e
+   * @return {boolean}
+   */
+  function handleEventAsNavigation(e) {
+    if (e.altKey || e.ctrlKey || e.metaKey)
+      return false;
+
+    var index = navigationKeys.indexOf(e.keyCode);
+    var tagName = e.target.tagName;
+    var inputType = tagName === 'INPUT' ? e.target.type : undefined;
+    var ariaRole = e.target.getAttribute('role');
+
+    // If key is not generally considered navigation, don't handle it as such.
+    if (index === -1)
+      return false;
+
+    // ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Home/End, PageUp/PageDown
+    if (e.keyCode > 32 && e.keyCode < 41)
+      // Return true if target is an input or has a role and is whitelisted as 'incrementable'.
+      return (inputType && behavior.incrementable.inputType[inputType])
+        || (ariaRole && behavior.incrementable.role[ariaRole]);
+
+    // Enter or Space
+    if (e.keyCode == 13 || e.keyCode == 32)
+      // Return true if target is an input or has a role and is whitelisted as 'selectable'.
+      return (inputType && behavior.selectable.inputType[inputType])
+        || (ariaRole && behavior.selectable.role[ariaRole]);
+
+    // Esc key when target is a descendant of a dialog or menu.
+    if (e.keyCode == 27)
+      return event.target.closest('[role$="dialog"],[role="menu"]') !== null;
+
+    // Backspace or Delete
+    if (e.keyCode == 8 || e.keyCode == 46)
+      // Return true if target has a role and is whitelisted as 'deletable'.
+      return ariaRole && behavior.deletable.role[ariaRole];
+
+    return e.keyCode == 9;
+  }
 
   /**
    * Computes whether the given element should automatically trigger the
@@ -75,27 +193,47 @@ function init() {
   }
 
   /**
-   * On `keyup` add `focus-ring` class if the user pressed Tab and the event
-   * target is an element that will likely require interaction via the
-   * keyboard (e.g. a text box).
-   * The `keyup` event is used over the focus event because:
-   * 1. `focus` is a device-independent event, and `keyup` ensures the
-   *    `focus-ring` class is only added when focus originates from
-   *    keyboard navigation.
-   * 2. Unlike `focus`, keyup` will fire when the user navigates from the
-   *    browser chrome into the document. (For more, see issue #15)
+   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
+   * key was Tab or another navigation key.
    * @param {Event} e
    */
-  function onKeyUp(e) {
-    if (e.altKey || e.ctrlKey || e.metaKey)
+  function onKeyDown(e) {
+    if (!handleEventAsNavigation(e))
       return;
 
-    if (e.keyCode != 9)
+    hadKeyboardEvent = true;
+  }
+
+  /**
+   * On `mousedown`, unset `hadKeyboardEvent`, remove `focus-ring` class from elements where not
+   * originally added by the author.
+   * @param {Event} e
+   */
+  function onMouseDown(e) {
+    hadKeyboardEvent = false;
+    if (elementsWithFocusRing.length) {
+      for(var i = 0; i < elementsWithFocusRing.length; i++) {
+        if (!focusTriggersKeyboardModality(elementsWithFocusRing[i])) {
+          removeFocusRingClass(elementsWithFocusRing[i]);
+        }
+      }
+    }
+  }
+
+  /**
+   * On `focus`, add the `focus-ring` class to the target if:
+   * - the target received focus as a result of keyboard navigation
+   * - the event target is an element that will likely require interaction
+   *   via the keyboard (e.g. a text box)
+   * @param {Event} e
+   */
+  function onFocus(e) {
+    if (e.target == document)
       return;
 
-    var target = e.target;
-    if (focusTriggersKeyboardModality(target)) {
-      addFocusRingClass(target);
+    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+      addFocusRingClass(e.target);
+      hadKeyboardEvent = false;
     }
   }
 
@@ -142,7 +280,9 @@ function init() {
     }
   }
 
-  document.addEventListener('keyup', onKeyUp, true);
+  document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('mousedown', onMouseDown, true);
+  document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
