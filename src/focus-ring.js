@@ -34,6 +34,28 @@ function init() {
     40: true,
   };
 
+  var managedFocusARIARoles = {
+    // parent roles
+    'grid': true,
+    'listbox': true,
+    'menu': true,
+    'menubar': true,
+    'radiogroup': true,
+    'tree': true,
+    'treegrid': true,
+    'tablist': true,
+
+    // descendant roles
+    'option': true,
+    'menuitem': true,
+    'menuitemradio': true,
+    'menuitemcheckbox': true,
+    'radio': true,
+    'tab': true,
+    'treeitem': true,
+    'gridcell': true,
+  };
+
   /**
    * Computes whether the given element should automatically trigger the
    * `focus-ring` class being added, i.e. whether it should always match
@@ -126,13 +148,42 @@ function init() {
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
-    if (keyIsValid(e))
+    if (!keyIsValid(e))
       return;
 
     var target = e.target;
     if (focusTriggersKeyboardModality(target)) {
       addFocusRingClass(target);
     }
+  }
+
+  var handledMouseDown = false;
+
+  function onMouseDown(e) {
+    handledMouseDown = true;
+  }
+
+  function onFocus(e) {
+    // Ignore `focus` events preceded by a mousedown so
+    // we can be assured the `focus-ring` class is only applied
+    // in response to key events or explicit programmatic focus.
+    //
+    // This works because events are fired in the following order:
+    // 1. mousedown
+    // 2. focus
+    // 3. mouseup
+    // 4. click
+    if (handledMouseDown) {
+      handledMouseDown = false;
+      return;
+    }
+
+    // Add the `focus-ring` class in response to focus events for
+    // ARIA controls requiring managed focused
+    var target = e.target;
+    var role = target.getAttribute('role');
+    if (managedFocusARIARoles[role])
+      addFocusRingClass(target);
   }
 
   /**
@@ -178,6 +229,8 @@ function init() {
     }
   }
 
+  document.addEventListener('mousedown', onMouseDown, true);
+  document.addEventListener('focus', onFocus, true);
   document.addEventListener('keyup', onKeyUp, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
