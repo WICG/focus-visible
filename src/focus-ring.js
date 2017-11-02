@@ -126,7 +126,7 @@ function init() {
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
-    if (keyIsValid(e))
+    if (!keyIsValid(e))
       return;
 
     var target = e.target;
