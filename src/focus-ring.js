@@ -27,6 +27,35 @@ function init() {
     'datetime-local': true,
   };
 
+  var arrowKeys = {
+    37: true,
+    38: true,
+    39: true,
+    40: true,
+  };
+
+  var managedFocusARIARoles = {
+    // parent roles
+    'grid': true,
+    'listbox': true,
+    'menu': true,
+    'menubar': true,
+    'radiogroup': true,
+    'tree': true,
+    'treegrid': true,
+    'tablist': true,
+
+    // descendant roles
+    'option': true,
+    'menuitem': true,
+    'menuitemradio': true,
+    'menuitemcheckbox': true,
+    'radio': true,
+    'tab': true,
+    'treeitem': true,
+    'gridcell': true,
+  };
+
   /**
    * Computes whether the given element should automatically trigger the
    * `focus-ring` class being added, i.e. whether it should always match
@@ -75,6 +104,35 @@ function init() {
   }
 
   /**
+   * Validate the key we're handling should result in the application of the
+   * `focus-ring` class.
+   * @param {Event} e
+   * @return {Boolean}
+   */
+  function keyIsValid(e) {
+    var keyCode = e.keyCode;
+    var target = e.target;
+    var type = target.type;
+    var tagName = target.tagName;
+    var isRadioButton = (tagName == 'input' && type == 'radio');
+
+    // By default the browser allows the user to manipulate the selection
+    // (checked state) among a set of radio buttons
+    // (<input type="radio"> each with a different value but the same `name`).
+    // The selection state change also moves focus to the next/previous radio,
+    // so the `focus-ring` class should be applied in this case to maintain
+    // parity with default browser behavior.
+    if (isRadioButton && arrowKeys[keyCode])
+      return true;
+
+    // Tab or Shift + Tab
+    if (keyCode == 9)
+      return true;
+
+    return false;
+  }
+
+  /**
    * On `keyup` add `focus-ring` class if the user pressed Tab and the event
    * target is an element that will likely require interaction via the
    * keyboard (e.g. a text box).
@@ -90,13 +148,54 @@ function init() {
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
-    if (e.keyCode != 9)
+    if (!keyIsValid(e))
       return;
 
     var target = e.target;
     if (focusTriggersKeyboardModality(target)) {
       addFocusRingClass(target);
     }
+  }
+
+  var handledMouseDown = false;
+
+  /**
+   * On `mousedown`, keep track of mousedown events.
+   * @param {Event} e
+   */
+  function onMouseDown(e) {
+    handledMouseDown = true;
+  }
+
+  /**
+   * On `focus`, add the `focus-ring` class if:
+   * 1. The focus event was preceded by a keyboard event or was the result
+   *    of an explicit call to focus()
+   * 2. The target of the event was a custom ARIA control requiring managed
+   *    focus.
+   * @param {Event} e
+   */
+  function onFocus(e) {
+    // Ignore `focus` events preceded by a mousedown so
+    // we can be assured the `focus-ring` class is only applied
+    // in response to key events or explicit programmatic focus.
+    //
+    // This works because events are fired in the following order:
+    // 1. mousedown
+    // 2. focus
+    // 3. mouseup
+    // 4. click
+    if (handledMouseDown) {
+      handledMouseDown = false;
+      return;
+    }
+
+    // Add the `focus-ring` class in response to focus events for
+    // ARIA controls requiring managed focused
+    var target = e.target;
+    var role = target.getAttribute('role');
+    if (managedFocusARIARoles[role])
+      addFocusRingClass(target);
   }
 
   /**
@@ -142,6 +241,8 @@ function init() {
     }
   }
 
+  document.addEventListener('mousedown', onMouseDown, true);
+  document.addEventListener('focus', onFocus, true);
   document.addEventListener('keyup', onKeyUp, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
