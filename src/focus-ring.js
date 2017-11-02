@@ -159,10 +159,22 @@ function init() {
 
   var handledMouseDown = false;
 
+  /**
+   * On `mousedown`, keep track of mousedown events.
+   * @param {Event} e
+   */
   function onMouseDown(e) {
     handledMouseDown = true;
   }
 
+  /**
+   * On `focus`, add the `focus-ring` class if:
+   * 1. The focus event was preceded by a keyboard event or was the result
+   *    of an explicit call to focus()
+   * 2. The target of the event was a custom ARIA control requiring managed
+   *    focus.
+   * @param {Event} e
+   */
   function onFocus(e) {
     // Ignore `focus` events preceded by a mousedown so
     // we can be assured the `focus-ring` class is only applied
