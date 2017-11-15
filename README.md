@@ -58,10 +58,6 @@ not supported in IE 8-9. In accordance with the W3C's new [Polyfill
 guidance](https://www.w3.org/2001/tag/doc/polyfills/#don-t-serve-unnecessary-polyfills), the
 `:focus-ring` polyfill does not bundle other polyfills. If you need to support these older browsers
 you should add the [classList polyfill](https://github.com/eligrey/classList.js/) to your page
-<<<<<<< HEAD
 before loading the `:focus-ring` polyfill. Using a service like
 [Polyfill.io](https://polyfill.io/v2/docs/) will handle feature detecting and loading the necessary
 polyfills for you.
-=======
-before loading the `:focus-ring` polyfill.
->>>>>>> Add dependencies note
