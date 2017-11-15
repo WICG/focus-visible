@@ -76,14 +76,18 @@ function init() {
 
   /**
    * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
-   * key was Tab.
+   * key was Tab/Shift-Tab or Arrow Keys.
    * @param {Event} e
    */
   function onKeyDown(e) {
+    const allowedKeys = [9, 37, 38, 39, 40];
+
+    // If the user is holding down a modifier key, abort.
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
-    if (e.keyCode != 9)
+    // If the key can't be found in the list of allowed keys, abort.
+    if (allowedKeys.indexOf(e.keyCode) === -1)
       return;
 
     hadKeyboardEvent = true;
