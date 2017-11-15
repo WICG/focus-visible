@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/WICG/focus-ring.svg?branch=master)](https://travis-ci.org/WICG/focus-ring)
+[![Greenkeeper badge](https://badges.greenkeeper.io/WICG/focus-ring.svg)](https://greenkeeper.io/)
 
 Based on the proposed CSS
 [`:focus-ring`](https://drafts.csswg.org/selectors-4/#the-focusring-pseudo)
@@ -9,8 +10,6 @@ in situations in which the `:focus-ring` pseudo-selector should match.
 [Demo](https://wicg.github.io/focus-ring/demo)
 
 ## Installation
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/WICG/focus-ring.svg)](https://greenkeeper.io/)
 
 `npm install --save wicg-focus-ring`
 
