@@ -9,25 +9,25 @@ describe('<input type="radio"> group', function() {
   });
 
   it('should apply .focus-ring on keyboard focus', async function() {
-      let body = await driver.findElement(By.css('body'));
-      let first = await driver.findElement(By.css('#first'));
-      let last = await driver.findElement(By.css('#last'));
-      await first.click();
-      await first.sendKeys(Key.ARROW_DOWN);
-      let actual = await driver.executeScript(`
-        return window.getComputedStyle(document.querySelector('#last')).outlineColor
-      `);
-      expect(actual).toEqual(FOCUS_RING_STYLE);
+    let body = await driver.findElement(By.css('body'));
+    let first = await driver.findElement(By.css('#first'));
+    let last = await driver.findElement(By.css('#last'));
+    await first.click();
+    await first.sendKeys(Key.ARROW_DOWN);
+    let actual = await driver.executeScript(`
+      return window.getComputedStyle(document.querySelector('#last')).outlineColor
+    `);
+    expect(actual).toEqual(FOCUS_RING_STYLE);
   });
 
   it('should NOT apply .focus-ring on mouse focus', async function() {
-      let body = await driver.findElement(By.css('body'));
-      let first = await driver.findElement(By.css('#first'));
-      await first.click();
-      let actual = await driver.executeScript(`
-        return window.getComputedStyle(document.querySelector('#first')).outlineColor
-      `);
-      expect(actual).toNotEqual(FOCUS_RING_STYLE);
+    let body = await driver.findElement(By.css('body'));
+    let first = await driver.findElement(By.css('#first'));
+    await first.click();
+    let actual = await driver.executeScript(`
+      return window.getComputedStyle(document.querySelector('#first')).outlineColor
+    `);
+    expect(actual).toNotEqual(FOCUS_RING_STYLE);
   });
 
 });

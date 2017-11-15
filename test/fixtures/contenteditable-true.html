@@ -20,6 +20,12 @@
     </style>
   </head>
   <body>
+    <!--
+      FF won't focus a div with contenteditable if it's the first element on the page.
+      https://jsbin.com/cawevo/edit?html,output
+      Add a dummy button so Selenium can use it as the first focus target.
+    -->
+    <button id="start">Dummy</button>
     <div contenteditable="true" id="el"></div>
     <script src="/dist/focus-ring.js"></script>
   </body>
