@@ -6,7 +6,7 @@
     "lint": "eslint src/*.js",
     "test:server": "http-server . -s",
     "test:selenium": "wait-on http://localhost:8080 && node ./test/index.js",
-    "test": "concurrently -k \"npm run test:server\" \"npm run test:selenium\"",
+    "test": "npm run build && concurrently -k \"npm run test:server\" \"npm run test:selenium\"",
     "build": "rollup -c",
     "dev": "rollup -c -w"
   },
