@@ -4,10 +4,11 @@
   "description": "Polyfill for :focus-ring pseudo-selector",
   "scripts": {
     "lint": "eslint src/*.js",
-    "test": "npm run lint",
+    "test:server": "http-server . -s",
+    "test:selenium": "wait-on http://localhost:8080 && node ./test/index.js",
+    "test": "concurrently -k \"npm run test:server\" \"npm run test:selenium\"",
     "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "prepublish": "npm run test && npm run build"
+    "dev": "rollup -c -w"
   },
   "main": "dist/focus-ring.js",
   "repository": {
@@ -20,15 +21,26 @@
     "url": "https://github.com/WICG/focus-ring/issues"
   },
   "homepage": "https://github.com/WICG/focus-ring",
-  "devDependencies": {
-    "eslint": "^3.13.1",
-    "eslint-config-google": "^0.7.1",
-    "rollup": "^0.41.6",
-    "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-watch": "^3.2.2"
-  },
   "dependencies": {
-    "dom-classlist": "^1.0.1"
+    "dom-classlist": "1.0.1"
+  },
+  "devDependencies": {
+    "chromedriver": "2.33.2",
+    "clear-module": "2.1.0",
+    "concurrently": "3.5.0",
+    "eslint": "3.13.1",
+    "eslint-config-google": "0.7.1",
+    "expect": "1.20.2",
+    "geckodriver": "1.9.0",
+    "glob-promise": "3.3.0",
+    "http-server": "0.10.0",
+    "mocha": "4.0.1",
+    "mz": "2.7.0",
+    "rollup": "0.41.6",
+    "rollup-plugin-commonjs": "8.2.6",
+    "rollup-plugin-node-resolve": "3.0.0",
+    "rollup-watch": "3.2.2",
+    "selenium-assistant": "5.2.0",
+    "wait-on": "2.0.2"
   }
 }
