@@ -5,37 +5,43 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
       div,input,textarea,h1,h2 {
-      font-family: arial, sans-serif;
+        font-family: arial, sans-serif;
       }
-      div { margin: 1em 0; }
+
+      div {
+        margin: 1em 0;
+      }
+
       div[contenteditable] {
-      width: 10em;
-      min-height: 2em;
-      padding: 0.2em;
-      border: 1px solid #000;
+        width: 10em;
+        min-height: 2em;
+        padding: 0.2em;
+        border: 1px solid #000;
       }
+
       label {
-      display: block;
-      margin: 1em 0;
+        display: block;
+        margin: 1em 0;
       }
+
       select {
-      width: 10em;
+        width: 10em;
       }
-    </style>
-    <script src="../dist/focus-ring.js"></script>
-    <style>
-        :focus:not(.focus-ring) {
-          outline-width: 0;
-        }
+
+      :focus:not(.focus-ring) {
+        outline: 0;
+      }
     </style>
   </head>
   <body>
     <h1>Keyboard-only focus test</h1>
     <p>
-      This page contains various html controls and demonstrates a proposal for only drawing a focus ring when the keyboard is being used.
-      Navigate through the interactive elements in various ways (using mouse, switch to keyboard, try it on a touch device).
-      You should see the normal platform focus indicator on elements below differently based on whether you interact with them via keyboard or mouse.
-      If you are using the mouse and get lost, at any time you can press a key (such as Shift) to have the focus indicator appear.
+      This page contains various html controls and demonstrates a proposal for only drawing a focus
+      ring when the keyboard is being used. Navigate through the interactive elements in various
+      ways (using mouse, switch to keyboard, try it on a touch device). You should see the normal
+      platform focus indicator on elements below differently based on whether you interact with them
+      via keyboard or mouse. If you are using the mouse and get lost, at any time you can press a
+      key (such as Shift) to have the focus indicator appear.
     </p>
     <h2>Buttons</h2>
     <div>
@@ -115,7 +121,7 @@
     <div>
       <input type="file" title="File">
     </div>
-
-
+    <script src="https://cdn.polyfill.io/v2/polyfill.js?features=Element.prototype.classList"></script>
+    <script src="https://unpkg.com/wicg-focus-ring"></script>
   </body>
 </html>
