@@ -197,6 +197,13 @@ function init() {
     'datetime-local': true,
   };
 
+  var arrowKeys = {
+    37: true,
+    38: true,
+    39: true,
+    40: true,
+  };
+
   /**
    * Computes whether the given element should automatically trigger the
    * `focus-ring` class being added, i.e. whether it should always match
@@ -245,6 +252,35 @@ function init() {
   }
 
   /**
+   * Validate the key we're handling should result in the application of the
+   * `focus-ring` class.
+   * @param {Event} e
+   * @return {Boolean}
+   */
+  function keyIsValid(e) {
+    var keyCode = e.keyCode;
+    var target = e.target;
+    var type = target.type;
+    var tagName = target.tagName;
+    var isRadioButton = (tagName == 'input' && type == 'radio');
+
+    // By default the browser allows the user to manipulate the selection
+    // (checked state) among a set of radio buttons
+    // (<input type="radio"> each with a different value but the same `name`).
+    // The selection state change also moves focus to the next/previous radio,
+    // so the `focus-ring` class should be applied in this case to maintain
+    // parity with default browser behavior.
+    if (isRadioButton && arrowKeys[keyCode])
+      return true;
+
+    // Tab or Shift + Tab
+    if (keyCode == 9)
+      return true;
+
+    return false;
+  }
+
+  /**
    * On `keyup` add `focus-ring` class if the user pressed Tab and the event
    * target is an element that will likely require interaction via the
    * keyboard (e.g. a text box).
@@ -260,7 +296,7 @@ function init() {
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
-    if (e.keyCode != 9)
+    if (!keyIsValid(e))
       return;
 
     var target = e.target;
