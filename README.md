@@ -10,6 +10,8 @@ in situations in which the `:focus-ring` pseudo-selector should match.
 
 ## Installation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/WICG/focus-ring.svg)](https://greenkeeper.io/)
+
 `npm install --save wicg-focus-ring`
 
 ## Usage
