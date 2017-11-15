@@ -1,4 +1,4 @@
-const {Key, By, until} = require('selenium-webdriver');
+const { Key, By, until } = require('selenium-webdriver');
 const expect = require('expect');
 
 // Expected test results
@@ -6,7 +6,7 @@ const FOCUS_RING_STYLE = 'rgb(255, 0, 0)';
 
 /**
  * Load a test fixture HTML file to run assertions against.
- * @param {*} file 
+ * @param {*} file
  */
 async function fixture(file) {
   let driver = global.__driver;
@@ -18,7 +18,7 @@ async function fixture(file) {
 /**
  * Assert that the target element with the #el id responds to keyboard focus.
  * Can optionally take a `false` argument to indicate it should NOT match.
- * @param {*} shouldMatch 
+ * @param {*} shouldMatch
  */
 async function matchesKeyboard(shouldMatch = true) {
   let driver = global.__driver;
@@ -37,7 +37,7 @@ async function matchesKeyboard(shouldMatch = true) {
 /**
  * Assert that the target element with the #el id responds to mouse focus.
  * Can optionally take a `false` argument to indicate it should NOT match.
- * @param {*} shouldMatch 
+ * @param {*} shouldMatch
  */
 async function matchesMouse(shouldMatch = true) {
   let driver = global.__driver;

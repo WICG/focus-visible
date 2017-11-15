@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2017 Google Inc. All rights reserved.
  *
@@ -14,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint no-console: ["off"] */
 const fs = require('mz/fs');
 const path = require('path');
 const seleniumAssistant = require('selenium-assistant');
@@ -30,7 +28,7 @@ let didTestsFail = false;
  */
 async function getMocha() {
   const mocha = new Mocha();
-  const specs = await glob('./test/specs/*.js', {absolute: true});
+  const specs = await glob('./test/specs/*.js', { absolute: true });
   specs.map(spec => {
     // Mocha adds state to its test files so they can't be run twice.
     // This will clear the test file from the cache so Mocha must request
@@ -51,7 +49,10 @@ async function runTests(browsers) {
     // I know what you're thinking...
     // But Mocha doesn't give me a good way to inject data into the runner so...
     global.__driver = driver;
-    driver.manage().timeouts().setScriptTimeout(60000);
+    driver
+      .manage()
+      .timeouts()
+      .setScriptTimeout(60000);
     const mocha = await getMocha();
     await runMocha(driver, mocha);
   }
@@ -59,8 +60,8 @@ async function runTests(browsers) {
 
 /**
  * Run Mocha tests for each WebDriver instance.
- * @param {*} driver 
- * @param {*} mocha 
+ * @param {*} driver
+ * @param {*} mocha
  */
 function runMocha(driver, mocha) {
   return new Promise(function(resolve, reject) {
@@ -75,7 +76,7 @@ function runMocha(driver, mocha) {
       }
       seleniumAssistant.killWebDriver(driver);
       resolve();
-    })
+    });
   });
 }
 
@@ -84,8 +85,10 @@ function runMocha(driver, mocha) {
  * which browsers are used to run the tests.
  */
 function browserFilter(browser) {
-  return browser.getReleaseName() === 'stable'
-    && ['chrome', 'firefox'].includes(browser.getId());
+  return (
+    browser.getReleaseName() === 'stable' &&
+    ['chrome', 'firefox'].includes(browser.getId())
+  );
 }
 
 /**
@@ -103,7 +106,7 @@ async function main() {
  */
 main()
   .then(function() {
-    didTestsFail ? process.exit(1) : process.exit()
+    didTestsFail ? process.exit(1) : process.exit();
   })
   .catch(err => {
     console.error(err);

@@ -1,4 +1,3 @@
-
 /**
  * https://github.com/WICG/focus-ring
  */
@@ -7,19 +6,19 @@ function init() {
   var elWithFocusRing;
 
   var inputTypesWhitelist = {
-    'text': true,
-    'search': true,
-    'url': true,
-    'tel': true,
-    'email': true,
-    'password': true,
-    'number': true,
-    'date': true,
-    'month': true,
-    'week': true,
-    'time': true,
-    'datetime': true,
-    'datetime-local': true,
+    text: true,
+    search: true,
+    url: true,
+    tel: true,
+    email: true,
+    password: true,
+    number: true,
+    date: true,
+    month: true,
+    week: true,
+    time: true,
+    datetime: true,
+    'datetime-local': true
   };
 
   /**
@@ -36,11 +35,9 @@ function init() {
     if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readonly)
       return true;
 
-    if (tagName == 'TEXTAREA' && !el.readonly)
-      return true;
+    if (tagName == 'TEXTAREA' && !el.readonly) return true;
 
-    if (el.contentEditable == 'true')
-      return true;
+    if (el.contentEditable == 'true') return true;
 
     return false;
   }
@@ -51,8 +48,7 @@ function init() {
    * @param {Element} el
    */
   function addFocusRingClass(el) {
-    if (el.classList.contains('focus-ring'))
-      return;
+    if (el.classList.contains('focus-ring')) return;
     el.classList.add('focus-ring');
     el.setAttribute('data-focus-ring-added', '');
   }
@@ -63,8 +59,7 @@ function init() {
    * @param {Element} el
    */
   function removeFocusRingClass(el) {
-    if (!el.hasAttribute('data-focus-ring-added'))
-      return;
+    if (!el.hasAttribute('data-focus-ring-added')) return;
     el.classList.remove('focus-ring');
     el.removeAttribute('data-focus-ring-added');
   }
@@ -78,12 +73,10 @@ function init() {
     const allowedKeys = [9, 37, 38, 39, 40];
 
     // If the user is holding down a modifier key, abort.
-    if (e.altKey || e.ctrlKey || e.metaKey)
-      return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
 
     // If the key can't be found in the list of allowed keys, abort.
-    if (allowedKeys.indexOf(e.keyCode) === -1)
-      return;
+    if (allowedKeys.indexOf(e.keyCode) === -1) return;
 
     hadKeyboardEvent = true;
   }
@@ -96,8 +89,7 @@ function init() {
    * @param {Event} e
    */
   function onFocus(e) {
-    if (e.target == document)
-      return;
+    if (e.target == document) return;
 
     if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
       addFocusRingClass(e.target);
@@ -110,8 +102,7 @@ function init() {
    * @param {Event} e
    */
   function onBlur(e) {
-    if (e.target == document)
-      return;
+    if (e.target == document) return;
 
     removeFocusRingClass(e.target);
   }
@@ -134,8 +125,7 @@ function init() {
    * @param {Event} e
    */
   function onWindowBlur(e) {
-    if (e.target !== window)
-      return;
+    if (e.target !== window) return;
 
     window.addEventListener('focus', onWindowFocus, true);
     addInitialPointerMoveListeners();
@@ -177,8 +167,7 @@ function init() {
   function onInitialPointerMove(e) {
     // Work around a Safari quirk that fires a mousemove on <html> whenever the window blurs,
     // even if you're tabbing out of the page. ¯\_(ツ)_/¯
-    if (e.target.nodeName.toLowerCase() === 'html')
-      return;
+    if (e.target.nodeName.toLowerCase() === 'html') return;
 
     hadKeyboardEvent = false;
     document.removeEventListener('mousemove', onInitialPointerMove);
