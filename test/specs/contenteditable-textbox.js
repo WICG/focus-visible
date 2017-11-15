@@ -1,18 +1,26 @@
-const {fixture, matchesKeyboard, matchesMouse} = require('./helpers');
+const {fixture, matchesKeyboard, matchesMouse, FOCUS_RING_STYLE} = require('./helpers');
+const {Key, By} = require('selenium-webdriver');
+const expect = require('expect');
+const driver = global.__driver;
 
 describe('<div role="textbox" contenteditable="true">', function() {
   beforeEach(function() {
-    return fixture('contenteditable-true.html');
+    return fixture('contenteditable-textbox.html');
   });
 
-  // This test seems to fail because FF won't focus a div with contenteditable
-  // if it's the first element on the page. Weird.
-  // https://jsbin.com/cawevo/edit?html,output
-  it.skip('should apply .focus-ring on keyboard focus', function() {
-    return matchesKeyboard();
+  // FF won't focus a div with contenteditable if it's the first element on the page.
+  // So we click on a dummy element to move focus into the document.
+  it('should apply .focus-ring on keyboard focus', async function() {
+    let start = await driver.findElement(By.css('#start'));
+    await start.click();
+    await start.sendKeys(Key.TAB);
+    let actual = await driver.executeScript(`
+      return window.getComputedStyle(document.querySelector('#el')).outlineColor
+    `);
+    expect(actual).toEqual(FOCUS_RING_STYLE);
   });
 
-  it.skip('should apply .focus-ring on mouse focus', function() {
+  it('should apply .focus-ring on mouse focus', async function() {
     return matchesMouse();
   });
 });

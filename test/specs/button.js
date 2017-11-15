@@ -1,6 +1,6 @@
 const {fixture, matchesKeyboard, matchesMouse} = require('./helpers');
 
-describe.only('<button>', function() {
+describe('<button>', function() {
   beforeEach(function() {
     return fixture('button.html');
   });

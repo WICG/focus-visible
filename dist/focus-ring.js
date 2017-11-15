@@ -5,183 +5,13 @@
 }(this, (function () { 'use strict';
 
 /**
- * Module export
- *
- * @param {Element} el
- * @return {ClassList}
- */
-
-var domClasslist = function (el) {
-  return new ClassList(el);
-};
-
-/**
- * Initialize a new ClassList for the given element
- *
- * @param {Element} el DOM Element
- */
-function ClassList(el) {
-  if (!el || el.nodeType !== 1) {
-    throw new Error('A DOM Element reference is required');
-  }
-
-  this.el = el;
-  this.classList = el.classList;
-}
-
-/**
- * Check token validity
- *
- * @param token
- * @param [method]
- */
-function checkToken(token, method) {
-  method = method || 'a method';
-
-  if (typeof token != 'string') {
-    throw new TypeError(
-      'Failed to execute \'' + method + '\' on \'ClassList\': ' +
-      'the token provided (\'' + token + '\') is not a string.'
-    );
-  }
-  if (token === "") {
-    throw new SyntaxError(
-      'Failed to execute \'' + method + '\' on \'ClassList\': ' +
-      'the token provided must not be empty.'
-    );
-  }
-  if (/\s/.test(token)) {
-    throw new Error(
-      'Failed to execute \'' + method + '\' on \'ClassList\': ' +
-      'the token provided (\'' + token + '\') contains HTML space ' +
-      'characters, which are not valid in tokens.'
-    );
-  }
-}
-
-/**
- * Return an array of the class names on the element.
- *
- * @return {Array}
- */
-ClassList.prototype.toArray = function () {
-  var str = (this.el.getAttribute('class') || '').replace(/^\s+|\s+$/g, '');
-  var classes = str.split(/\s+/);
-  if ('' === classes[0]) { classes.shift(); }
-  return classes;
-};
-
-/**
- * Add the given `token` to the class list if it's not already present.
- *
- * @param {String} token
- */
-ClassList.prototype.add = function (token) {
-  var classes, index, updated;
-  checkToken(token, 'add');
-
-  if (this.classList) {
-    this.classList.add(token);
-  }
-  else {
-    // fallback
-    classes = this.toArray();
-    index = classes.indexOf(token);
-    if (index === -1) {
-      classes.push(token);
-      this.el.setAttribute('class', classes.join(' '));
-    }
-  }
-
-  return;
-};
-
-/**
- * Check if the given `token` is in the class list.
- *
- * @param {String} token
- * @return {Boolean}
- */
-ClassList.prototype.contains = function (token) {
-  checkToken(token, 'contains');
-
-  return this.classList ?
-    this.classList.contains(token) :
-    this.toArray().indexOf(token) > -1;
-};
-
-/**
- * Remove any class names that match the given `token`, when present.
- *
- * @param {String|RegExp} token
- */
-ClassList.prototype.remove = function (token) {
-  var arr, classes, i, index, len;
-
-  if ('[object RegExp]' == Object.prototype.toString.call(token)) {
-    arr = this.toArray();
-    for (i = 0, len = arr.length; i < len; i++) {
-      if (token.test(arr[i])) {
-        this.remove(arr[i]);
-      }
-    }
-  }
-  else {
-    checkToken(token, 'remove');
-
-    if (this.classList) {
-      this.classList.remove(token);
-    }
-    else {
-      // fallback
-      classes = this.toArray();
-      index = classes.indexOf(token);
-      if (index > -1) {
-        classes.splice(index, 1);
-        this.el.setAttribute('class', classes.join(' '));
-      }
-    }
-  }
-
-  return;
-};
-
-/**
- * Toggle the `token` in the class list. Optionally force state via `force`.
- *
- * Native `classList` is not used as some browsers that support `classList` do
- * not support `force`. Avoiding `classList` altogether keeps this function
- * simple.
- *
- * @param {String} token
- * @param {Boolean} [force]
- * @return {Boolean}
- */
-ClassList.prototype.toggle = function (token, force) {
-  checkToken(token, 'toggle');
-
-  var hasToken = this.contains(token);
-  var method = hasToken ? (force !== true && 'remove') : (force !== false && 'add');
-
-  if (method) {
-    this[method](token);
-  }
-
-  return (typeof force == 'boolean' ? force : !hasToken);
-};
-
-/**
  * https://github.com/WICG/focus-ring
  */
 function init() {
+  var hadKeyboardEvent = true;
   var elWithFocusRing;
 
   var inputTypesWhitelist = {
-    'radio': true,
-    'checkbox': true,
-    'button': true,
-    'reset': true,
-    'submit': true,
     'text': true,
     'search': true,
     'url': true,
@@ -226,9 +56,9 @@ function init() {
    * @param {Element} el
    */
   function addFocusRingClass(el) {
-    if (domClasslist(el).contains('focus-ring'))
+    if (el.classList.contains('focus-ring'))
       return;
-    domClasslist(el).add('focus-ring');
+    el.classList.add('focus-ring');
     el.setAttribute('data-focus-ring-added', '');
   }
 
@@ -240,32 +70,43 @@ function init() {
   function removeFocusRingClass(el) {
     if (!el.hasAttribute('data-focus-ring-added'))
       return;
-    domClasslist(el).remove('focus-ring');
+    el.classList.remove('focus-ring');
     el.removeAttribute('data-focus-ring-added');
   }
 
   /**
-   * On `keyup` add `focus-ring` class if the user pressed Tab and the event
-   * target is an element that will likely require interaction via the
-   * keyboard (e.g. a text box).
-   * The `keyup` event is used over the focus event because:
-   * 1. `focus` is a device-independent event, and `keyup` ensures the
-   *    `focus-ring` class is only added when focus originates from
-   *    keyboard navigation.
-   * 2. Unlike `focus`, keyup` will fire when the user navigates from the
-   *    browser chrome into the document. (For more, see issue #15)
+   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
+   * key was Tab/Shift-Tab or Arrow Keys.
    * @param {Event} e
    */
-  function onKeyUp(e) {
+  function onKeyDown(e) {
+    const allowedKeys = [9, 37, 38, 39, 40];
+
+    // If the user is holding down a modifier key, abort.
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
-    if (e.keyCode != 9)
+    // If the key can't be found in the list of allowed keys, abort.
+    if (allowedKeys.indexOf(e.keyCode) === -1)
       return;
 
-    var target = e.target;
-    if (focusTriggersKeyboardModality(target)) {
-      addFocusRingClass(target);
+    hadKeyboardEvent = true;
+  }
+
+  /**
+   * On `focus`, add the `focus-ring` class to the target if:
+   * - the target received focus as a result of keyboard navigation
+   * - the event target is an element that will likely require interaction
+   *   via the keyboard (e.g. a text box)
+   * @param {Event} e
+   */
+  function onFocus(e) {
+    if (e.target == document)
+      return;
+
+    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+      addFocusRingClass(e.target);
+      hadKeyboardEvent = false;
     }
   }
 
@@ -285,10 +126,7 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
-    // When removing the activeElement from DOM it's possible IE11 is in state
-    // document.activeElement === null
-    if (!document.activeElement)
-      return;
+    window.removeEventListener('focus', onWindowFocus, true);
     if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
 
@@ -298,13 +136,15 @@ function init() {
   /**
    * When switching windows, keep track of the focused element if it has a
    * focus-ring class.
+   * @param {Event} e
    */
-  function onWindowBlur() {
-    // When removing the activeElement from DOM it's possible IE11 is in state
-    // document.activeElement === null
-    if (!document.activeElement)
+  function onWindowBlur(e) {
+    if (e.target !== window)
       return;
-    if (domClasslist(document.activeElement).contains('focus-ring')) {
+
+    window.addEventListener('focus', onWindowFocus, true);
+    addInitialPointerMoveListeners();
+    if (document.activeElement.classList.contains('focus-ring')) {
       // Keep a reference to the element to which the focus-ring class is applied
       // so the focus-ring class can be restored to it if the window regains
       // focus after being blurred.
@@ -312,12 +152,59 @@ function init() {
     }
   }
 
-  document.addEventListener('keyup', onKeyUp, true);
+  /**
+   * Add a group of listeners to detect a fine-grained pointing device.
+   * These listeners will be added when the polyfill first loads, and if
+   * the window is blurred and regains focus.
+   */
+  function addInitialPointerMoveListeners() {
+    document.addEventListener('mousemove', onInitialPointerMove);
+    document.addEventListener('mousedown', onInitialPointerMove);
+    document.addEventListener('mouseup', onInitialPointerMove);
+    document.addEventListener('pointermove', onInitialPointerMove);
+    document.addEventListener('pointerdown', onInitialPointerMove);
+    document.addEventListener('pointerup', onInitialPointerMove);
+    document.addEventListener('touchmove', onInitialPointerMove);
+    document.addEventListener('touchstart', onInitialPointerMove);
+    document.addEventListener('touchend', onInitialPointerMove);
+  }
+
+  /**
+   * When the polfyill first loads, assume the user is in keyboard modality.
+   * If any event is received from a fine-grained pointing device (mouse, pointer, touch),
+   * turn off keyboard modality.
+   * This accounts for situations where focus enters the page from the URL bar.
+   * In that scenario, the keydown event is inconsistent, so we can't use it to detect modality.
+   * But the odds are pretty good we'll get one of the other pointing device events
+   * and any of them should act as a signal that this is not keyboard focus.
+   * @param {Event} e
+   */
+  function onInitialPointerMove(e) {
+    // Work around a Safari quirk that fires a mousemove on <html> whenever the window blurs,
+    // even if you're tabbing out of the page. ¯\_(ツ)_/¯
+    if (e.target.nodeName.toLowerCase() === 'html')
+      return;
+
+    hadKeyboardEvent = false;
+    document.removeEventListener('mousemove', onInitialPointerMove);
+    document.removeEventListener('mousedown', onInitialPointerMove);
+    document.removeEventListener('mouseup', onInitialPointerMove);
+    document.removeEventListener('pointermove', onInitialPointerMove);
+    document.removeEventListener('pointerdown', onInitialPointerMove);
+    document.removeEventListener('pointerup', onInitialPointerMove);
+    document.removeEventListener('touchmove', onInitialPointerMove);
+    document.removeEventListener('touchstart', onInitialPointerMove);
+    document.removeEventListener('touchend', onInitialPointerMove);
+  }
+
+  document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
+  addInitialPointerMoveListeners();
 
-  domClasslist(document.body).add('js-focus-ring');
+  document.body.classList.add('js-focus-ring');
 }
 
 /**

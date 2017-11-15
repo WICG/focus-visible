@@ -9,7 +9,7 @@ describe('<input type="submit">', function() {
     return matchesKeyboard();
   });
 
-  it.skip('should NOT apply .focus-ring on mouse focus', function() {
+  it('should NOT apply .focus-ring on mouse focus', function() {
     return matchesMouse(false);
   });
 });
