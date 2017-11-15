@@ -85,7 +85,7 @@ function runMocha(driver, mocha) {
  */
 function browserFilter(browser) {
   return browser.getReleaseName() === 'stable'
-    && ['firefox', 'chrome'].includes(browser.getId());
+    && ['chrome', 'firefox'].includes(browser.getId());
 }
 
 /**

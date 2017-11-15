@@ -1,17 +1,12 @@
-import classList from 'dom-classlist';
 
 /**
  * https://github.com/WICG/focus-ring
  */
 function init() {
+  var hadKeyboardEvent = true;
   var elWithFocusRing;
 
   var inputTypesWhitelist = {
-    'radio': true,
-    'checkbox': true,
-    'button': true,
-    'reset': true,
-    'submit': true,
     'text': true,
     'search': true,
     'url': true,
@@ -56,9 +51,9 @@ function init() {
    * @param {Element} el
    */
   function addFocusRingClass(el) {
-    if (classList(el).contains('focus-ring'))
+    if (el.classList.contains('focus-ring'))
       return;
-    classList(el).add('focus-ring');
+    el.classList.add('focus-ring');
     el.setAttribute('data-focus-ring-added', '');
   }
 
@@ -70,32 +65,39 @@ function init() {
   function removeFocusRingClass(el) {
     if (!el.hasAttribute('data-focus-ring-added'))
       return;
-    classList(el).remove('focus-ring');
+    el.classList.remove('focus-ring');
     el.removeAttribute('data-focus-ring-added');
   }
 
   /**
-   * On `keyup` add `focus-ring` class if the user pressed Tab and the event
-   * target is an element that will likely require interaction via the
-   * keyboard (e.g. a text box).
-   * The `keyup` event is used over the focus event because:
-   * 1. `focus` is a device-independent event, and `keyup` ensures the
-   *    `focus-ring` class is only added when focus originates from
-   *    keyboard navigation.
-   * 2. Unlike `focus`, keyup` will fire when the user navigates from the
-   *    browser chrome into the document. (For more, see issue #15)
+   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
+   * key was Tab.
    * @param {Event} e
    */
-  function onKeyUp(e) {
+  function onKeyDown(e) {
     if (e.altKey || e.ctrlKey || e.metaKey)
       return;
 
     if (e.keyCode != 9)
       return;
 
-    var target = e.target;
-    if (focusTriggersKeyboardModality(target)) {
-      addFocusRingClass(target);
+    hadKeyboardEvent = true;
+  }
+
+  /**
+   * On `focus`, add the `focus-ring` class to the target if:
+   * - the target received focus as a result of keyboard navigation
+   * - the event target is an element that will likely require interaction
+   *   via the keyboard (e.g. a text box)
+   * @param {Event} e
+   */
+  function onFocus(e) {
+    if (e.target == document)
+      return;
+
+    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+      addFocusRingClass(e.target);
+      hadKeyboardEvent = false;
     }
   }
 
@@ -115,10 +117,7 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
-    // When removing the activeElement from DOM it's possible IE11 is in state
-    // document.activeElement === null
-    if (!document.activeElement)
-      return;
+    window.removeEventListener('focus', onWindowFocus, true);
     if (document.activeElement == elWithFocusRing)
       addFocusRingClass(elWithFocusRing);
 
@@ -128,13 +127,15 @@ function init() {
   /**
    * When switching windows, keep track of the focused element if it has a
    * focus-ring class.
+   * @param {Event} e
    */
-  function onWindowBlur() {
-    // When removing the activeElement from DOM it's possible IE11 is in state
-    // document.activeElement === null
-    if (!document.activeElement)
+  function onWindowBlur(e) {
+    if (e.target !== window)
       return;
-    if (classList(document.activeElement).contains('focus-ring')) {
+
+    window.addEventListener('focus', onWindowFocus, true);
+    addInitialPointerMoveListeners();
+    if (document.activeElement.classList.contains('focus-ring')) {
       // Keep a reference to the element to which the focus-ring class is applied
       // so the focus-ring class can be restored to it if the window regains
       // focus after being blurred.
@@ -142,12 +143,59 @@ function init() {
     }
   }
 
-  document.addEventListener('keyup', onKeyUp, true);
+  /**
+   * Add a group of listeners to detect a fine-grained pointing device.
+   * These listeners will be added when the polyfill first loads, and if
+   * the window is blurred and regains focus.
+   */
+  function addInitialPointerMoveListeners() {
+    document.addEventListener('mousemove', onInitialPointerMove);
+    document.addEventListener('mousedown', onInitialPointerMove);
+    document.addEventListener('mouseup', onInitialPointerMove);
+    document.addEventListener('pointermove', onInitialPointerMove);
+    document.addEventListener('pointerdown', onInitialPointerMove);
+    document.addEventListener('pointerup', onInitialPointerMove);
+    document.addEventListener('touchmove', onInitialPointerMove);
+    document.addEventListener('touchstart', onInitialPointerMove);
+    document.addEventListener('touchend', onInitialPointerMove);
+  }
+
+  /**
+   * When the polfyill first loads, assume the user is in keyboard modality.
+   * If any event is received from a fine-grained pointing device (mouse, pointer, touch),
+   * turn off keyboard modality.
+   * This accounts for situations where focus enters the page from the URL bar.
+   * In that scenario, the keydown event is inconsistent, so we can't use it to detect modality.
+   * But the odds are pretty good we'll get one of the other pointing device events
+   * and any of them should act as a signal that this is not keyboard focus.
+   * @param {Event} e
+   */
+  function onInitialPointerMove(e) {
+    // Work around a Safari quirk that fires a mousemove on <html> whenever the window blurs,
+    // even if you're tabbing out of the page. ¯\_(ツ)_/¯
+    if (e.target.nodeName.toLowerCase() === 'html')
+      return;
+
+    hadKeyboardEvent = false;
+    document.removeEventListener('mousemove', onInitialPointerMove);
+    document.removeEventListener('mousedown', onInitialPointerMove);
+    document.removeEventListener('mouseup', onInitialPointerMove);
+    document.removeEventListener('pointermove', onInitialPointerMove);
+    document.removeEventListener('pointerdown', onInitialPointerMove);
+    document.removeEventListener('pointerup', onInitialPointerMove);
+    document.removeEventListener('touchmove', onInitialPointerMove);
+    document.removeEventListener('touchstart', onInitialPointerMove);
+    document.removeEventListener('touchend', onInitialPointerMove);
+  }
+
+  document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
   window.addEventListener('focus', onWindowFocus, true);
   window.addEventListener('blur', onWindowBlur, true);
+  addInitialPointerMoveListeners();
 
-  classList(document.body).add('js-focus-ring');
+  document.body.classList.add('js-focus-ring');
 }
 
 /**
