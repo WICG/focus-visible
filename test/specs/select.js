@@ -1,4 +1,4 @@
-const {fixture, matchesKeyboard, matchesMouse} = require('./helpers');
+const { fixture, matchesKeyboard, matchesMouse } = require('./helpers');
 
 describe('<select>', function() {
   beforeEach(function() {

@@ -3,12 +3,16 @@
   "version": "2.0.2",
   "description": "Polyfill for :focus-ring pseudo-selector",
   "scripts": {
-    "lint": "eslint src/*.js",
+    "precommit": "lint-staged",
     "test:server": "http-server . -s",
     "test:selenium": "wait-on http://localhost:8080 && node ./test/index.js",
-    "test": "npm run build && concurrently -k \"npm run test:server\" \"npm run test:selenium\"",
+    "test":
+      "npm run build && concurrently -k \"npm run test:server\" \"npm run test:selenium\"",
     "build": "rollup -c",
     "dev": "rollup -c -w"
+  },
+  "lint-staged": {
+    "*.{js,json,css}": ["prettier --write", "git add"]
   },
   "main": "dist/focus-ring.js",
   "repository": {
@@ -34,8 +38,11 @@
     "geckodriver": "1.9.0",
     "glob-promise": "3.3.0",
     "http-server": "0.10.0",
+    "husky": "0.14.3",
+    "lint-staged": "5.0.0",
     "mocha": "4.0.1",
     "mz": "2.7.0",
+    "prettier": "1.8.2",
     "rollup": "0.41.6",
     "rollup-plugin-commonjs": "8.2.6",
     "rollup-plugin-node-resolve": "3.0.0",

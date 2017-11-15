@@ -1,4 +1,3 @@
-
 /**
  * https://github.com/WICG/focus-ring
  */
@@ -7,19 +6,19 @@ function init() {
   var elWithFocusRing;
 
   var inputTypesWhitelist = {
-    'text': true,
-    'search': true,
-    'url': true,
-    'tel': true,
-    'email': true,
-    'password': true,
-    'number': true,
-    'date': true,
-    'month': true,
-    'week': true,
-    'time': true,
-    'datetime': true,
-    'datetime-local': true,
+    text: true,
+    search: true,
+    url: true,
+    tel: true,
+    email: true,
+    password: true,
+    number: true,
+    date: true,
+    month: true,
+    week: true,
+    time: true,
+    datetime: true,
+    'datetime-local': true
   };
 
   /**
@@ -33,14 +32,17 @@ function init() {
     var type = el.type;
     var tagName = el.tagName;
 
-    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readonly)
+    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readonly) {
       return true;
+    }
 
-    if (tagName == 'TEXTAREA' && !el.readonly)
+    if (tagName == 'TEXTAREA' && !el.readonly) {
       return true;
+    }
 
-    if (el.contentEditable == 'true')
+    if (el.contentEditable == 'true') {
       return true;
+    }
 
     return false;
   }
@@ -51,8 +53,9 @@ function init() {
    * @param {Element} el
    */
   function addFocusRingClass(el) {
-    if (el.classList.contains('focus-ring'))
+    if (el.classList.contains('focus-ring')) {
       return;
+    }
     el.classList.add('focus-ring');
     el.setAttribute('data-focus-ring-added', '');
   }
@@ -63,8 +66,9 @@ function init() {
    * @param {Element} el
    */
   function removeFocusRingClass(el) {
-    if (!el.hasAttribute('data-focus-ring-added'))
+    if (!el.hasAttribute('data-focus-ring-added')) {
       return;
+    }
     el.classList.remove('focus-ring');
     el.removeAttribute('data-focus-ring-added');
   }
@@ -78,12 +82,10 @@ function init() {
     const allowedKeys = [9, 37, 38, 39, 40];
 
     // If the user is holding down a modifier key, abort.
-    if (e.altKey || e.ctrlKey || e.metaKey)
-      return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
 
     // If the key can't be found in the list of allowed keys, abort.
-    if (allowedKeys.indexOf(e.keyCode) === -1)
-      return;
+    if (allowedKeys.indexOf(e.keyCode) === -1) return;
 
     hadKeyboardEvent = true;
   }
@@ -96,8 +98,9 @@ function init() {
    * @param {Event} e
    */
   function onFocus(e) {
-    if (e.target == document)
+    if (e.target == document) {
       return;
+    }
 
     if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
       addFocusRingClass(e.target);
@@ -110,8 +113,9 @@ function init() {
    * @param {Event} e
    */
   function onBlur(e) {
-    if (e.target == document)
+    if (e.target == document) {
       return;
+    }
 
     removeFocusRingClass(e.target);
   }
@@ -122,8 +126,9 @@ function init() {
    */
   function onWindowFocus() {
     window.removeEventListener('focus', onWindowFocus, true);
-    if (document.activeElement == elWithFocusRing)
+    if (document.activeElement == elWithFocusRing) {
       addFocusRingClass(elWithFocusRing);
+    }
 
     elWithFocusRing = null;
   }
@@ -134,15 +139,16 @@ function init() {
    * @param {Event} e
    */
   function onWindowBlur(e) {
-    if (e.target !== window)
+    if (e.target !== window) {
       return;
+    }
 
     window.addEventListener('focus', onWindowFocus, true);
     addInitialPointerMoveListeners();
     if (document.activeElement.classList.contains('focus-ring')) {
-      // Keep a reference to the element to which the focus-ring class is applied
-      // so the focus-ring class can be restored to it if the window regains
-      // focus after being blurred.
+      // Keep a reference to the element to which the focus-ring class is
+      // applied so the focus-ring class can be restored to it if the window
+      // regains focus after being blurred.
       elWithFocusRing = document.activeElement;
     }
   }
@@ -166,19 +172,19 @@ function init() {
 
   /**
    * When the polfyill first loads, assume the user is in keyboard modality.
-   * If any event is received from a fine-grained pointing device (mouse, pointer, touch),
-   * turn off keyboard modality.
+   * If any event is received from a fine-grained pointing device (e.g mouse,
+   * pointer, touch), turn off keyboard modality.
    * This accounts for situations where focus enters the page from the URL bar.
-   * In that scenario, the keydown event is inconsistent, so we can't use it to detect modality.
-   * But the odds are pretty good we'll get one of the other pointing device events
-   * and any of them should act as a signal that this is not keyboard focus.
+   * In that scenario, the keydown event is inconsistent, so we can't use it to
+   * detect modality. But the odds are pretty good we'll get one of the other
+   * pointing device events and any of them should act as a signal that this is
+   * not keyboard focus.
    * @param {Event} e
    */
   function onInitialPointerMove(e) {
-    // Work around a Safari quirk that fires a mousemove on <html> whenever the window blurs,
-    // even if you're tabbing out of the page. ¯\_(ツ)_/¯
-    if (e.target.nodeName.toLowerCase() === 'html')
-      return;
+    // Work around a Safari quirk that fires a mousemove on <html> whenever the
+    // window blurs, even if you're tabbing out of the page. ¯\_(ツ)_/¯
+    if (e.target.nodeName.toLowerCase() === 'html') return;
 
     hadKeyboardEvent = false;
     document.removeEventListener('mousemove', onInitialPointerMove);

@@ -1,5 +1,10 @@
-const {fixture, matchesKeyboard, matchesMouse, FOCUS_RING_STYLE} = require('./helpers');
-const {Key, By} = require('selenium-webdriver');
+const {
+  fixture,
+  matchesKeyboard,
+  matchesMouse,
+  FOCUS_RING_STYLE
+} = require('./helpers');
+const { Key, By } = require('selenium-webdriver');
 const expect = require('expect');
 const driver = global.__driver;
 
