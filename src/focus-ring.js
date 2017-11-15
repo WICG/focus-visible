@@ -79,20 +79,30 @@ function init() {
    * @param {Event} e
    */
   function onKeyDown(e) {
-    const allowedKeys = [9, 37, 38, 39, 40];
+    const allowedKeys = [
+      9, // TAB
+      37, // LEFT
+      38, // UP
+      39, // RIGHT
+      40 // DOWN
+    ];
 
-    // If the user is holding down a modifier key, abort.
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    // Ignore keypresses if the user is holding down a modifier key.
+    if (e.altKey || e.ctrlKey || e.metaKey) {
+      return;
+    }
 
-    // If the key can't be found in the list of allowed keys, abort.
-    if (allowedKeys.indexOf(e.keyCode) === -1) return;
+    // Ignore keypresses which aren't related to keyboard navigation.
+    if (allowedKeys.indexOf(e.keyCode) === -1) {
+      return;
+    }
 
     hadKeyboardEvent = true;
   }
 
   /**
    * On `focus`, add the `focus-ring` class to the target if:
-   * - the target received focus as a result of keyboard navigation
+   * - the target received focus as a result of keyboard navigation, or
    * - the event target is an element that will likely require interaction
    *   via the keyboard (e.g. a text box)
    * @param {Event} e
@@ -154,9 +164,9 @@ function init() {
   }
 
   /**
-   * Add a group of listeners to detect a fine-grained pointing device.
-   * These listeners will be added when the polyfill first loads, and if
-   * the window is blurred and regains focus.
+   * Add a group of listeners to detect usage of any pointing devices.
+   * These listeners will be added when the polyfill first loads, and anytime
+   * the window is blurred, so that they are active when the window regains focus.
    */
   function addInitialPointerMoveListeners() {
     document.addEventListener('mousemove', onInitialPointerMove);
@@ -172,13 +182,9 @@ function init() {
 
   /**
    * When the polfyill first loads, assume the user is in keyboard modality.
-   * If any event is received from a fine-grained pointing device (e.g mouse,
-   * pointer, touch), turn off keyboard modality.
+   * If any event is received from a pointing device (e.g mouse, pointer, touch), turn off
+   * keyboard modality.
    * This accounts for situations where focus enters the page from the URL bar.
-   * In that scenario, the keydown event is inconsistent, so we can't use it to
-   * detect modality. But the odds are pretty good we'll get one of the other
-   * pointing device events and any of them should act as a signal that this is
-   * not keyboard focus.
    * @param {Event} e
    */
   function onInitialPointerMove(e) {
