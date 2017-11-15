@@ -19,8 +19,20 @@ in situations in which the `:focus-ring` pseudo-selector should match.
 
 `npm install --save wicg-focus-ring`
 
+_We recommend only using versions of the polyfill that have been published to npm, rather than cloning the repo and using the source directly. This helps ensure the version you're using is stable and
+thoroughly tested._
+
 ## Usage
 
+### 1. Add the script to your page
+```html
+    ...
+    <script src="/node_modules/wicg-focus-ring/dist/focus-ring.js"></script>
+  </body>
+</html>
+```
+
+### 2. Update your CSS
 We suggest that users
 selectively disable the default focus style
 by selecting for the case when the polyfill is loaded
@@ -32,7 +44,7 @@ and `.focus-ring` is _not_ applied to the element:
   but it will still show up on keyboard focus.
 */
 .js-focus-ring :focus:not(.focus-ring) {
-    outline: 0;
+  outline: 0;
 }
 ```
 
