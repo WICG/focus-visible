@@ -19,7 +19,22 @@ in situations in which the `:focus-ring` pseudo-selector should match.
 
 `npm install --save wicg-focus-ring`
 
+_We recommend only using versions of the polyfill that have been published to npm, rather than
+cloning the repo and using the source directly. This helps ensure the version you're using is stable
+and thoroughly tested. If you do want to build from source, make sure you clone the latest tag._
+
 ## Usage
+
+### 1. Add the script to your page
+
+```html
+    ...
+    <script src="/node_modules/wicg-focus-ring/dist/focus-ring.js"></script>
+  </body>
+</html>
+```
+
+### 2. Update your CSS
 
 We suggest that users
 selectively disable the default focus style
@@ -32,7 +47,7 @@ and `.focus-ring` is _not_ applied to the element:
   but it will still show up on keyboard focus.
 */
 .js-focus-ring :focus:not(.focus-ring) {
-    outline: 0;
+  outline: 0;
 }
 ```
 
@@ -41,6 +56,7 @@ authors may explicitly add the `focus-ring` class.
 If explicitly added, it will not be removed on `blur`.
 
 ### How it works
+
 The script uses two heuristics to determine whether the keyboard is being used:
 
 - a `focus` event immediately following a `keydown` event where the key pressed was either `Tab`, 
@@ -52,6 +68,7 @@ The script uses two heuristics to determine whether the keyboard is being used:
   this still needs to be implemented._
 
 ### Dependencies
+
 The `:focus-ring` polyfill uses the
 [Element.classList](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList) API which is
 not supported in IE 8-9. In accordance with the W3C's new [Polyfill
