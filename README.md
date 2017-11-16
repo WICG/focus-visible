@@ -21,7 +21,9 @@ in situations in which the `:focus-ring` pseudo-selector should match.
 
 _We recommend only using versions of the polyfill that have been published to npm, rather than
 cloning the repo and using the source directly. This helps ensure the version you're using is stable
-and thoroughly tested. If you do want to build from source, make sure you clone the latest tag._
+and thoroughly tested._
+
+_If you do want to build from source, make sure you clone the latest tag!_
 
 ## Usage
 
