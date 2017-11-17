@@ -79,7 +79,7 @@ function init() {
    * @param {Event} e
    */
   function onKeyDown(e) {
-    const allowedKeys = [
+    var allowedKeys = [
       9, // TAB
       37, // LEFT
       38, // UP
