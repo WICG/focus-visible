@@ -12,6 +12,7 @@
       "npm run build && concurrently -k \"npm run test:server\" \"npm run test:selenium\""
   },
   "lint-staged": {
+    "src/focus-ring.js": ["eslint"],
     "*.{js,json,css}": ["prettier --write", "git add"]
   },
   "main": "dist/focus-ring.js",
@@ -29,6 +30,9 @@
     "chromedriver": "2.33.2",
     "clear-module": "2.1.0",
     "concurrently": "3.5.0",
+    "eslint": "4.11.0",
+    "eslint-config-prettier": "2.7.0",
+    "eslint-plugin-es5": "1.1.0",
     "expect": "1.20.2",
     "geckodriver": "1.10.0",
     "glob-promise": "3.3.0",
