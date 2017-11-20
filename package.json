@@ -38,7 +38,7 @@
     "mocha": "4.0.1",
     "mz": "2.7.0",
     "prettier": "1.8.2",
-    "rollup": "0.51.6",
+    "rollup": "0.51.7",
     "rollup-plugin-commonjs": "8.2.6",
     "rollup-plugin-node-resolve": "3.0.0",
     "rollup-watch": "4.3.1",
