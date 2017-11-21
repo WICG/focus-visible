@@ -28,7 +28,7 @@
   "devDependencies": {
     "chromedriver": "2.33.2",
     "clear-module": "2.1.0",
-    "concurrently": "3.5.0",
+    "concurrently": "3.5.1",
     "expect": "1.20.2",
     "geckodriver": "1.10.0",
     "glob-promise": "3.3.0",
