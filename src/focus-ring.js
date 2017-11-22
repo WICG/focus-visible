@@ -135,7 +135,12 @@ function init() {
    * to which it was previously applied.
    */
   function onWindowFocus() {
-    window.removeEventListener('focus', onWindowFocus, true);
+    // When removing the activeElement from DOM it's possible IE11 is in state
+    // document.activeElement === null
+    if (!document.activeElement) {
+      return;
+    }
+
     if (document.activeElement == elWithFocusRing) {
       addFocusRingClass(elWithFocusRing);
     }
@@ -153,8 +158,17 @@ function init() {
       return;
     }
 
-    window.addEventListener('focus', onWindowFocus, true);
+    // When removing the activeElement from DOM it's possible IE11 is in state
+    // document.activeElement === null
+    if (!document.activeElement) {
+      return;
+    }
+
+    // Set initial state back to assuming that the user is relying on the keyboard.
+    // And add listeners to detect if they use a pointing device instead.
+    hadKeyboardEvent = true;
     addInitialPointerMoveListeners();
+
     if (document.activeElement.classList.contains('focus-ring')) {
       // Keep a reference to the element to which the focus-ring class is
       // applied so the focus-ring class can be restored to it if the window
@@ -190,7 +204,9 @@ function init() {
   function onInitialPointerMove(e) {
     // Work around a Safari quirk that fires a mousemove on <html> whenever the
     // window blurs, even if you're tabbing out of the page. ¯\_(ツ)_/¯
-    if (e.target.nodeName.toLowerCase() === 'html') return;
+    if (e.target.nodeName.toLowerCase() === 'html') {
+      return;
+    }
 
     hadKeyboardEvent = false;
     document.removeEventListener('mousemove', onInitialPointerMove);
