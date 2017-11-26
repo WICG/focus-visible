@@ -31,7 +31,7 @@
     "clear-module": "2.1.0",
     "concurrently": "3.5.0",
     "eslint": "4.11.0",
-    "eslint-config-prettier": "2.7.0",
+    "eslint-config-prettier": "2.9.0",
     "eslint-plugin-es5": "1.1.0",
     "expect": "1.20.2",
     "geckodriver": "1.10.0",
