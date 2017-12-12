@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      .js-focus-ring :focus:not(.focus-ring) {
+      .js-focus-visible :focus:not(.focus-visible) {
         outline: 0;
       }
-      .focus-ring {
+      .focus-visible {
         outline: 2px solid red;
       }
     </style>
@@ -16,6 +16,6 @@
   <body>
     <input type="radio" name="foo" id="first">
     <input type="radio" name="foo" id="last">
-    <script src="/dist/focus-ring.js"></script>
+    <script src="/dist/focus-visible.js"></script>
   </body>
 </html>

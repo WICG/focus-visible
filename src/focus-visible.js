@@ -23,8 +23,8 @@ function init() {
 
   /**
    * Computes whether the given element should automatically trigger the
-   * `focus-ring` class being added, i.e. whether it should always match
-   * `:focus-ring` when focused.
+   * `focus-visible` class being added, i.e. whether it should always match
+   * `:focus-visible` when focused.
    * @param {Element} el
    * @return {boolean}
    */
@@ -48,33 +48,33 @@ function init() {
   }
 
   /**
-   * Add the `focus-ring` class to the given element if it was not added by
+   * Add the `focus-visible` class to the given element if it was not added by
    * the author.
    * @param {Element} el
    */
   function addFocusRingClass(el) {
-    if (el.classList.contains('focus-ring')) {
+    if (el.classList.contains('focus-visible')) {
       return;
     }
-    el.classList.add('focus-ring');
-    el.setAttribute('data-focus-ring-added', '');
+    el.classList.add('focus-visible');
+    el.setAttribute('data-focus-visible-added', '');
   }
 
   /**
-   * Remove the `focus-ring` class from the given element if it was not
+   * Remove the `focus-visible` class from the given element if it was not
    * originally added by the author.
    * @param {Element} el
    */
   function removeFocusRingClass(el) {
-    if (!el.hasAttribute('data-focus-ring-added')) {
+    if (!el.hasAttribute('data-focus-visible-added')) {
       return;
     }
-    el.classList.remove('focus-ring');
-    el.removeAttribute('data-focus-ring-added');
+    el.classList.remove('focus-visible');
+    el.removeAttribute('data-focus-visible-added');
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
+   * On `keydown`, set `hadKeyboardEvent`, add `focus-visible` class if the
    * key was Tab/Shift-Tab or Arrow Keys.
    * @param {Event} e
    */
@@ -101,7 +101,7 @@ function init() {
   }
 
   /**
-   * On `focus`, add the `focus-ring` class to the target if:
+   * On `focus`, add the `focus-visible` class to the target if:
    * - the target received focus as a result of keyboard navigation, or
    * - the event target is an element that will likely require interaction
    *   via the keyboard (e.g. a text box)
@@ -119,7 +119,7 @@ function init() {
   }
 
   /**
-   * On `blur`, remove the `focus-ring` class from the target.
+   * On `blur`, remove the `focus-visible` class from the target.
    * @param {Event} e
    */
   function onBlur(e) {
@@ -131,7 +131,7 @@ function init() {
   }
 
   /**
-   * When the window regains focus, restore the focus-ring class to the element
+   * When the window regains focus, restore the focus-visible class to the element
    * to which it was previously applied.
    */
   function onWindowFocus() {
@@ -150,7 +150,7 @@ function init() {
 
   /**
    * When switching windows, keep track of the focused element if it has a
-   * focus-ring class.
+   * focus-visible class.
    * @param {Event} e
    */
   function onWindowBlur(e) {
@@ -169,9 +169,9 @@ function init() {
     hadKeyboardEvent = true;
     addInitialPointerMoveListeners();
 
-    if (document.activeElement.classList.contains('focus-ring')) {
-      // Keep a reference to the element to which the focus-ring class is
-      // applied so the focus-ring class can be restored to it if the window
+    if (document.activeElement.classList.contains('focus-visible')) {
+      // Keep a reference to the element to which the focus-visible class is
+      // applied so the focus-visible class can be restored to it if the window
       // regains focus after being blurred.
       elWithFocusRing = document.activeElement;
     }
@@ -227,7 +227,7 @@ function init() {
   window.addEventListener('blur', onWindowBlur, true);
   addInitialPointerMoveListeners();
 
-  document.body.classList.add('js-focus-ring');
+  document.body.classList.add('js-focus-visible');
 }
 
 /**

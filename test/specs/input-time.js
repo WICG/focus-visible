@@ -5,11 +5,11 @@ describe('<input type="time">', function() {
     return fixture('input-time.html');
   });
 
-  it('should apply .focus-ring on keyboard focus', function() {
+  it('should apply .focus-visible on keyboard focus', function() {
     return matchesKeyboard();
   });
 
-  it('should apply .focus-ring on mouse focus', function() {
+  it('should apply .focus-visible on mouse focus', function() {
     return matchesMouse();
   });
 });
