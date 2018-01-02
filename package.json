@@ -32,7 +32,7 @@
     "concurrently": "3.5.1",
     "eslint": "4.14.0",
     "eslint-config-prettier": "2.7.0",
-    "eslint-plugin-es5": "1.1.0",
+    "eslint-plugin-es5": "1.2.0",
     "expect": "1.20.2",
     "geckodriver": "1.10.0",
     "glob-promise": "3.3.0",
