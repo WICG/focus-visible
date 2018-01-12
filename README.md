@@ -31,7 +31,7 @@ _If you do want to build from source, make sure you clone the latest tag!_
 
 ```html
     ...
-    <script src="/node_modules/wicg-focus-ring/dist/focus-visible.js"></script>
+    <script src="/node_modules/focus-visible/dist/focus-visible.js"></script>
   </body>
 </html>
 ```
