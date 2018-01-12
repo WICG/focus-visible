@@ -17,7 +17,7 @@ in situations in which the `:focus-visible` pseudo-selector should match.
 
 ## Installation
 
-`npm install --save wicg-focus-ring`
+`npm install --save focus-visible`
 
 _We recommend only using versions of the polyfill that have been published to npm, rather than
 cloning the repo and using the source directly. This helps ensure the version you're using is stable
