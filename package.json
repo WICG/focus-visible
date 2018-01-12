@@ -44,7 +44,7 @@
     "prettier": "1.9.0",
     "rollup": "0.53.2",
     "rollup-plugin-commonjs": "8.2.6",
-    "rollup-plugin-node-resolve": "3.0.0",
+    "rollup-plugin-node-resolve": "3.0.1",
     "rollup-watch": "4.3.1",
     "selenium-assistant": "5.2.0",
     "wait-on": "2.0.2"
