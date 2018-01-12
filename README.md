@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/WICG/focus-ring.svg?branch=master)](https://travis-ci.org/WICG/focus-ring)
-[![Greenkeeper badge](https://badges.greenkeeper.io/WICG/focus-ring.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/WICG/focus-visible.svg?branch=master)](https://travis-ci.org/WICG/focus-visible)
+[![Greenkeeper badge](https://badges.greenkeeper.io/WICG/focus-visible.svg)](https://greenkeeper.io/)
 
 Based on the proposed CSS
 [`:focus-visible`](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo)
@@ -11,7 +11,7 @@ in situations in which the `:focus-visible` pseudo-selector should match.
 
 - Read the [Explainer](explainer.md).
 - Read the [Spec](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).
-- Try the [Demo](https://wicg.github.io/focus-ring/demo).
+- Try the [Demo](https://wicg.github.io/focus-visible/demo).
 
 # Polyfill
 
