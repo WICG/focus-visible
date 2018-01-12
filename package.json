@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/WICG/focus-ring",
   "devDependencies": {
-    "chromedriver": "2.34.0",
+    "chromedriver": "2.34.1",
     "clear-module": "2.1.0",
     "concurrently": "3.5.1",
     "eslint": "4.15.0",
