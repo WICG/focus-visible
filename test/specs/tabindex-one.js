@@ -8,11 +8,11 @@ describe('[tabindex=1]', function() {
     return fixture('tabindex-one.html');
   });
 
-  it('should apply .focus-ring on keyboard focus', function() {
+  it('should apply .focus-visible on keyboard focus', function() {
     return matchesKeyboard();
   });
 
-  it('should NOT apply .focus-ring on mouse focus', function() {
+  it('should NOT apply .focus-visible on mouse focus', function() {
     return matchesMouse(false);
   });
 });
