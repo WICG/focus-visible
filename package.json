@@ -1,7 +1,7 @@
 {
-  "name": "wicg-focus-ring",
+  "name": "focus-visible",
   "version": "3.0.2",
-  "description": "Polyfill for :focus-ring pseudo-selector",
+  "description": "Polyfill for :focus-visible pseudo-selector",
   "scripts": {
     "build": "rollup -c",
     "precommit": "lint-staged",
@@ -12,20 +12,20 @@
       "npm run build && concurrently -k \"npm run test:server\" \"npm run test:selenium\""
   },
   "lint-staged": {
-    "src/focus-ring.js": ["eslint"],
+    "src/focus-visible.js": ["eslint"],
     "*.{js,json,css}": ["prettier --write", "git add"]
   },
-  "main": "dist/focus-ring.js",
+  "main": "dist/focus-visible.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/WICG/focus-ring.git"
+    "url": "https://github.com/WICG/focus-visible.git"
   },
   "author": "WICG",
   "license": "W3C",
   "bugs": {
-    "url": "https://github.com/WICG/focus-ring/issues"
+    "url": "https://github.com/WICG/focus-visible/issues"
   },
-  "homepage": "https://github.com/WICG/focus-ring",
+  "homepage": "https://github.com/WICG/focus-visible",
   "devDependencies": {
     "chromedriver": "2.34.1",
     "clear-module": "2.1.0",
