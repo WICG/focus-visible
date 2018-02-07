@@ -13,7 +13,7 @@ describe('<input type="radio"> group', function() {
     return fixture('input-radio-group.html');
   });
 
-  it('should apply .focus-ring on keyboard focus', async function() {
+  it('should apply .focus-visible on keyboard focus', async function() {
     let body = await driver.findElement(By.css('body'));
     let first = await driver.findElement(By.css('#first'));
     let last = await driver.findElement(By.css('#last'));
@@ -25,7 +25,7 @@ describe('<input type="radio"> group', function() {
     expect(actual).toEqual(FOCUS_RING_STYLE);
   });
 
-  it('should NOT apply .focus-ring on mouse focus', async function() {
+  it('should NOT apply .focus-visible on mouse focus', async function() {
     let body = await driver.findElement(By.css('body'));
     let first = await driver.findElement(By.css('#first'));
     await first.click();

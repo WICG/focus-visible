@@ -1,6 +1,6 @@
 - [Rationale](#rationale)
 - [API Proposal](#api-proposal)
-  * [Note: Styling non-native elements which should always match `focus-ring`](#note--styling-non-native-elements-which-should-always-match--focus-ring-)
+  * [Note: Styling non-native elements which should always match `focus-visible`](#note--styling-non-native-elements-which-should-always-match--focus-visible-)
 - [Example heuristic](#example-heuristic)
 - [Implementation Prototype](#implementation-prototype)
 
@@ -43,28 +43,28 @@ To deal with this:
 }
 
 /* establish desired focus ring appearance for appropriate input modalities */
-:focus-ring {
+:focus-visible {
   outline: 2px solid blue;
 }
 ```
 
-`:focus-ring` matches native elements that are
+`:focus-visible` matches native elements that are
 1. focussed; and
 2. would display a focus ring if only UA styles applied
 
-Additionally, `:focus-ring` matches non-native elements as if they were
+Additionally, `:focus-visible` matches non-native elements as if they were
 native button elements.
 
-### Note: Styling non-native elements which should always match `focus-ring`
+### Note: Styling non-native elements which should always match `focus-visible`
 
 
 This is not currently part of the spec,
 but a mechanism is needed to explain the ability of native text fields
-to match `:focus-ring` regardless of how focus arrived on the element.
+to match `:focus-visible` regardless of how focus arrived on the element.
 
 Consider an author creating a custom element, `custom-texty-element`,
 which they believe should show a focus ring on mouse click.
-By default, the default `:focus-ring` user agent style
+By default, the default `:focus-visible` user agent style
 will not show a focus ring when this element receives focus via mouse click.
 However, if the author were to style the element via `:focus`,
 they could not recreate the browser's default `outline` style reliably:
@@ -78,7 +78,7 @@ custom-texty-element:focus {
 Either of the following two new primitives would allow the author to
 show the default focus ring on click for this element:
 
-1. Add a new keyword value to the outline shorthand that represents whatever the default UA `::focus-ring` is. Then authors can do:
+1. Add a new keyword value to the outline shorthand that represents whatever the default UA `::focus-visible` is. Then authors can do:
 
         custom-texty-element:focus {
             outline: platform-default-focus-outline-style-foo;
@@ -87,7 +87,7 @@ show the default focus ring on click for this element:
 2. Add a new CSS property that controls "keyboard modality" vs non-"keyboard modality" behavior, e.g.
 
         custom-texty-element {
-            show-focus-ring-foo: always | keyboard-only;
+            show-focus-visible-foo: always | keyboard-only;
         }
 
 _("`-foo`" placeholder indicates that these names are by no means final!)_
@@ -107,13 +107,13 @@ the modality is not keyboard.
 ## Implementation Prototype
 
 The tiny
-[focus-ring.js](http://wicg.github.io/focus-ring/src/focus-ring.js)
+[focus-visible.js](http://wicg.github.io/focus-ring/src/focus-visible.js)
 provides a prototype intended to achieve the goals we are proposing
 with technology that exists today
 in order for developers to be able to try it out, understand it and provide feedback.
-It sets a `.js-focus-ring` class on the body element
+It sets a `.js-focus-visible` class on the body element
 to provide a way to disable focus styles only when the polyfill is loaded.
-It also sets a `.focus-ring` class on the active element
+It also sets a `.focus-visible` class on the active element
 if the script determines that the keyboard is being used.
 This attribute is removed on any `blur` event.
 
