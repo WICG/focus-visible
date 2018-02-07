@@ -144,14 +144,14 @@ function init() {
   /**
    * If the user changes tabs, keep track of whether or not the previously
    * focused element had .focus-visible.
-   * If the tab becomes active again, the browser will handle calling focus
-   * on the element again (Safari actually calls it twice).
-   * At this point we just need to remind the system whether or not the user
-   * previously used a keyboard to focus the element.
    * @param {Event} e
    */
   function onVisibilityChange(e) {
     if (document.visibilityState == 'hidden') {
+      // If the tab becomes active again, the browser will handle calling focus
+      // on the element (Safari actually calls it twice).
+      // At this point we just need to remind the system whether or not the user
+      // previously used a keyboard to focus the element.
       if (hadFocusVisibleRecently) {
         hadKeyboardEvent = true;
       }
