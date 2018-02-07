@@ -3,6 +3,8 @@
  */
 function init() {
   var hadKeyboardEvent = true;
+  var hadFocusVisibleRecently = false;
+  var hadFocusVisibleRecentlyTimeout = null;
   var elWithFocusRing;
 
   var inputTypesWhitelist = {
@@ -23,8 +25,8 @@ function init() {
 
   /**
    * Computes whether the given element should automatically trigger the
-   * `focus-ring` class being added, i.e. whether it should always match
-   * `:focus-ring` when focused.
+   * `focus-visible` class being added, i.e. whether it should always match
+   * `:focus-visible` when focused.
    * @param {Element} el
    * @return {boolean}
    */
@@ -48,33 +50,33 @@ function init() {
   }
 
   /**
-   * Add the `focus-ring` class to the given element if it was not added by
+   * Add the `focus-visible` class to the given element if it was not added by
    * the author.
    * @param {Element} el
    */
-  function addFocusRingClass(el) {
-    if (el.classList.contains('focus-ring')) {
+  function addFocusVisibleClass(el) {
+    if (el.classList.contains('focus-visible')) {
       return;
     }
-    el.classList.add('focus-ring');
-    el.setAttribute('data-focus-ring-added', '');
+    el.classList.add('focus-visible');
+    el.setAttribute('data-focus-visible-added', '');
   }
 
   /**
-   * Remove the `focus-ring` class from the given element if it was not
+   * Remove the `focus-visible` class from the given element if it was not
    * originally added by the author.
    * @param {Element} el
    */
-  function removeFocusRingClass(el) {
-    if (!el.hasAttribute('data-focus-ring-added')) {
+  function removeFocusVisibleClass(el) {
+    if (!el.hasAttribute('data-focus-visible-added')) {
       return;
     }
-    el.classList.remove('focus-ring');
-    el.removeAttribute('data-focus-ring-added');
+    el.classList.remove('focus-visible');
+    el.removeAttribute('data-focus-visible-added');
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, add `focus-ring` class if the
+   * On `keydown`, set `hadKeyboardEvent`, add `focus-visible` class if the
    * key was Tab/Shift-Tab or Arrow Keys.
    * @param {Event} e
    */
@@ -101,86 +103,67 @@ function init() {
   }
 
   /**
-   * On `focus`, add the `focus-ring` class to the target if:
+   * On `focus`, add the `focus-visible` class to the target if:
    * - the target received focus as a result of keyboard navigation, or
    * - the event target is an element that will likely require interaction
    *   via the keyboard (e.g. a text box)
    * @param {Event} e
    */
   function onFocus(e) {
-    if (e.target == document) {
+    // Prevent IE from focusing the document or HTML element.
+    if (e.target == document || e.target.nodeName == 'HTML') {
       return;
     }
 
     if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
-      addFocusRingClass(e.target);
+      addFocusVisibleClass(e.target);
       hadKeyboardEvent = false;
     }
   }
 
   /**
-   * On `blur`, remove the `focus-ring` class from the target.
+   * On `blur`, remove the `focus-visible` class from the target.
    * @param {Event} e
    */
   function onBlur(e) {
-    if (e.target == document) {
+    if (e.target == document || e.target.nodeName == 'HTML') {
       return;
     }
 
-    removeFocusRingClass(e.target);
+    if (e.target.classList.contains('focus-visible')) {
+      hadFocusVisibleRecently = true;
+      window.clearTimeout(hadFocusVisibleRecentlyTimeout);
+      hadFocusVisibleRecentlyTimeout = window.setTimeout(function() {
+        hadFocusVisibleRecently = false;
+        window.clearTimeout(hadFocusVisibleRecentlyTimeout);
+      }, 100);
+      removeFocusVisibleClass(e.target);
+    }
   }
 
   /**
-   * When the window regains focus, restore the focus-ring class to the element
-   * to which it was previously applied.
-   */
-  function onWindowFocus() {
-    // When removing the activeElement from DOM it's possible IE11 is in state
-    // document.activeElement === null
-    if (!document.activeElement) {
-      return;
-    }
-
-    if (document.activeElement == elWithFocusRing) {
-      addFocusRingClass(elWithFocusRing);
-    }
-
-    elWithFocusRing = null;
-  }
-
-  /**
-   * When switching windows, keep track of the focused element if it has a
-   * focus-ring class.
+   * If the user changes tabs, keep track of whether or not the previously
+   * focused element had .focus-visible.
    * @param {Event} e
    */
-  function onWindowBlur(e) {
-    if (e.target !== window) {
-      return;
-    }
-
-    // When removing the activeElement from DOM it's possible IE11 is in state
-    // document.activeElement === null
-    if (!document.activeElement) {
-      return;
-    }
-
-    // Set initial state back to assuming that the user is relying on the keyboard.
-    // And add listeners to detect if they use a pointing device instead.
-    hadKeyboardEvent = true;
-    addInitialPointerMoveListeners();
-
-    if (document.activeElement.classList.contains('focus-ring')) {
-      // Keep a reference to the element to which the focus-ring class is
-      // applied so the focus-ring class can be restored to it if the window
-      // regains focus after being blurred.
-      elWithFocusRing = document.activeElement;
+  function onVisibilityChange(e) {
+    if (document.visibilityState == 'hidden') {
+      // If the tab becomes active again, the browser will handle calling focus
+      // on the element (Safari actually calls it twice).
+      // At this point we just need to remind the system whether or not the user
+      // previously used a keyboard to focus the element.
+      if (hadFocusVisibleRecently) {
+        hadKeyboardEvent = true;
+      }
+      addInitialPointerMoveListeners();
     }
   }
 
   /**
    * Add a group of listeners to detect usage of any pointing devices.
    * These listeners will be added when the polyfill first loads, and anytime
-   * the window is blurred, so that they are active when the window regains focus.
+   * the window is blurred, so that they are active when the window regains
+   * focus.
    */
   function addInitialPointerMoveListeners() {
     document.addEventListener('mousemove', onInitialPointerMove);
@@ -194,21 +177,7 @@ function init() {
     document.addEventListener('touchend', onInitialPointerMove);
   }
 
-  /**
-   * When the polfyill first loads, assume the user is in keyboard modality.
-   * If any event is received from a pointing device (e.g mouse, pointer, touch), turn off
-   * keyboard modality.
-   * This accounts for situations where focus enters the page from the URL bar.
-   * @param {Event} e
-   */
-  function onInitialPointerMove(e) {
-    // Work around a Safari quirk that fires a mousemove on <html> whenever the
-    // window blurs, even if you're tabbing out of the page. ¯\_(ツ)_/¯
-    if (e.target.nodeName.toLowerCase() === 'html') {
-      return;
-    }
-
-    hadKeyboardEvent = false;
+  function removeInitialPointerMoveListeners() {
     document.removeEventListener('mousemove', onInitialPointerMove);
     document.removeEventListener('mousedown', onInitialPointerMove);
     document.removeEventListener('mouseup', onInitialPointerMove);
@@ -220,14 +189,31 @@ function init() {
     document.removeEventListener('touchend', onInitialPointerMove);
   }
 
+  /**
+   * When the polfyill first loads, assume the user is in keyboard modality.
+   * If any event is received from a pointing device (e.g. mouse, pointer,
+   * touch), turn off keyboard modality.
+   * This accounts for situations where focus enters the page from the URL bar.
+   * @param {Event} e
+   */
+  function onInitialPointerMove(e) {
+    // Work around a Safari quirk that fires a mousemove on <html> whenever the
+    // window blurs, even if you're tabbing out of the page. ¯\_(ツ)_/¯
+    if (e.target.nodeName.toLowerCase() === 'html') {
+      return;
+    }
+
+    hadKeyboardEvent = false;
+    removeInitialPointerMoveListeners();
+  }
+
   document.addEventListener('keydown', onKeyDown, true);
   document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
-  window.addEventListener('focus', onWindowFocus, true);
-  window.addEventListener('blur', onWindowBlur, true);
+  document.addEventListener('visibilitychange', onVisibilityChange, true);
   addInitialPointerMoveListeners();
 
-  document.body.classList.add('js-focus-ring');
+  document.body.classList.add('js-focus-visible');
 }
 
 /**

@@ -15,7 +15,7 @@ describe('<div contenteditable>', function() {
 
   // FF won't focus a div with contenteditable if it's the first element on the page.
   // So we click on a dummy element to move focus into the document.
-  it('should apply .focus-ring on keyboard focus', async function() {
+  it('should apply .focus-visible on keyboard focus', async function() {
     let start = await driver.findElement(By.css('#start'));
     await start.click();
     await start.sendKeys(Key.TAB);
@@ -25,7 +25,7 @@ describe('<div contenteditable>', function() {
     expect(actual).toEqual(FOCUS_RING_STYLE);
   });
 
-  it('should apply .focus-ring on mouse focus', async function() {
+  it('should apply .focus-visible on mouse focus', async function() {
     return matchesMouse();
   });
 });

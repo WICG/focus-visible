@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
     <!-- Original test page written by Dominic Mazzoni -->
-    <title>focus-ring class demo</title>
+    <title>focus-visible class demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
       div,input,textarea,h1,h2 {
@@ -28,7 +28,7 @@
         width: 10em;
       }
 
-      :focus:not(.focus-ring) {
+      :focus:not(.focus-visible) {
         outline: 0;
       }
     </style>
@@ -76,7 +76,7 @@
     <h2>Focusable <code>&lt;div&gt;</code>s</h2>
       <div tabindex="0"><code>tabindex="0"</code></div>
       <div tabindex="-1"><code>tabindex="-1"</code></div>
-      <div tabindex="0" class="focus-ring"><code>tabindex="0"</code> with explicit <code>class="focus-ring"</code></div>
+      <div tabindex="0" class="focus-visible"><code>tabindex="0"</code> with explicit <code>class="focus-visible"</code></div>
     <h2>Selects</h2>
     <label>Select one from drop-down:<br>
       <select>
@@ -122,6 +122,6 @@
       <input type="file" title="File">
     </div>
     <script src="https://cdn.polyfill.io/v2/polyfill.js?features=Element.prototype.classList"></script>
-    <script src="https://unpkg.com/wicg-focus-ring"></script>
+    <script src="https://unpkg.com/focus-visible"></script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 export default {
-  input: 'src/focus-ring.js',
+  input: 'src/focus-visible.js',
   output: {
-    file: 'dist/focus-ring.js',
+    file: 'dist/focus-visible.js',
     format: 'umd'
   }
 };

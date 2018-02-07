@@ -8,11 +8,11 @@ describe('[tabindex=-1]', function() {
     return fixture('tabindex-negative-one.html');
   });
 
-  it('should NOT apply .focus-ring on keyboard focus', function() {
+  it('should NOT apply .focus-visible on keyboard focus', function() {
     return matchesKeyboard(false);
   });
 
-  it('should NOT apply .focus-ring on mouse focus', function() {
+  it('should NOT apply .focus-visible on mouse focus', function() {
     return matchesMouse(false);
   });
 });
