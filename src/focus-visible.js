@@ -141,6 +141,15 @@ function init() {
     }
   }
 
+  /**
+   * If the user changes tabs, keep track of whether or not the previously
+   * focused element had .focus-visible.
+   * If the tab becomes active again, the browser will handle calling focus
+   * on the element again (Safari actually calls it twice).
+   * At this point we just need to remind the system whether or not the user
+   * previously used a keyboard to focus the element.
+   * @param {Event} e
+   */
   function onVisibilityChange(e) {
     if (document.visibilityState == 'hidden') {
       if (hadFocusVisibleRecently) {
@@ -151,9 +160,10 @@ function init() {
   }
 
   /**
-   * Add a group of listeners to detect usage of any pointing devices. These
-   * listeners will be added when the polyfill first loads, and anytime the
-   * window is blurred, so that they are active when the window regains focus.
+   * Add a group of listeners to detect usage of any pointing devices.
+   * These listeners will be added when the polyfill first loads, and anytime
+   * the window is blurred, so that they are active when the window regains
+   * focus.
    */
   function addInitialPointerMoveListeners() {
     document.addEventListener('mousemove', onInitialPointerMove);
@@ -181,9 +191,9 @@ function init() {
 
   /**
    * When the polfyill first loads, assume the user is in keyboard modality.
-   * If any event is received from a pointing device (mouse, pointer, touch),
-   * turn off keyboard modality. This accounts for situations where focus enters
-   * the page from the URL bar.
+   * If any event is received from a pointing device (e.g. mouse, pointer,
+   * touch), turn off keyboard modality.
+   * This accounts for situations where focus enters the page from the URL bar.
    * @param {Event} e
    */
   function onInitialPointerMove(e) {
