@@ -19,7 +19,7 @@ describe('change tabs, always match if elements should always have focus-visible
     await body.click();
     await body.sendKeys(Key.TAB);
     await el.sendKeys(Key.SPACE);
-    await driver.sleep(2000); // sleep while we open and close a new tab.
+    await driver.sleep(3000); // sleep while we open and close a new tab.
     let actual = await driver.executeScript(`
       return window.getComputedStyle(document.querySelector('#el')).outlineColor
     `);
@@ -29,7 +29,7 @@ describe('change tabs, always match if elements should always have focus-visible
   it('should retain .focus-visible if the user switches tabs and an element had .focus-visible from mouse', async function() {
     let el = await driver.findElement(By.css('#el'));
     await el.click();
-    await driver.sleep(2000);
+    await driver.sleep(3000);
     let actual = await driver.executeScript(`
       return window.getComputedStyle(document.querySelector('#el')).outlineColor
     `);
