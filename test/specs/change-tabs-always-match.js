@@ -8,7 +8,7 @@ const { Key, By } = require('selenium-webdriver');
 const expect = require('expect');
 const driver = global.__driver;
 
-describe('change tabs, always match if elements should always have focus-visible', function() {
+describe.skip('change tabs, always match if elements should always have focus-visible', function() {
   beforeEach(function() {
     return fixture('change-tabs-always-match.html');
   });
