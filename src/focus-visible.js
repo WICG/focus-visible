@@ -2,10 +2,10 @@
  * https://github.com/WICG/focus-ring
  */
 function init() {
-  var hadKeyboardEvent = true;
+  var elementToBePointerFocused = null;
+  var forceNoFocusVisible = false;
   var hadFocusVisibleRecently = false;
   var hadFocusVisibleRecentlyTimeout = null;
-  var elWithFocusRing;
 
   var inputTypesWhitelist = {
     text: true,
@@ -76,37 +76,39 @@ function init() {
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, add `focus-visible` class if the
-   * key was Tab/Shift-Tab or Arrow Keys.
+   * On `keydown`, disable the forceNoFocusVisible flag.
+   * This flag should be off if a user action is taking place.
    * @param {Event} e
    */
   function onKeyDown(e) {
-    var allowedKeys = [
-      9, // TAB
-      37, // LEFT
-      38, // UP
-      39, // RIGHT
-      40 // DOWN
-    ];
+    forceNoFocusVisible = false;
+  }
 
-    // Ignore keypresses if the user is holding down a modifier key.
-    if (e.altKey || e.ctrlKey || e.metaKey) {
-      return;
+  /**
+   * On any pointer down event (e.g. touchstart, mousedown, pointerdown),
+   * disable the forceNoFocusVisible flag.
+   * This flag should be off if a user action is taking place.
+   * Also, keep track of the clicked on element.
+   * This is useful for determining if clicking on an element calls focus() on a
+   * different element.
+   * @param {Event} e
+   */
+  function onPointerDown(e) {
+    forceNoFocusVisible = false;
+    elementToBePointerFocused = e.target;
+    // Clicking inside of a <select multiple> element will fire a mousedown
+    // on the <option> child, but focus will be set on the <select> itself.
+    if (elementToBePointerFocused.nodeName == 'OPTION') {
+      elementToBePointerFocused = elementToBePointerFocused.parentElement;
     }
-
-    // Ignore keypresses which aren't related to keyboard navigation.
-    if (allowedKeys.indexOf(e.keyCode) === -1) {
-      return;
-    }
-
-    hadKeyboardEvent = true;
   }
 
   /**
    * On `focus`, add the `focus-visible` class to the target if:
    * - the target received focus as a result of keyboard navigation, or
-   * - the event target is an element that will likely require interaction
-   *   via the keyboard (e.g. a text box)
+   * - the target is an element that will likely require interaction via the
+   *   keyboard (e.g. <input type="text">), or
+   * - an element called focus() on the target.
    * @param {Event} e
    */
   function onFocus(e) {
@@ -115,9 +117,30 @@ function init() {
       return;
     }
 
-    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+    // Prevent switching to a new tab from looking like a user-initiated focus
+    // event.
+    if (forceNoFocusVisible) {
+      return;
+    }
+
+    // If there is no elementToBePointerFocused, then focus is coming from
+    // the keyboard. This should always apply `focus-visible`.
+    if (!elementToBePointerFocused) {
       addFocusVisibleClass(e.target);
-      hadKeyboardEvent = false;
+      return;
+    }
+
+    if (elementToBePointerFocused) {
+      // - Force focus-visible for elements like <input type="text">, or
+      // - Force focus-visible if the clicked on element is calling
+      //   focus() on a different element.
+      if (
+        focusTriggersKeyboardModality(e.target) ||
+        elementToBePointerFocused != e.target
+      ) {
+        addFocusVisibleClass(e.target);
+      }
+      elementToBePointerFocused = null;
     }
   }
 
@@ -131,6 +154,10 @@ function init() {
     }
 
     if (e.target.classList.contains('focus-visible')) {
+      // To detect a tab/window switch, we look for a blur event followed
+      // rapidly by a visibility change.
+      // If we don't see a visibility change within 100ms, it's probably a
+      // regular focus change.
       hadFocusVisibleRecently = true;
       window.clearTimeout(hadFocusVisibleRecentlyTimeout);
       hadFocusVisibleRecentlyTimeout = window.setTimeout(function() {
@@ -143,75 +170,37 @@ function init() {
 
   /**
    * If the user changes tabs, keep track of whether or not the previously
-   * focused element had .focus-visible.
+   * focused element had `focus-visible`.
    * @param {Event} e
    */
   function onVisibilityChange(e) {
     if (document.visibilityState == 'hidden') {
+      // !!! Important Note !!!
       // If the tab becomes active again, the browser will handle calling focus
-      // on the element (Safari actually calls it twice).
-      // At this point we just need to remind the system whether or not the user
-      // previously used a keyboard to focus the element.
-      if (hadFocusVisibleRecently) {
-        hadKeyboardEvent = true;
+      // on the element. Each browser does this in a different order.
+      // https://github.com/WICG/focus-visible/issues/115#issuecomment-363568291
+      // Safari will actually call focus on the same element twice.
+
+      // If the tab becomes active again, and the previously focused element
+      // did NOT have focus-visible, we need to indicate that.
+      if (!hadFocusVisibleRecently) {
+        // This flag ensures that when the newly active tab spams the element
+        // with focus events, it doesn't look like user-initiated focus.
+        // The only way to turn this flag off is for the user to take an action
+        // such as pressing a key, or clicking the mouse.
+        forceNoFocusVisible = true;
+        return;
       }
-      addInitialPointerMoveListeners();
     }
-  }
-
-  /**
-   * Add a group of listeners to detect usage of any pointing devices.
-   * These listeners will be added when the polyfill first loads, and anytime
-   * the window is blurred, so that they are active when the window regains
-   * focus.
-   */
-  function addInitialPointerMoveListeners() {
-    document.addEventListener('mousemove', onInitialPointerMove);
-    document.addEventListener('mousedown', onInitialPointerMove);
-    document.addEventListener('mouseup', onInitialPointerMove);
-    document.addEventListener('pointermove', onInitialPointerMove);
-    document.addEventListener('pointerdown', onInitialPointerMove);
-    document.addEventListener('pointerup', onInitialPointerMove);
-    document.addEventListener('touchmove', onInitialPointerMove);
-    document.addEventListener('touchstart', onInitialPointerMove);
-    document.addEventListener('touchend', onInitialPointerMove);
-  }
-
-  function removeInitialPointerMoveListeners() {
-    document.removeEventListener('mousemove', onInitialPointerMove);
-    document.removeEventListener('mousedown', onInitialPointerMove);
-    document.removeEventListener('mouseup', onInitialPointerMove);
-    document.removeEventListener('pointermove', onInitialPointerMove);
-    document.removeEventListener('pointerdown', onInitialPointerMove);
-    document.removeEventListener('pointerup', onInitialPointerMove);
-    document.removeEventListener('touchmove', onInitialPointerMove);
-    document.removeEventListener('touchstart', onInitialPointerMove);
-    document.removeEventListener('touchend', onInitialPointerMove);
-  }
-
-  /**
-   * When the polfyill first loads, assume the user is in keyboard modality.
-   * If any event is received from a pointing device (e.g. mouse, pointer,
-   * touch), turn off keyboard modality.
-   * This accounts for situations where focus enters the page from the URL bar.
-   * @param {Event} e
-   */
-  function onInitialPointerMove(e) {
-    // Work around a Safari quirk that fires a mousemove on <html> whenever the
-    // window blurs, even if you're tabbing out of the page. ¯\_(ツ)_/¯
-    if (e.target.nodeName.toLowerCase() === 'html') {
-      return;
-    }
-
-    hadKeyboardEvent = false;
-    removeInitialPointerMoveListeners();
   }
 
   document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('mousedown', onPointerDown, true);
+  document.addEventListener('touchstart', onPointerDown, true);
+  document.addEventListener('pointerdown', onPointerDown, true);
   document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
   document.addEventListener('visibilitychange', onVisibilityChange, true);
-  addInitialPointerMoveListeners();
 
   document.body.classList.add('js-focus-visible');
 }

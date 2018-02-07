@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>change tabs with focus on element which always matches focus-visible fixture</title>
+    <title>programmatic focus with element that always matches focus-visible fixture</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body {
-        margin: 20px;
-      }
       .js-focus-visible :focus:not(.focus-visible) {
         outline: none;
       }
@@ -17,23 +14,13 @@
     </style>
   </head>
   <body>
+    <button id="start">Focus input</button>
     <input type="text" id="el">
     <script src="/dist/focus-visible.js"></script>
     <script>
-      function openTempWindow() {
-        var newWindow = window.open();
-        setTimeout(function() {
-          newWindow.close();
-        }, 1500);
-      }
-      el.onclick = function() {
-        openTempWindow();
+      start.onclick = function() {
+        el.focus();
       };
-      el.onkeyup = function(e) {
-        if (e.keyCode == 32) {
-          openTempWindow();
-        }
-      }
     </script>
   </body>
 </html>

@@ -8,7 +8,7 @@ const { Key, By } = require('selenium-webdriver');
 const expect = require('expect');
 const driver = global.__driver;
 
-describe.skip('change tabs, only match if elements had focus-visible', function() {
+describe('change tabs, only match if elements had focus-visible', function() {
   beforeEach(function() {
     // Note: For focus to enter the page properly with this fixture I had
     // to make sure the div had some width/height.
