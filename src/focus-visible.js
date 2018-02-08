@@ -131,6 +131,10 @@ function init() {
     }
 
     if (e.target.classList.contains('focus-visible')) {
+      // To detect a tab/window switch, we look for a blur event followed
+      // rapidly by a visibility change.
+      // If we don't see a visibility change within 100ms, it's probably a
+      // regular focus change.
       hadFocusVisibleRecently = true;
       window.clearTimeout(hadFocusVisibleRecentlyTimeout);
       hadFocusVisibleRecentlyTimeout = window.setTimeout(function() {
@@ -150,8 +154,8 @@ function init() {
     if (document.visibilityState == 'hidden') {
       // If the tab becomes active again, the browser will handle calling focus
       // on the element (Safari actually calls it twice).
-      // At this point we just need to remind the system whether or not the user
-      // previously used a keyboard to focus the element.
+      // If this tab change caused a blur on an element with focus-visible,
+      // re-apply the class when the user switches back to the tab.
       if (hadFocusVisibleRecently) {
         hadKeyboardEvent = true;
       }
