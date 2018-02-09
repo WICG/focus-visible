@@ -40,24 +40,6 @@ async function getMocha() {
   return mocha;
 }
 
-async function runTests(browsers) {
-  for (let browser of browsers) {
-    const driver = await browser.getSeleniumDriver();
-    // Stash a copy of the browser's name so we can log it
-    // during the tests
-    driver.__prettyName = browser.getPrettyName();
-    // I know what you're thinking...
-    // But Mocha doesn't give me a good way to inject data into the runner so...
-    global.__driver = driver;
-    driver
-      .manage()
-      .timeouts()
-      .setScriptTimeout(60000);
-    const mocha = await getMocha();
-    await runMocha(driver, mocha);
-  }
-}
-
 /**
  * Run Mocha tests for each WebDriver instance.
  * @param {*} driver
@@ -80,15 +62,69 @@ function runMocha(driver, mocha) {
   });
 }
 
-/**
- * `browserFilter` is used as an argument to `Array.prototype.filter` to filter
- * which browsers are used to run the tests.
- */
-function browserFilter(browser) {
-  return (
-    browser.getReleaseName() === 'stable' &&
-    ['chrome', 'firefox'].includes(browser.getId())
+async function runMochaWithBrowsers(browsers) {
+  for (let browser of browsers) {
+    const driver = await browser.getSeleniumDriver();
+    // Stash a copy of the browser's name so we can log it
+    // during the tests
+    driver.__prettyName = browser.getPrettyName();
+    // I know what you're thinking...
+    // But Mocha doesn't give me a good way to inject data into the runner so...
+    global.__driver = driver;
+    driver
+      .manage()
+      .timeouts()
+      .setScriptTimeout(60000);
+    // Indicate the browser under test using an env variable
+    // This is useful if we need to skip tests for certain browsers.
+    process.env.TEST_BROWSER = driver.__prettyName;
+    // Run the tests.
+    const mocha = await getMocha();
+    await runMocha(driver, mocha);
+  }
+}
+
+async function getLocalBrowsers() {
+  // Return headless Chrome and Firefox.
+  let browsers = [];
+
+  const chromeBrowser = seleniumAssistant.getLocalBrowser('chrome', 'stable');
+  const chromeOptions = chromeBrowser.getSeleniumOptions();
+  chromeOptions.addArguments('--headless');
+  browsers.push(chromeBrowser);
+
+  const firefoxBrowser = seleniumAssistant.getLocalBrowser('firefox', 'stable');
+  const firefoxOptions = firefoxBrowser.getSeleniumOptions();
+  firefoxOptions.addArguments('--headless');
+  browsers.push(firefoxBrowser);
+
+  return browsers;
+}
+
+async function getSauceBrowsers() {
+  // Return Microsoft Edge and Internet Explorer 11.
+  let browsers = [];
+
+  // Connect to Sauce.
+  seleniumAssistant.setSaucelabsDetails(
+    'robdodson_inert',
+    'a844aee9-d3ec-4566-94e3-dba3d0c30248'
   );
+  await seleniumAssistant.startSaucelabsConnect();
+
+  let edgeBrowser = await seleniumAssistant.getSauceLabsBrowser(
+    'microsoftedge',
+    'latest'
+  );
+  browsers.push(edgeBrowser);
+
+  let ieBrowser = await seleniumAssistant.getSauceLabsBrowser(
+    'internet explorer',
+    '11.103'
+  );
+  browsers.push(ieBrowser);
+
+  return browsers;
 }
 
 /**
@@ -96,8 +132,13 @@ function browserFilter(browser) {
  * Run tests, check for failures, and kill the process.
  */
 async function main() {
-  let browsers = seleniumAssistant.getLocalBrowsers().filter(browserFilter);
-  await runTests(browsers);
+  let browsers;
+  if (process.env.NODE_ENV === 'ci') {
+    browsers = await getLocalBrowsers();
+  } else if (process.env.NODE_ENV === 'sauce') {
+    browsers = await getSauceBrowsers();
+  }
+  await runMochaWithBrowsers(browsers);
   console.log('Done.');
 }
 

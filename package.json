@@ -8,12 +8,17 @@
     "prepublishOnly": "npm run test",
     "test:server": "http-server . -s",
     "test:selenium": "wait-on http://localhost:8080 && node ./test/index.js",
-    "test":
-      "npm run build && concurrently -k \"npm run test:server\" \"npm run test:selenium\""
+    "test": "npm run build && cross-env NODE_ENV=ci concurrently -k \"npm run test:server\" \"npm run test:selenium\"",
+    "sauce": "npm run build && cross-env NODE_ENV=sauce concurrently -k \"npm run test:server\" \"npm run test:selenium\""
   },
   "lint-staged": {
-    "src/focus-visible.js": ["eslint"],
-    "*.{js,json,css}": ["prettier --write", "git add"]
+    "src/focus-visible.js": [
+      "eslint"
+    ],
+    "*.{js,json,css}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "main": "dist/focus-visible.js",
   "repository": {
@@ -27,9 +32,11 @@
   },
   "homepage": "https://github.com/WICG/focus-visible",
   "devDependencies": {
+    "ajv": "^6.0.0",
     "chromedriver": "^2.35.0",
     "clear-module": "^2.1.0",
     "concurrently": "^3.5.1",
+    "cross-env": "^5.1.4",
     "eslint": "^4.16.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-es5": "^1.2.0",
@@ -41,7 +48,7 @@
     "lint-staged": "^7.0.0",
     "mocha": "^5.0.0",
     "mz": "^2.7.0",
-    "prettier": "^1.10.0",
+    "prettier": "^1.10.1",
     "rollup": "^0.54.1",
     "rollup-plugin-commonjs": "^9.0.0",
     "rollup-plugin-node-resolve": "^3.0.1",
@@ -51,6 +58,8 @@
     "wait-on": "^2.1.0"
   },
   "greenkeeper": {
-    "ignore": ["expect"]
+    "ignore": [
+      "expect"
+    ]
   }
 }
