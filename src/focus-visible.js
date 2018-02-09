@@ -81,21 +81,8 @@ function init() {
    * @param {Event} e
    */
   function onKeyDown(e) {
-    var allowedKeys = [
-      9, // TAB
-      37, // LEFT
-      38, // UP
-      39, // RIGHT
-      40 // DOWN
-    ];
-
     // Ignore keypresses if the user is holding down a modifier key.
     if (e.altKey || e.ctrlKey || e.metaKey) {
-      return;
-    }
-
-    // Ignore keypresses which aren't related to keyboard navigation.
-    if (allowedKeys.indexOf(e.keyCode) === -1) {
       return;
     }
 
