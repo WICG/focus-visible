@@ -81,25 +81,24 @@ function init() {
    * @param {Event} e
    */
   function onKeyDown(e) {
-    var allowedKeys = [
-      9, // TAB
-      37, // LEFT
-      38, // UP
-      39, // RIGHT
-      40 // DOWN
-    ];
-
     // Ignore keypresses if the user is holding down a modifier key.
     if (e.altKey || e.ctrlKey || e.metaKey) {
       return;
     }
 
-    // Ignore keypresses which aren't related to keyboard navigation.
-    if (allowedKeys.indexOf(e.keyCode) === -1) {
-      return;
-    }
-
     hadKeyboardEvent = true;
+  }
+
+  /**
+   * If at any point a user clicks with a pointing device, ensure that we change
+   * the modality away from keyboard.
+   * This avoids the situation where a user presses a key on an already focused
+   * element, and then clicks on a different element, focusing it with a
+   * pointing device, while we still think we're in keyboard modality.
+   * @param {Event} e
+   */
+  function onPointerDown(e) {
+    hadKeyboardEvent = false;
   }
 
   /**
@@ -212,6 +211,9 @@ function init() {
   }
 
   document.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('mousedown', onPointerDown, true);
+  document.addEventListener('pointerdown', onPointerDown, true);
+  document.addEventListener('touchstart', onPointerDown, true);
   document.addEventListener('focus', onFocus, true);
   document.addEventListener('blur', onBlur, true);
   document.addEventListener('visibilitychange', onVisibilityChange, true);
