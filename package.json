@@ -1,6 +1,6 @@
 {
   "name": "focus-visible",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Polyfill for :focus-visible pseudo-selector",
   "scripts": {
     "build": "rollup -c",
