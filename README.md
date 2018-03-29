@@ -12,6 +12,11 @@ in situations in which the `:focus-visible` pseudo-selector should match.
 - Read the [Explainer](explainer.md).
 - Read the [Spec](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).
 - Try the [Demo](https://wicg.github.io/focus-visible/demo).
+- [Give feedback!](https://github.com/WICG/focus-visible/issues)
+    - Open discussions:
+        - [What's the impact on users with low vision or cognitive impairments?](https://github.com/WICG/focus-visible/issues/128)
+        - [Should :focus-visible match when returning focus or programmatically focusing?](https://github.com/WICG/focus-visible/issues/88)
+        - [Brainstorm: options for opting in to always matching focus ring.](https://github.com/WICG/focus-visible/issues/42)
 
 # Polyfill
 
