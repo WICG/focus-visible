@@ -54,7 +54,7 @@ and `.focus-visible` is _not_ applied to the element:
   but it will still show up on keyboard focus.
 */
 .js-focus-visible :focus:not(.focus-visible) {
-  outline: 0;
+  outline: none;
 }
 ```
 
@@ -85,3 +85,60 @@ you should add the [classList polyfill](https://github.com/eligrey/classList.js/
 before loading the `:focus-visible` polyfill. Using a service like
 [Polyfill.io](https://polyfill.io/v2/docs/) will handle feature detecting and loading the necessary
 polyfills for you.
+
+# Backwards compatibility
+Until all browsers ship `:focus-visible` developers will need to use it defensively to avoid accidentally
+removing focus styles in legacy browsers. This is easy to do with the polyfill.
+
+```css
+/*
+  This will hide the focus indicator if the element receives focus via the mouse,
+  but it will still show up on keyboard focus.
+*/
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+/*
+  Optionally: Define a strong focus indiactor for keyboard focus.
+  If you choose to skip this step then the browser's default focus
+  indicator will be displayed instead.
+*/
+.js-focus-visible .focus-visible {
+  …
+}
+```
+
+As [explained by the Paciello Group](https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/), developers who don't use the polyfill can still defensively rely on `:focus-visible` using the
+following snippet:
+
+```css
+/*
+  Provide basic, default focus styles.
+*/
+button:focus {
+  …
+}
+
+/*
+  Remove default focus styles for mouse users ONLY if
+  :focus-visible is supported on this platform.
+*/
+button:focus:not(:focus-visible) {
+  …
+}
+
+/*
+  Optionally: If :focus-visible is supported on this
+  platform, provide enhanced focus styles for keyboard
+  focus.
+*/
+button:focus-visible {
+  …
+}
+```
+
+In the future, when all browsers support `:focus-visible`, the
+snippets above will be unecessary. But until that time it's imporant
+to be mindful when you use `:focus-visible` and to ensure you always
+have a fallback strategy.
