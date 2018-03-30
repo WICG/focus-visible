@@ -19,9 +19,17 @@
     <script src="/dist/focus-visible.js"></script>
     <script>
       start.onclick = function() {
-        Promise.resolve().then(function() {
-          el.focus();
-        });
+        if (window.Promise) {
+          Promise.resolve().then(function() {
+            el.focus();
+          });
+        } else {
+          // If this is IE11, which does not support Promises,
+          // cheat with a setImmediate.
+          setTimeout(function() {
+            el.focus();
+          }, 0);
+        }
       };
     </script>
   </body>

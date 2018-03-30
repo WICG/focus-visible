@@ -10,6 +10,11 @@ describe('<input type="date">', function() {
   });
 
   it('should apply .focus-visible on mouse focus', function() {
-    return matchesMouse();
+    // Skip test in Microsoft Edge. It displays a modal UI on mouse click.
+    if (process.env.TEST_BROWSER.includes('Edge')) {
+      this.skip();
+    } else {
+      return matchesMouse();
+    }
   });
 });
