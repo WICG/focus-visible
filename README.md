@@ -100,7 +100,7 @@ removing focus styles in legacy browsers. This is easy to do with the polyfill.
 }
 
 /*
-  Optionally: Define a strong focus indiactor for keyboard focus.
+  Optionally: Define a strong focus indicator for keyboard focus.
   If you choose to skip this step then the browser's default focus
   indicator will be displayed instead.
 */
@@ -139,6 +139,6 @@ button:focus-visible {
 ```
 
 In the future, when all browsers support `:focus-visible`, the
-snippets above will be unecessary. But until that time it's imporant
+snippets above will be unnecessary. But until that time it's important
 to be mindful when you use `:focus-visible` and to ensure you always
 have a fallback strategy.
