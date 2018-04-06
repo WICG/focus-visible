@@ -24,6 +24,23 @@ function init() {
   };
 
   /**
+   * Helper function for legacy browsers and iframes which sometimes focus
+   * elements like document and body.
+   * @param {Element} el
+   */
+  function isValidFocusTarget(el) {
+    if (
+      el &&
+      el !== document &&
+      el.nodeName !== 'HTML' &&
+      el.nodeName !== 'BODY'
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Computes whether the given element should automatically trigger the
    * `focus-visible` class being added, i.e. whether it should always match
    * `:focus-visible` when focused.
@@ -76,14 +93,14 @@ function init() {
   }
 
   /**
-   * On `keydown`, set `hadKeyboardEvent`, add `focus-visible` class if the
-   * key was Tab/Shift-Tab or Arrow Keys.
+   * Treat `keydown` as a signal that the user is in keyboard modality.
+   * Apply `focus-visible` to any current active element and keep track
+   * of our keyboard modality state with `hadKeyboardEvent`.
    * @param {Event} e
    */
   function onKeyDown(e) {
-    // Ignore keypresses if the user is holding down a modifier key.
-    if (e.altKey || e.ctrlKey || e.metaKey) {
-      return;
+    if (isValidFocusTarget(document.activeElement)) {
+      addFocusVisibleClass(document.activeElement);
     }
 
     hadKeyboardEvent = true;
@@ -110,7 +127,7 @@ function init() {
    */
   function onFocus(e) {
     // Prevent IE from focusing the document or HTML element.
-    if (e.target == document || e.target.nodeName == 'HTML') {
+    if (!isValidFocusTarget(e.target)) {
       return;
     }
 
@@ -125,7 +142,7 @@ function init() {
    * @param {Event} e
    */
   function onBlur(e) {
-    if (e.target == document || e.target.nodeName == 'HTML') {
+    if (!isValidFocusTarget(e.target)) {
       return;
     }
 
