@@ -1,6 +1,6 @@
 {
   "name": "focus-visible",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "Polyfill for :focus-visible pseudo-selector",
   "scripts": {
     "build": "rollup -c",
@@ -15,7 +15,7 @@
     "src/focus-visible.js": [
       "eslint"
     ],
-    "*.{js,json,css}": [
+    "*.{js,css}": [
       "prettier --write",
       "git add"
     ]

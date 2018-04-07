@@ -8,7 +8,7 @@ const { Key, By } = require('selenium-webdriver');
 const expect = require('expect');
 const driver = global.__driver;
 
-describe.only('keydown should always update focus-visible', function() {
+describe('keydown should always update focus-visible', function() {
   beforeEach(function() {
     return fixture('tabindex-zero.html');
   });
