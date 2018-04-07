@@ -107,7 +107,7 @@ the modality is not keyboard.
 ## Implementation Prototype
 
 The tiny
-[focus-visible.js](http://wicg.github.io/focus-ring/src/focus-visible.js)
+[focus-visible.js](http://wicg.github.io/focus-visible/src/focus-visible.js)
 provides a prototype intended to achieve the goals we are proposing
 with technology that exists today
 in order for developers to be able to try it out, understand it and provide feedback.
