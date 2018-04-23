@@ -72,11 +72,14 @@ function init() {
    * @param {Element} el
    */
   function addFocusVisibleClass(el) {
-    if (el.classList.contains('focus-visible')) {
+    if (el && el.classList && el.classList.contains('focus-visible')) {
       return;
     }
-    el.classList.add('focus-visible');
-    el.setAttribute('data-focus-visible-added', '');
+    if(el && el.classList) {
+      el.classList.add('focus-visible');
+      el.setAttribute('data-focus-visible-added', '');
+    }
+    return false;
   }
 
   /**
@@ -85,11 +88,14 @@ function init() {
    * @param {Element} el
    */
   function removeFocusVisibleClass(el) {
-    if (!el.hasAttribute('data-focus-visible-added')) {
+    if (el && !el.hasAttribute('data-focus-visible-added')) {
       return;
     }
-    el.classList.remove('focus-visible');
-    el.removeAttribute('data-focus-visible-added');
+    if(el && el.classList) {
+      el.classList.remove('focus-visible');
+      el.removeAttribute('data-focus-visible-added');
+    }
+    return false;
   }
 
   /**
