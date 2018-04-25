@@ -267,5 +267,5 @@ function onDOMReady(callback) {
 }
 
 if (typeof document !== 'undefined') {
-	onDOMReady(init);
+  onDOMReady(init);
 }
