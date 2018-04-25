@@ -266,4 +266,6 @@ function onDOMReady(callback) {
   }
 }
 
-onDOMReady(init);
+if (document !== undefined) {
+	onDOMReady(init);
+}
