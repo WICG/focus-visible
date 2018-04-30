@@ -76,15 +76,17 @@ The script uses two heuristics to determine whether the keyboard is being used:
 
 ### Dependencies
 
-The `:focus-visible` polyfill uses the
-[Element.classList](https://developer.mozilla.org/en-US/docs/Web/API/Element/classList) API which is
-not supported in IE 8-9. In accordance with the W3C's new [Polyfill
+If you want to use `:focus-visible` with an older browser you'll need to include an additional polyfill for [`Element.prototype.classList`](https://caniuse.com/#feat=classlist).
+
+In accordance with the W3C's new [polyfill
 guidance](https://www.w3.org/2001/tag/doc/polyfills/#don-t-serve-unnecessary-polyfills), the
-`:focus-visible` polyfill does not bundle other polyfills. If you need to support these older browsers
-you should add the [classList polyfill](https://github.com/eligrey/classList.js/) to your page
-before loading the `:focus-visible` polyfill. Using a service like
-[Polyfill.io](https://polyfill.io/v2/docs/) will handle feature detecting and loading the necessary
-polyfills for you.
+`:focus-visible` polyfill does not bundle other polyfills.
+
+You can use a service like [Polyfill.io](https://polyfill.io) to download only the polyfills needed by the current browser. Just add the following line to the start of your page:
+
+```html
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList"></script>
+```
 
 # Backwards compatibility
 Until all browsers ship `:focus-visible` developers will need to use it defensively to avoid accidentally
