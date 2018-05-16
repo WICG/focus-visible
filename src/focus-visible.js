@@ -5,7 +5,6 @@ function init() {
   var hadKeyboardEvent = true;
   var hadFocusVisibleRecently = false;
   var hadFocusVisibleRecentlyTimeout = null;
-  var elWithFocusRing;
 
   var inputTypesWhitelist = {
     text: true,
