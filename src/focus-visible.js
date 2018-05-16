@@ -257,7 +257,7 @@ function onDOMReady(callback) {
     }
   }
 
-  if (document.readyState === 'complete') {
+  if (['interactive', 'complete'].indexOf(document.readyState) >= 0) {
     callback();
   } else {
     loaded = false;
