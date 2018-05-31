@@ -34,8 +34,8 @@ function init() {
       el !== document &&
       el.nodeName !== 'HTML' &&
       el.nodeName !== 'BODY' &&
-      el.classList &&
-      el.classList.contains
+      'classList' in el &&
+      'contains' in el.classList
     ) {
       return true;
     }
