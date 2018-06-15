@@ -50,11 +50,11 @@ function init() {
     var type = el.type;
     var tagName = el.tagName;
 
-    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readonly) {
+    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readOnly) {
       return true;
     }
 
-    if (tagName == 'TEXTAREA' && !el.readonly) {
+    if (tagName == 'TEXTAREA' && !el.readOnly) {
       return true;
     }
 
