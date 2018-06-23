@@ -37,7 +37,7 @@
     "clear-module": "^2.1.0",
     "concurrently": "^3.5.1",
     "cross-env": "^5.1.4",
-    "eslint": "^4.16.0",
+    "eslint": "^5.0.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-es5": "^1.2.0",
     "expect": "^1.20.2",
