@@ -1,5 +1,5 @@
 /**
- * https://github.com/WICG/focus-ring
+ * https://github.com/WICG/focus-visible
  */
 function init() {
   var hadKeyboardEvent = true;
