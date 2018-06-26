@@ -7,8 +7,11 @@ node_js:
   - "8"
 cache:
   directories:
-    - node_modules
+    - "$HOME/.npm"
     - ~/.selenium-assistant
+before_install:
+  - npm i -g npm@latest
+install: npm ci
 script:
   - npm test
   - npm run sauce
