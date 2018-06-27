@@ -132,7 +132,6 @@ function init() {
 
     if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
       addFocusVisibleClass(e.target);
-      hadKeyboardEvent = false;
     }
   }
 
