@@ -58,7 +58,7 @@ function init() {
       return true;
     }
 
-    if (el.contentEditable == 'true') {
+    if (el.isContentEditable) {
       return true;
     }
 
