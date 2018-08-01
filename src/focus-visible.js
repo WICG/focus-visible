@@ -32,7 +32,9 @@ function init() {
       el &&
       el !== document &&
       el.nodeName !== 'HTML' &&
-      el.nodeName !== 'BODY'
+      el.nodeName !== 'BODY' &&
+      !el.readOnly &&
+      !el.disabled
     ) {
       return true;
     }
@@ -50,11 +52,11 @@ function init() {
     var type = el.type;
     var tagName = el.tagName;
 
-    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readOnly) {
+    if (tagName == 'INPUT' && inputTypesWhitelist[type]) {
       return true;
     }
 
-    if (tagName == 'TEXTAREA' && !el.readOnly) {
+    if (tagName == 'TEXTAREA') {
       return true;
     }
 
