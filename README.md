@@ -144,3 +144,11 @@ In the future, when all browsers support `:focus-visible`, the
 snippets above will be unnecessary. But until that time it's important
 to be mindful when you use `:focus-visible` and to ensure you always
 have a fallback strategy.
+
+### Big Thanks
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs][homepage]
+
+<a href="https://saucelabs.com"><img src="https://i.imgur.com/f2cK9ZQ.jpg" width="200"></a>
+
+[homepage]: https://saucelabs.com
