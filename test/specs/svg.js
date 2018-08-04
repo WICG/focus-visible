@@ -6,7 +6,7 @@ const driver = global.__driver;
 // IE11 has a strange behavior where it will always focus an <svg> on the page.
 // This test is to verify that we don't hit an error in this situation.
 // See https://github.com/WICG/focus-visible/issues/80#issuecomment-383424156.
-describe.only('svg focus', function() {
+describe('svg focus', function() {
   beforeEach(function() {
     return fixture('svg.html');
   });
