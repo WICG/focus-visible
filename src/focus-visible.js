@@ -24,7 +24,7 @@ function init() {
 
   /**
    * Helper function for legacy browsers and iframes which sometimes focus
-   * elements like document and body.
+   * elements like document, body, and non-interactive SVG.
    * @param {Element} el
    */
   function isValidFocusTarget(el) {
@@ -32,7 +32,9 @@ function init() {
       el &&
       el !== document &&
       el.nodeName !== 'HTML' &&
-      el.nodeName !== 'BODY'
+      el.nodeName !== 'BODY' &&
+      'classList' in el &&
+      'contains' in el.classList
     ) {
       return true;
     }
