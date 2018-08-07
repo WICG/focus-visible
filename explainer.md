@@ -98,11 +98,10 @@ having both would provide more flexibility for authors.
 ## Example heuristic
 
 The heuristic used to decide the current modality should not be defined
-normatively. An example heuristic is to update modality on each style recalc:
-if the most recent user interaction was via the keyboard;
-and the key pressed was either `Tab`, `Shift + Tab`, or an arrow key;
-then the modality is keyboard. Otherwise,
-the modality is not keyboard.
+normatively. An example heuristic is to update modality on each style recalc: if
+the most recent user interaction was via the keyboard; and the key press did not
+include a meta, alt/option, or control key; then the modality is keyboard.
+Otherwise, the modality is not keyboard.
 
 ## Implementation Prototype
 
