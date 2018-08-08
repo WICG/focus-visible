@@ -275,7 +275,7 @@ if (typeof document !== 'undefined') {
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = init;
-} else (typeof define === 'function' && define.amd) {
+} else if (typeof define === 'function' && define.amd) {
   define([], function() {
     return init;
   });
