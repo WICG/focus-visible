@@ -103,6 +103,10 @@ the most recent user interaction was via the keyboard; and the key press did not
 include a meta, alt/option, or control key; then the modality is keyboard.
 Otherwise, the modality is not keyboard.
 
+See [the web platform
+tests](https://github.com/web-platform-tests/wpt/search?utf8=%E2%9C%93&q=focus-visible&type=)
+which check against the proposed behavior.
+
 ## Implementation Prototype
 
 The tiny
