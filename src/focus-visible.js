@@ -272,3 +272,13 @@ function onDOMReady(callback) {
 if (typeof document !== 'undefined') {
   onDOMReady(init);
 }
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = init;
+} else if (typeof define === 'function' && define.amd) {
+  define([], function() {
+    return init;
+  });
+} else {
+  window.initFocusVisible = init;
+}
