@@ -35,7 +35,7 @@
     "ajv": "^6.0.0",
     "chromedriver": "^2.38.2",
     "clear-module": "^2.1.0",
-    "concurrently": "^3.5.1",
+    "concurrently": "^4.0.0",
     "cross-env": "^5.1.4",
     "eslint": "^5.0.0",
     "eslint-config-prettier": "^2.9.0",
