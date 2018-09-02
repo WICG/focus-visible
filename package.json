@@ -55,7 +55,7 @@
     "rollup-plugin-uglify": "^3.0.0",
     "rollup-watch": "^4.3.1",
     "selenium-assistant": "^5.3.0",
-    "wait-on": "^2.1.0"
+    "wait-on": "^3.0.0"
   },
   "greenkeeper": {
     "ignore": [
