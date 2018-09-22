@@ -62,6 +62,14 @@ If there are elements which should always have a focus ring shown,
 authors may explicitly add the `focus-visible` class.
 If explicitly added, it will not be removed on `blur`.
 
+Alternatively, if you're using a framework which overwrites your classes ([#179](https://github.com/WICG/focus-visible/issues/179)),
+you can rely on the `data-focus-visible-added` attribute.
+```css
+.js-focus-visible :focus:not([data-focus-visible-added]) {
+  outline: none;
+}
+```
+
 ### How it works
 
 The script uses two heuristics to determine whether the keyboard is being used:
