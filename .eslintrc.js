@@ -6,6 +6,6 @@ module.exports = {
   // This is because we don't want/need to use Babel in this project.
   // We specifically DO NOT want ESLint to try to enforce a style guide on us.
   // We use prettier for that.
-  extends: ['prettier'],
-  plugins: ['es5']
+  plugins: ['es5'],
+  extends: ['plugin:es5/no-es2015', 'plugin:es5/no-es2016', 'prettier']
 };
