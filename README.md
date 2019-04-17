@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/WICG/focus-visible.svg?branch=master)](https://travis-ci.org/WICG/focus-visible)
-[![Greenkeeper badge](https://badges.greenkeeper.io/WICG/focus-visible.svg)](https://greenkeeper.io/)
 
 Based on the proposed CSS
 [`:focus-visible`](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo)
