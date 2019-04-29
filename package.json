@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/WICG/focus-visible",
   "devDependencies": {
+    "@webcomponents/webcomponentsjs": "^2.2.10",
     "ajv": "^6.0.0",
     "chromedriver": "^2.38.2",
     "clear-module": "^2.1.0",
