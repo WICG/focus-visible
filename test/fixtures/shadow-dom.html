@@ -36,18 +36,21 @@
     </template>
     <script src="/dist/focus-visible.js"></script>
     <script>
-      var shadowRootTemplate = document.querySelector('#shadow-root-template');
-      var el = document.querySelector('#el');
+      window.addEventListener('DOMContentLoaded', function() {
+        var shadowRootTemplate = document.querySelector('#shadow-root-template');
 
-      el.attachShadow({ mode: 'open', delegatesFocus: true });
-      el.shadowRoot.appendChild(
-          shadowRootTemplate.content.cloneNode(true));
+        if (self.ShadyCSS != null) {
+          ShadyCSS.prepareTemplate(shadowRootTemplate, 'div');
+        }
 
-      // If ShadyCSS is being used, there is no need to apply the polyfill to
-      // the shadow root because the shadow tree is not truly encapsulated:
-      if (self.ShadyCSS == null || self.ShadyCSS.nativeShadow) {
+        var el = document.querySelector('#el');
+
+        el.attachShadow({ mode: 'open', delegatesFocus: true });
+        el.shadowRoot.appendChild(
+            shadowRootTemplate.content.cloneNode(true));
+
         applyFocusVisiblePolyfill(el.shadowRoot);
-      }
+      }, { once: true });
     </script>
   </body>
 </html>

@@ -252,17 +252,18 @@ function applyFocusVisiblePolyfill(scope) {
   scope.addEventListener('focus', onFocus, true);
   scope.addEventListener('blur', onBlur, true);
 
-  if (scope.nodeType === Node.DOCUMENT_NODE) {
-    document.documentElement.classList.add('js-focus-visible');
-
-    // We detect that a node is a ShadowRoot by ensuring that it is a
-    // DocumentFragment and also has a host property. This check covers native
-    // implementation and polyfill implementation transparently.
-  } else if (scope.nodeType === Node.DOCUMENT_FRAGMENT_NODE && scope.host) {
+  // We detect that a node is a ShadowRoot by ensuring that it is a
+  // DocumentFragment and also has a host property. This check covers native
+  // implementation and polyfill implementation transparently. If we only cared
+  // about the native implementation, we could just check if the scope was
+  // an instance of a ShadowRoot.
+  if (scope.nodeType === Node.DOCUMENT_FRAGMENT_NODE && scope.host) {
     // Since a ShadowRoot is a special kind of DocumentFragment, it does not
     // have a root element to add a class to. So, we add this attribute to the
     // host element instead:
     scope.host.setAttribute('data-js-focus-visible', '');
+  } else if (scope.nodeType === Node.DOCUMENT_NODE) {
+    document.documentElement.classList.add('js-focus-visible');
   }
 }
 
