@@ -222,7 +222,7 @@ function init() {
   function onInitialPointerMove(e) {
     // Work around a Safari quirk that fires a mousemove on <html> whenever the
     // window blurs, even if you're tabbing out of the page. ¯\_(ツ)_/¯
-    if (e.target.nodeName.toLowerCase() === 'html') {
+    if (e.target.nodeName && e.target.nodeName.toLowerCase() === 'html') {
       return;
     }
 
