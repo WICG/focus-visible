@@ -104,8 +104,8 @@ this polyfill imperatively to the component's shadow root:
 
 ```javascript
 // Check for the polyfill:
-if (self.applyFocusVisiblePolyfill != null) {
-  self.applyFocusVisiblePolyfill(myComponent.shadowRoot);
+if (window.applyFocusVisiblePolyfill != null) {
+  window.applyFocusVisiblePolyfill(myComponent.shadowRoot);
 }
 ```
 
@@ -120,7 +120,7 @@ In order to act at the right time, you can observe the global
 
 ```javascript
 window.addEventListener('focus-visible-polyfill-ready',
-    () => self.applyFocusVisiblePolyfill(myComponent.shadowRoot),
+    () => window.applyFocusVisiblePolyfill(myComponent.shadowRoot),
     { once:  true });
 ```
 
