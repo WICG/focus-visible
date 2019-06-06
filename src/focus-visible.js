@@ -1,7 +1,11 @@
 /**
- * https://github.com/WICG/focus-visible
+ * Applies the :focus-visible polyfill at the given scope.
+ * A scope in this case is either the top-level Document or a Shadow Root.
+ *
+ * @param {(Document|ShadowRoot)} scope
+ * @see https://github.com/WICG/focus-visible
  */
-function init() {
+function applyFocusVisiblePolyfill(scope) {
   var hadKeyboardEvent = true;
   var hadFocusVisibleRecently = false;
   var hadFocusVisibleRecentlyTimeout = null;
@@ -100,8 +104,8 @@ function init() {
    * @param {Event} e
    */
   function onKeyDown(e) {
-    if (isValidFocusTarget(document.activeElement)) {
-      addFocusVisibleClass(document.activeElement);
+    if (isValidFocusTarget(scope.activeElement)) {
+      addFocusVisibleClass(scope.activeElement);
     }
 
     hadKeyboardEvent = true;
@@ -230,45 +234,58 @@ function init() {
     removeInitialPointerMoveListeners();
   }
 
+  // For some kinds of state, we are interested in changes at the global scope
+  // only. For example, global pointer input, global key presses and global
+  // visibility change should affect the state at every scope:
   document.addEventListener('keydown', onKeyDown, true);
   document.addEventListener('mousedown', onPointerDown, true);
   document.addEventListener('pointerdown', onPointerDown, true);
   document.addEventListener('touchstart', onPointerDown, true);
-  document.addEventListener('focus', onFocus, true);
-  document.addEventListener('blur', onBlur, true);
   document.addEventListener('visibilitychange', onVisibilityChange, true);
+
   addInitialPointerMoveListeners();
 
-  document.body.classList.add('js-focus-visible');
-}
+  // For focus and blur, we specifically care about state changes in the local
+  // scope. This is because focus / blur events that originate from within a
+  // shadow root are not re-dispatched from the host element if it was already
+  // the active element in its own scope:
+  scope.addEventListener('focus', onFocus, true);
+  scope.addEventListener('blur', onBlur, true);
 
-/**
- * Subscription when the DOM is ready
- * @param {Function} callback
- */
-function onDOMReady(callback) {
-  var loaded;
-
-  /**
-   * Callback wrapper for check loaded state
-   */
-  function load() {
-    if (!loaded) {
-      loaded = true;
-
-      callback();
-    }
-  }
-
-  if (['interactive', 'complete'].indexOf(document.readyState) >= 0) {
-    callback();
-  } else {
-    loaded = false;
-    document.addEventListener('DOMContentLoaded', load, false);
-    window.addEventListener('load', load, false);
+  // We detect that a node is a ShadowRoot by ensuring that it is a
+  // DocumentFragment and also has a host property. This check covers native
+  // implementation and polyfill implementation transparently. If we only cared
+  // about the native implementation, we could just check if the scope was
+  // an instance of a ShadowRoot.
+  if (scope.nodeType === Node.DOCUMENT_FRAGMENT_NODE && scope.host) {
+    // Since a ShadowRoot is a special kind of DocumentFragment, it does not
+    // have a root element to add a class to. So, we add this attribute to the
+    // host element instead:
+    scope.host.setAttribute('data-js-focus-visible', '');
+  } else if (scope.nodeType === Node.DOCUMENT_NODE) {
+    document.documentElement.classList.add('js-focus-visible');
   }
 }
 
-if (typeof document !== 'undefined') {
-  onDOMReady(init);
+// Make the polyfill helper globally available. This can be used as a signal to
+// interested libraries that wish to coordinate with the polyfill for e.g.,
+// applying the polyfill to a shadow root:
+window.applyFocusVisiblePolyfill = applyFocusVisiblePolyfill;
+
+// Notify interested libraries of the polyfill's presence, in case the polyfill
+// was loaded lazily:
+var event;
+
+try {
+  event = new CustomEvent('focus-visible-polyfill-ready');
+} catch (error) {
+  // IE11 does not support using CustomEvent as a constructor directly:
+  event = document.createEvent('CustomEvent');
+  event.initCustomEvent('focus-visible-polyfill-ready', false, false, {});
 }
+
+window.dispatchEvent(event);
+
+// Apply the polyfill to the global document, so that no JavaScript coordination
+// is required to use the polyfill in the top-level document:
+applyFocusVisiblePolyfill(document);

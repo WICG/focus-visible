@@ -95,6 +95,42 @@ You can use a service like [Polyfill.io](https://polyfill.io) to download only t
 <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList"></script>
 ```
 
+### Shadow DOM
+
+It could be very expensive to apply this polyfill automatically to every shadow
+root that is created in a given document, so the polyfill ignores shadow roots
+by default. If you are using Shadow DOM in a component, it is possible to apply
+this polyfill imperatively to the component's shadow root:
+
+```javascript
+// Check for the polyfill:
+if (window.applyFocusVisiblePolyfill != null) {
+  window.applyFocusVisiblePolyfill(myComponent.shadowRoot);
+}
+```
+
+### Lazy-loading
+
+When this polyfill is lazy-loaded, and you are applying the polyfill to a shadow
+root with JavaScript, it is important to know when the polyfill has become
+available before trying to use it.
+
+In order to act at the right time, you can observe the global
+`focus-visible-polyfill-ready` event:
+
+```javascript
+window.addEventListener('focus-visible-polyfill-ready',
+    () => window.applyFocusVisiblePolyfill(myComponent.shadowRoot),
+    { once:  true });
+```
+
+**Important:** this event is _only_ intended to support late application of the
+polyfill in lazy-loading use cases. Do not write code that depends on the event
+firing, as it is timing dependent and only fired once. If you plan to lazy-load
+the polyfill, it is recommended that you check for it synchronously (see example
+above under "Shadow DOM") and listen for the event only if the polyfill isn't
+available yet.
+
 # Backwards compatibility
 Until all browsers ship `:focus-visible` developers will need to use it defensively to avoid accidentally
 removing focus styles in legacy browsers. This is easy to do with the polyfill.
