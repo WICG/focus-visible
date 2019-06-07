@@ -98,12 +98,18 @@ function applyFocusVisiblePolyfill(scope) {
   }
 
   /**
-   * Treat `keydown` as a signal that the user is in keyboard modality.
+   * If the most recent user interaction was via the keyboard;
+   * and the key press did not include a meta, alt/option, or control key;
+   * then the modality is keyboard. Otherwise, the modality is not keyboard.
    * Apply `focus-visible` to any current active element and keep track
    * of our keyboard modality state with `hadKeyboardEvent`.
-   * @param {Event} e
+   * @param {KeyboardEvent} e
    */
   function onKeyDown(e) {
+    if (e.metaKey || e.altKey || e.ctrlKey) {
+      return;
+    }
+
     if (isValidFocusTarget(scope.activeElement)) {
       addFocusVisibleClass(scope.activeElement);
     }
