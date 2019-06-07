@@ -4,6 +4,18 @@ const expect = require('expect');
 const driver = global.__driver;
 
 describe('meta keys', function() {
+  before(function() {
+    // Skip these tests in Edge and IE because it's unclear how to get focus
+    // back to the page when pressing the Windows meta key without clicking
+    // on the page which would sort of negate the test.
+    if (
+      process.env.TEST_BROWSER.includes('Edge') ||
+      process.env.TEST_BROWSER.includes('Internet Explorer')
+    ) {
+      this.skip();
+    }
+  });
+
   beforeEach(function() {
     return fixture('button.html');
   });
