@@ -276,7 +276,7 @@ function applyFocusVisiblePolyfill(scope) {
 // It is important to wrap all references to global window and document in
 // these checks to support server-side rendering use cases
 // @see https://github.com/WICG/focus-visible/issues/199
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   // Make the polyfill helper globally available. This can be used as a signal
   // to interested libraries that wish to coordinate with the polyfill for e.g.,
   // applying the polyfill to a shadow root:
