@@ -135,16 +135,7 @@ available yet.
 Until all browsers ship `:focus-visible` developers will need to use it defensively to avoid accidentally
 removing focus styles in legacy browsers. This is easy to do with the polyfill.
 
-Firefox uses their own :-moz-focusring CSS pseudo-class, see here: [-moz-focusring](https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-focusring).
-
 ```css
-/*
-  Firefox uses their own :-moz-focusring CSS pseudo-class, a Mozilla extension that is similar to the :focus pseudo-class
-*/
-.js-focus-visible :-moz-focusring:not(.focus-visible) {
-  outline: none;
-}
-
 /*
   This will hide the focus indicator if the element receives focus via the mouse,
   but it will still show up on keyboard focus.
