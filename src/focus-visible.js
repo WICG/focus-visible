@@ -56,11 +56,11 @@ function applyFocusVisiblePolyfill(scope) {
     var type = el.type;
     var tagName = el.tagName;
 
-    if (tagName == 'INPUT' && inputTypesWhitelist[type] && !el.readOnly) {
+    if (tagName === 'INPUT' && inputTypesWhitelist[type] && !el.readOnly) {
       return true;
     }
 
-    if (tagName == 'TEXTAREA' && !el.readOnly) {
+    if (tagName === 'TEXTAREA' && !el.readOnly) {
       return true;
     }
 
@@ -180,7 +180,7 @@ function applyFocusVisiblePolyfill(scope) {
    * @param {Event} e
    */
   function onVisibilityChange(e) {
-    if (document.visibilityState == 'hidden') {
+    if (document.visibilityState === 'hidden') {
       // If the tab becomes active again, the browser will handle calling focus
       // on the element (Safari actually calls it twice).
       // If this tab change caused a blur on an element with focus-visible,
