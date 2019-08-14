@@ -168,7 +168,6 @@ function applyFocusVisiblePolyfill(scope) {
       window.clearTimeout(hadFocusVisibleRecentlyTimeout);
       hadFocusVisibleRecentlyTimeout = window.setTimeout(function() {
         hadFocusVisibleRecently = false;
-        window.clearTimeout(hadFocusVisibleRecentlyTimeout);
       }, 100);
       removeFocusVisibleClass(e.target);
     }
