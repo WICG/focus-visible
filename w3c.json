@@ -1,5 +1,6 @@
  {
     "group":      ["80485"]
 ,   "contacts":   ["yoavweiss"]
-,   "shortName":  "modality"
+,   "shortName":  "modality",
+    "repo-type":  "cg-report"
 }
