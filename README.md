@@ -71,12 +71,16 @@ you can rely on the `data-focus-visible-added` attribute.
 
 ### How it works
 
-The script uses two heuristics to determine whether the keyboard is being used:
+The script uses two heuristics to determine whether the keyboard is being (or will be) used:
 
 - a `focus` event immediately following a `keydown` event where the key pressed was either `Tab`,
 `Shift + Tab`, or an arrow key.
+
 - focus moves into an element which requires keyboard interaction,
   such as a text field
+
+  - NOTE: this means that HTML elements like `<input type={text|email|password|...}>` or `<textarea>` will **always** match the `:focus-visible` selector, regardless of whether they are focused via a keyboard or a mouse.
+
 - _TODO: ideally, we also trigger keyboard modality
   following a keyboard event which activates an element or causes a mutation;
   this still needs to be implemented._
