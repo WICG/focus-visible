@@ -269,6 +269,7 @@ function applyFocusVisiblePolyfill(scope) {
     scope.host.setAttribute('data-js-focus-visible', '');
   } else if (scope.nodeType === Node.DOCUMENT_NODE) {
     document.documentElement.classList.add('js-focus-visible');
+    document.documentElement.setAttribute('data-js-focus-visible', '');
   }
 }
 
