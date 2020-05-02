@@ -49,9 +49,7 @@ function matchesKeyboard(shouldMatch = true) {
 function matchesMouse(shouldMatch = true) {
   $('#el').click();
 
-  const color = browser.execute(GET_OUTLINE_COLOR, '#el');
-  // IE returns "transparent" instead of and rgba value
-  const { hex } = rgb2hex(color === 'transparent' ? 'rgba(0, 0, 0, 0)' : color);
+  const color = rgb2hex(browser.execute(GET_OUTLINE_COLOR, '#el'));
 
   if (shouldMatch) {
     expect(color.hex).toBe(FOCUS_RING_STYLE);
