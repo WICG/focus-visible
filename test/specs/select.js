@@ -1,15 +1,13 @@
 const { fixture, matchesKeyboard, matchesMouse } = require('./helpers');
 
-describe('<select>', function() {
-  beforeEach(function() {
-    return fixture('select.html');
-  });
+describe('<select>', () => {
+  beforeEach(() => fixture('select.html'));
 
-  it('should apply .focus-visible on keyboard focus', function() {
+  it('should apply .focus-visible on keyboard focus', () => {
     return matchesKeyboard();
   });
 
-  it('should NOT apply .focus-visible on mouse focus', function() {
+  it('should NOT apply .focus-visible on mouse focus', () => {
     return matchesMouse(false);
   });
 });
