@@ -191,6 +191,18 @@ function applyFocusVisiblePolyfill(scope) {
     }
   }
 
+  const pointerMoveEvents = [
+    'mousemove',
+    'mousedown',
+    'mouseup',
+    'pointermove',
+    'pointerdown',
+    'pointerup',
+    'touchmove',
+    'touchstart',
+    'touchend',
+  ];
+
   /**
    * Add a group of listeners to detect usage of any pointing devices.
    * These listeners will be added when the polyfill first loads, and anytime
@@ -198,27 +210,15 @@ function applyFocusVisiblePolyfill(scope) {
    * focus.
    */
   function addInitialPointerMoveListeners() {
-    document.addEventListener('mousemove', onInitialPointerMove);
-    document.addEventListener('mousedown', onInitialPointerMove);
-    document.addEventListener('mouseup', onInitialPointerMove);
-    document.addEventListener('pointermove', onInitialPointerMove);
-    document.addEventListener('pointerdown', onInitialPointerMove);
-    document.addEventListener('pointerup', onInitialPointerMove);
-    document.addEventListener('touchmove', onInitialPointerMove);
-    document.addEventListener('touchstart', onInitialPointerMove);
-    document.addEventListener('touchend', onInitialPointerMove);
+    pointerMoveEvents.forEach((eventName) => {
+      document.addEventListener(eventName, onInitialPointerMove);
+    });
   }
 
   function removeInitialPointerMoveListeners() {
-    document.removeEventListener('mousemove', onInitialPointerMove);
-    document.removeEventListener('mousedown', onInitialPointerMove);
-    document.removeEventListener('mouseup', onInitialPointerMove);
-    document.removeEventListener('pointermove', onInitialPointerMove);
-    document.removeEventListener('pointerdown', onInitialPointerMove);
-    document.removeEventListener('pointerup', onInitialPointerMove);
-    document.removeEventListener('touchmove', onInitialPointerMove);
-    document.removeEventListener('touchstart', onInitialPointerMove);
-    document.removeEventListener('touchend', onInitialPointerMove);
+    pointerMoveEvents.forEach((eventName) => {
+      document.removeEventListener(eventName, onInitialPointerMove);
+    });
   }
 
   /**
