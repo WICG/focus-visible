@@ -10,21 +10,21 @@ function applyFocusVisiblePolyfill(scope) {
   var hadFocusVisibleRecently = false;
   var hadFocusVisibleRecentlyTimeout = null;
 
-  var inputTypesWhitelist = {
-    text: true,
-    search: true,
-    url: true,
-    tel: true,
-    email: true,
-    password: true,
-    number: true,
-    date: true,
-    month: true,
-    week: true,
-    time: true,
-    datetime: true,
-    'datetime-local': true
-  };
+  var inputTypesWhitelist = [
+    'text',
+    'search',
+    'url',
+    'tel',
+    'email',
+    'password',
+    'number',
+    'date',
+    'month',
+    'week',
+    'time',
+    'datetime',
+    'datetime-local',
+  ];
 
   /**
    * Helper function for legacy browsers and iframes which sometimes focus
@@ -56,7 +56,7 @@ function applyFocusVisiblePolyfill(scope) {
     var type = el.type;
     var tagName = el.tagName;
 
-    if (tagName === 'INPUT' && inputTypesWhitelist[type] && !el.readOnly) {
+    if (tagName === 'INPUT' && inputTypesWhitelist.includes(type) && !el.readOnly) {
       return true;
     }
 
