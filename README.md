@@ -62,9 +62,9 @@ authors may explicitly add the `focus-visible` class.
 If explicitly added, it will not be removed on `blur`.
 
 Alternatively, if you're using a framework which overwrites your classes ([#179](https://github.com/WICG/focus-visible/issues/179)),
-you can rely on the `data-focus-visible-added` attribute.
+you can rely on the `data-js-focus-visible` and `data-focus-visible-added` attributes.
 ```css
-.js-focus-visible :focus:not([data-focus-visible-added]) {
+[data-js-focus-visible] :focus:not([data-focus-visible-added]) {
   outline: none;
 }
 ```
