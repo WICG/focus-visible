@@ -10,7 +10,7 @@ function applyFocusVisiblePolyfill(scope) {
   var hadFocusVisibleRecently = false;
   var hadFocusVisibleRecentlyTimeout = null;
 
-  var inputTypesWhitelist = {
+  var inputTypesAllowlist = {
     text: true,
     search: true,
     url: true,
@@ -56,7 +56,7 @@ function applyFocusVisiblePolyfill(scope) {
     var type = el.type;
     var tagName = el.tagName;
 
-    if (tagName === 'INPUT' && inputTypesWhitelist[type] && !el.readOnly) {
+    if (tagName === 'INPUT' && inputTypesAllowlist[type] && !el.readOnly) {
       return true;
     }
 
