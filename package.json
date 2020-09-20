@@ -21,6 +21,7 @@
     ]
   },
   "main": "dist/focus-visible.js",
+  "module": "dist/focus-visible.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/WICG/focus-visible.git"
