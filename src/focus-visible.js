@@ -37,6 +37,7 @@ function applyFocusVisiblePolyfill(scope) {
       el !== document &&
       el.nodeName !== 'HTML' &&
       el.nodeName !== 'BODY' &&
+      el.getAttribute('tabindex') !== '-1' &&
       'classList' in el &&
       'contains' in el.classList
     ) {
