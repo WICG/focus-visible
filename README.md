@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/WICG/focus-visible.svg?branch=master)](https://travis-ci.org/WICG/focus-visible)
+[![Build Status](https://travis-ci.org/WICG/focus-visible.svg?branch=main)](https://travis-ci.org/WICG/focus-visible)
 
 Based on the proposed CSS
 [`:focus-visible`](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo)
