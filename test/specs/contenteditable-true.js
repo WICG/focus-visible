@@ -1,31 +1,28 @@
+const rgb2hex = require('rgb2hex');
+
 const {
   fixture,
   matchesKeyboard,
   matchesMouse,
-  FOCUS_RING_STYLE
+  FOCUS_RING_STYLE,
+  GET_OUTLINE_COLOR
 } = require('./helpers');
-const { Key, By } = require('selenium-webdriver');
-const expect = require('expect');
-const driver = global.__driver;
 
-describe('<div contenteditable="true">', function() {
-  beforeEach(function() {
-    return fixture('contenteditable-true.html');
-  });
+describe('<div contenteditable="true">', () => {
+  beforeEach(() => fixture('contenteditable-true.html'));
 
   // FF won't focus a div with contenteditable if it's the first element on the page.
   // So we click on a dummy element to move focus into the document.
-  it('should apply .focus-visible on keyboard focus', async function() {
-    let start = await driver.findElement(By.css('#start'));
-    await start.click();
-    await start.sendKeys(Key.TAB);
-    let actual = await driver.executeScript(`
-      return window.getComputedStyle(document.querySelector('#el')).outlineColor
-    `);
-    expect(actual).toEqual(FOCUS_RING_STYLE);
+  it('should apply .focus-visible on keyboard focus', () => {
+    const start = $('#start');
+    start.click();
+    start.addValue('Tab');
+
+    const color = rgb2hex(browser.execute(GET_OUTLINE_COLOR, '#el'));
+    expect(color.hex).toBe(FOCUS_RING_STYLE);
   });
 
-  it('should apply .focus-visible on mouse focus', async function() {
+  it('should apply .focus-visible on mouse focus', () => {
     return matchesMouse();
   });
 });

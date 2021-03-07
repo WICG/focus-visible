@@ -6,10 +6,8 @@
     "build": "rollup -c",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run test",
-    "test:server": "http-server . -s",
-    "test:selenium": "wait-on http://localhost:8080 && node ./test/index.js",
-    "test": "npm run build && cross-env NODE_ENV=ci concurrently -k --success last \"npm run test:server\" \"npm run test:selenium\"",
-    "sauce": "npm run build && cross-env NODE_ENV=sauce concurrently -k --success last \"npm run test:server\" \"npm run test:selenium\""
+    "test": "NODE_ENV=ci npm run build && wdio run ./test/wdio.local.conf.js",
+    "sauce": "NODE_ENV=sauce npm run build && wdio run ./test/wdio.sauce.conf.js"
   },
   "lint-staged": {
     "src/focus-visible.js": [
@@ -33,31 +31,36 @@
   },
   "homepage": "https://github.com/WICG/focus-visible",
   "devDependencies": {
+    "@wdio/cli": "^6.1.5",
+    "@wdio/local-runner": "^6.1.6",
+    "@wdio/mocha-framework": "^6.1.6",
+    "@wdio/sauce-service": "^6.1.0",
+    "@wdio/spec-reporter": "^6.1.5",
+    "@wdio/static-server-service": "^6.0.16",
+    "@wdio/sync": "^6.1.5",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "ajv": "^6.0.0",
-    "chromedriver": "^2.38.2",
+    "chromedriver": "^81.0.0",
     "clear-module": "^2.1.0",
-    "concurrently": "^4.0.0",
     "cross-env": "^5.1.4",
     "eslint": "^5.0.0",
     "eslint-config-prettier": "^3.0.0",
     "eslint-plugin-es5": "^1.2.0",
     "expect": "^1.20.2",
-    "geckodriver": "^1.12.1",
     "glob-promise": "^3.3.0",
     "http-server": "^0.11.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.5",
-    "mocha": "^5.1.1",
     "mz": "^2.7.0",
     "prettier": "^1.12.1",
+    "rgb2hex": "^0.1.10",
     "rollup": "^0.65.0",
     "rollup-plugin-commonjs": "^9.1.2",
     "rollup-plugin-node-resolve": "^3.0.1",
     "rollup-plugin-uglify": "^3.0.0",
     "rollup-watch": "^4.3.1",
-    "selenium-assistant": "^5.3.0",
-    "wait-on": "^2.1.0"
+    "wait-on": "^2.1.0",
+    "wdio-chromedriver-service": "^6.0.2"
   },
   "greenkeeper": {
     "ignore": [

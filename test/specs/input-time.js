@@ -1,20 +1,18 @@
 const { fixture, matchesKeyboard, matchesMouse } = require('./helpers');
 
-describe('<input type="time">', function() {
-  beforeEach(function() {
-    return fixture('input-time.html');
-  });
+describe('<input type="time">', () => {
+  beforeEach(() => fixture('input-time.html'));
 
-  it('should apply .focus-visible on keyboard focus', function() {
+  it('should apply .focus-visible on keyboard focus', () => {
     return matchesKeyboard();
   });
 
   it('should apply .focus-visible on mouse focus', function() {
     // Skip test in Microsoft Edge. It displays a modal UI on mouse click.
-    if (process.env.TEST_BROWSER.includes('Edge')) {
-      this.skip();
-    } else {
-      return matchesMouse();
+    if (browser.capabilities.browserName === 'microsoftedge') {
+      return this.skip();
     }
+
+    return matchesMouse();
   });
 });
