@@ -33,11 +33,21 @@ _If you do want to build from source, make sure you clone the latest tag!_
 
 ### 1. Add the script to your page
 
+Using a script tag:
+
 ```html
     ...
     <script src="/node_modules/focus-visible/dist/focus-visible.min.js"></script>
   </body>
 </html>
+```
+
+Using ES6 imports (e.g. for nextjs)
+
+```js
+...
+import "focus-visible"
+...
 ```
 
 ### 2. Update your CSS
