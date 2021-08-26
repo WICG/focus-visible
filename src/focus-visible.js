@@ -292,7 +292,7 @@ function supportsNativeFocusVisible() {
 if (
   typeof window !== 'undefined' &&
   typeof document !== 'undefined' &&
-  supportsNativeFocusVisible()
+  !supportsNativeFocusVisible()
 ) {
   // Make the polyfill helper globally available. This can be used as a signal
   // to interested libraries that wish to coordinate with the polyfill for e.g.,
@@ -314,7 +314,7 @@ if (
   window.dispatchEvent(event);
 }
 
-if (typeof document !== 'undefined' && supportsNativeFocusVisible()) {
+if (typeof document !== 'undefined' && !supportsNativeFocusVisible()) {
   // Apply the polyfill to the global document, so that no JavaScript
   // coordination is required to use the polyfill in the top-level document:
   applyFocusVisiblePolyfill(document);
