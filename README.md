@@ -19,6 +19,10 @@ in situations in which the `:focus-visible` pseudo-selector should match.
 
 # Polyfill
 
+## Support
+
+👋 `:focus-visible` is now [supported in all major browsers](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible#browser_compatibility) and we would encourage you to use the CSS selector instead of this polyfill if you are able. We are not currently planning to make any updates or release new versions of the polyfill, but are open to discussion in GitHub issues if changes need to be made for emergencies.
+
 ## Installation
 
 `npm install --save focus-visible`
