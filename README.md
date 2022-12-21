@@ -21,7 +21,11 @@ in situations in which the `:focus-visible` pseudo-selector should match.
 
 ## Support
 
-👋 `:focus-visible` is now [supported in all major browsers](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible#browser_compatibility) and we would encourage you to use the CSS selector instead of this polyfill if you are able. We are not currently planning to make any updates or release new versions of the polyfill, but are open to discussion in GitHub issues if changes need to be made for emergencies.
+👋 `:focus-visible` is now [supported in all major browsers](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible#browser_compatibility).
+
+![A browser suppor table showing focus-visible is supported in Chrome 86, Edge 86, Firefox 85, Opera 72, Safari 15.4, all Android browsers, Safari 15.4 on iOS, Android WebView, and Samsung Internet](https://user-images.githubusercontent.com/1066253/208977092-0fdacba7-b1de-4a8f-90f9-880b06dcdb26.png)
+
+We would encourage you to use the CSS selector instead of this polyfill if you are able. We are not currently planning to make any updates or release new versions of the polyfill, but are open to discussion in GitHub issues if changes need to be made for emergencies.
 
 ## Installation
 
