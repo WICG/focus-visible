@@ -273,10 +273,27 @@ function applyFocusVisiblePolyfill(scope) {
   }
 }
 
+/**
+ * Returns true if :focus-visible is supported natively in the current
+ * environment, otherwise returns false.
+ */
+function supportsNativeFocusVisible() {
+  try {
+    document.querySelector(':focus-visible');
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 // It is important to wrap all references to global window and document in
 // these checks to support server-side rendering use cases
 // @see https://github.com/WICG/focus-visible/issues/199
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (
+  typeof window !== 'undefined' &&
+  typeof document !== 'undefined' &&
+  !supportsNativeFocusVisible()
+) {
   // Make the polyfill helper globally available. This can be used as a signal
   // to interested libraries that wish to coordinate with the polyfill for e.g.,
   // applying the polyfill to a shadow root:
@@ -297,7 +314,7 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   window.dispatchEvent(event);
 }
 
-if (typeof document !== 'undefined') {
+if (typeof document !== 'undefined' && !supportsNativeFocusVisible()) {
   // Apply the polyfill to the global document, so that no JavaScript
   // coordination is required to use the polyfill in the top-level document:
   applyFocusVisiblePolyfill(document);
