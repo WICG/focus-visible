@@ -1,37 +1,29 @@
+const rgb2hex = require('rgb2hex');
+
 const {
   fixture,
   matchesKeyboard,
   matchesMouse,
-  FOCUS_RING_STYLE
+  FOCUS_RING_STYLE,
+  GET_OUTLINE_COLOR
 } = require('./helpers');
-const { Key, By } = require('selenium-webdriver');
-const expect = require('expect');
-const driver = global.__driver;
 
-describe('<input type="radio"> group', function() {
-  beforeEach(function() {
-    return fixture('input-radio-group.html');
+describe('<input type="radio"> group', () => {
+  beforeEach(() => fixture('input-radio-group.html'));
+
+  it('should apply .focus-visible on keyboard focus', () => {
+    const first = $('#first');
+    first.click();
+    first.addValue('ArrowDown');
+
+    const color = rgb2hex(browser.execute(GET_OUTLINE_COLOR, '#last'));
+    expect(color.hex).toBe(FOCUS_RING_STYLE);
   });
 
-  it('should apply .focus-visible on keyboard focus', async function() {
-    let body = await driver.findElement(By.css('body'));
-    let first = await driver.findElement(By.css('#first'));
-    let last = await driver.findElement(By.css('#last'));
-    await first.click();
-    await first.sendKeys(Key.ARROW_DOWN);
-    let actual = await driver.executeScript(`
-      return window.getComputedStyle(document.querySelector('#last')).outlineColor
-    `);
-    expect(actual).toEqual(FOCUS_RING_STYLE);
-  });
+  it('should NOT apply .focus-visible on mouse focus', () => {
+    $('#first').click();
 
-  it('should NOT apply .focus-visible on mouse focus', async function() {
-    let body = await driver.findElement(By.css('body'));
-    let first = await driver.findElement(By.css('#first'));
-    await first.click();
-    let actual = await driver.executeScript(`
-      return window.getComputedStyle(document.querySelector('#first')).outlineColor
-    `);
-    expect(actual).toNotEqual(FOCUS_RING_STYLE);
+    const color = rgb2hex(browser.execute(GET_OUTLINE_COLOR, '#first'));
+    expect(color.hex).not.toBe(FOCUS_RING_STYLE);
   });
 });

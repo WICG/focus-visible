@@ -1,18 +1,27 @@
-const { Key, By, until } = require('selenium-webdriver');
-const expect = require('expect');
+const rgb2hex = require('rgb2hex');
 
 // Expected test results
-const FOCUS_RING_STYLE = 'rgb(255, 0, 0)';
+const FOCUS_RING_STYLE = '#ff0000';
+// Receive outline color helper
+const GET_OUTLINE_COLOR = function(selector) {
+  return window.getComputedStyle(document.querySelector(selector)).outlineColor;
+};
+const GET_SHADOW_ELEMENT = function(root, selector) {
+  return document.querySelector(root).shadowRoot.querySelector(selector);
+};
+const GET_SHADOW_OUTLINE_COLOR = function(root, selector) {
+  var el = document.querySelector(root);
+  return window.getComputedStyle(el.shadowRoot.querySelector(selector))
+    .outlineColor;
+};
 
 /**
  * Load a test fixture HTML file to run assertions against.
  * @param {*} file
  */
-async function fixture(file) {
-  let driver = global.__driver;
-  await driver.get(`http://localhost:8080/test/fixtures/${file}`);
-  let body = await driver.findElement(By.css('body'));
-  await body.click();
+function fixture(file) {
+  browser.url(`http://localhost:8080/${file}`);
+  $('body').click();
 }
 
 /**
@@ -20,17 +29,15 @@ async function fixture(file) {
  * Can optionally take a `false` argument to indicate it should NOT match.
  * @param {*} shouldMatch
  */
-async function matchesKeyboard(shouldMatch = true) {
-  let driver = global.__driver;
-  let body = await driver.findElement(By.css('body'));
-  await body.sendKeys(Key.TAB);
-  let actual = await driver.executeScript(`
-    return window.getComputedStyle(document.querySelector('#el')).outlineColor
-  `);
+function matchesKeyboard(shouldMatch = true) {
+  browser.keys('Tab');
+
+  color = rgb2hex(browser.execute(GET_OUTLINE_COLOR, '#el'));
+
   if (shouldMatch) {
-    expect(actual).toEqual(FOCUS_RING_STYLE);
+    expect(color.hex).toBe(FOCUS_RING_STYLE);
   } else {
-    expect(actual).toNotEqual(FOCUS_RING_STYLE);
+    expect(color.hex).not.toBe(FOCUS_RING_STYLE);
   }
 }
 
@@ -39,23 +46,53 @@ async function matchesKeyboard(shouldMatch = true) {
  * Can optionally take a `false` argument to indicate it should NOT match.
  * @param {*} shouldMatch
  */
-async function matchesMouse(shouldMatch = true) {
-  let driver = global.__driver;
-  let element = await driver.findElement(By.css('#el'));
-  await element.click();
-  let actual = await driver.executeScript(`
-    return window.getComputedStyle(document.querySelector('#el')).outlineColor
-  `);
+function matchesMouse(shouldMatch = true) {
+  $('#el').click();
+
+  const color = rgb2hex(browser.execute(GET_OUTLINE_COLOR, '#el'));
+
   if (shouldMatch) {
-    expect(actual).toEqual(FOCUS_RING_STYLE);
+    expect(color.hex).toBe(FOCUS_RING_STYLE);
   } else {
-    expect(actual).toNotEqual(FOCUS_RING_STYLE);
+    expect(color.hex).not.toBe(FOCUS_RING_STYLE);
+  }
+}
+
+function shadowDescendantMatchesKeyboard(shouldMatch = true) {
+  $('body').addValue('Tab');
+
+  color = rgb2hex(
+    browser.execute(GET_SHADOW_OUTLINE_COLOR, '#el', '#shadow-el')
+  );
+
+  if (shouldMatch) {
+    expect(color.hex).toBe(FOCUS_RING_STYLE);
+  } else {
+    expect(color.hex).not.toBe(FOCUS_RING_STYLE);
+  }
+}
+
+function shadowDescendantMatchesMouse(shouldMatch = true) {
+  const element = $(browser.execute(GET_SHADOW_ELEMENT, '#el', '#shadow-el'));
+  element.click();
+
+  color = rgb2hex(
+    browser.execute(GET_SHADOW_OUTLINE_COLOR, '#el', '#shadow-el')
+  );
+
+  if (shouldMatch) {
+    expect(color.hex).toBe(FOCUS_RING_STYLE);
+  } else {
+    expect(color.hex).not.toBe(FOCUS_RING_STYLE);
   }
 }
 
 module.exports = {
   FOCUS_RING_STYLE,
+  GET_OUTLINE_COLOR,
   fixture,
   matchesKeyboard,
-  matchesMouse
+  matchesMouse,
+  shadowDescendantMatchesKeyboard,
+  shadowDescendantMatchesMouse
 };
