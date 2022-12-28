@@ -9,6 +9,7 @@ function applyFocusVisiblePolyfill(scope) {
   var hadKeyboardEvent = true;
   var hadFocusVisibleRecently = false;
   var hadFocusVisibleRecentlyTimeout = null;
+  var hasKeyboardModality = false;
 
   var inputTypesAllowlist = {
     text: true,
@@ -114,7 +115,9 @@ function applyFocusVisiblePolyfill(scope) {
       addFocusVisibleClass(scope.activeElement);
     }
 
-    hadKeyboardEvent = true;
+    if (!hasKeyboardModality) {
+      hadKeyboardEvent = true;
+    }
   }
 
   /**
@@ -142,7 +145,8 @@ function applyFocusVisiblePolyfill(scope) {
       return;
     }
 
-    if (hadKeyboardEvent || focusTriggersKeyboardModality(e.target)) {
+    hasKeyboardModality = focusTriggersKeyboardModality(e.target);
+    if (hadKeyboardEvent || hasKeyboardModality) {
       addFocusVisibleClass(e.target);
     }
   }
@@ -155,6 +159,8 @@ function applyFocusVisiblePolyfill(scope) {
     if (!isValidFocusTarget(e.target)) {
       return;
     }
+
+    hasKeyboardModality = false;
 
     if (
       e.target.classList.contains('focus-visible') ||
