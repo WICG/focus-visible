@@ -93,20 +93,6 @@ The script uses two heuristics to determine whether the keyboard is being (or wi
   following a keyboard event which activates an element or causes a mutation;
   this still needs to be implemented._
 
-### Dependencies
-
-If you want to use `:focus-visible` with an older browser you'll need to include an additional polyfill for [`Element.prototype.classList`](https://caniuse.com/#feat=classlist).
-
-In accordance with the W3C's new [polyfill
-guidance](https://www.w3.org/2001/tag/doc/polyfills/#don-t-serve-unnecessary-polyfills), the
-`:focus-visible` polyfill does not bundle other polyfills.
-
-You can use a service like [Polyfill.io](https://polyfill.io) to download only the polyfills needed by the current browser. Just add the following line to the start of your page:
-
-```html
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Element.prototype.classList"></script>
-```
-
 ### Shadow DOM
 
 It could be very expensive to apply this polyfill automatically to every shadow
