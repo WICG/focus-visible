@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>has keyboard modality fixture</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      .js-focus-visible :focus:not(.focus-visible) {
+        outline: none;
+      }
+      .focus-visible {
+        outline: 2px solid red;
+      }
+    </style>
+    <script>
+      function labelAndFocusButton() {
+        var button = document.querySelector('button');
+        button.innerHTML = document.querySelector('input').value;
+        button.focus();
+        event.preventDefault();
+      }
+    </script>
+  </head>
+  <body>
+    <p>
+      If you <strong>click</strong> into the input, type something and
+      hit Enter to submit the form, the button will not be .focus-visible.
+    </p>
+    <p>
+      If you <strong>tab</strong> into the input, type something and
+      hit Enter, the button <em>will</em> be .focus-visible.
+    </p>
+    <form method="GET" action="#" onsubmit="labelAndFocusButton()">
+      <input type="text" placeholder="Enter button label…" />
+      <button type="submit">Submit</button>
+    </form>
+    <script src="/dist/focus-visible.js"></script>
+  </body>
+</html>
