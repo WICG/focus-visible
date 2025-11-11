@@ -101,15 +101,12 @@ async function getLocalBrowsers() {
   return browsers;
 }
 
-async function getSauceBrowsers() {
+async function getSauceBrowsers(userName, accessKey) {
   // Return Microsoft Edge and Internet Explorer 11.
   let browsers = [];
 
   // Connect to Sauce.
-  seleniumAssistant.setSaucelabsDetails(
-    'robdodson_inert',
-    'a844aee9-d3ec-4566-94e3-dba3d0c30248'
-  );
+  seleniumAssistant.setSaucelabsDetails(userName, accessKey);
   await seleniumAssistant.startSaucelabsConnect();
 
   let edgeBrowser = await seleniumAssistant.getSauceLabsBrowser(
@@ -136,7 +133,10 @@ async function main() {
   if (process.env.NODE_ENV === 'ci') {
     browsers = await getLocalBrowsers();
   } else if (process.env.NODE_ENV === 'sauce') {
-    browsers = await getSauceBrowsers();
+    browsers = await getSauceBrowsers(
+        process.env.SAUCELABS_USERNAME,
+        process.env.SAUCELABS_ACCESS_KEY
+    );
   }
   await runMochaWithBrowsers(browsers);
   console.log('Done.');
